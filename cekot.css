@@ -1,0 +1,159 @@
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f3f3f3;
+    }
+
+    .checkout-container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2, h3 {
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .shipping-method {
+      margin-top: 30px;
+    }
+
+    .shipping-method label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .summary {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 30px;
+    }
+
+    .summary p {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .summary hr {
+      margin: 10px 0;
+    }
+
+    .summary strong {
+      font-size: 1.1em;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0070f3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+        .cart-items-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        }
+
+        .cart-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 8px;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        }
+
+        .cart-item img {
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        border-radius: 5px;
+        }
+
+      /* Bagian detail produk */
+.cart-details {
+  display: flex;
+  justify-content: flex-start; /* Mengatur konten ke kiri */
+  width: 100%;
+  gap: 10px; /* Mengatur jarak antar elemen */
+}
+
+/* Kolom kiri (nama + harga) */
+.cart-details .left {
+  flex: 1;
+  margin-right: 10px; /* Memberi sedikit jarak dengan kanan */
+}
+
+/* Kolom kanan (jumlah + total) */
+.cart-details .right {
+  flex: 1;
+  text-align: left; /* Mengatur teks di kanan agar rata kiri */
+  margin-left: 0;  /* Mengurangi margin kiri */
+}
+
+/* Nama produk */
+.cart-details .name {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px; /* Mengurangi jarak antar elemen */
+}
+
+/* Harga produk */
+.cart-details .price {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 4px; /* Mengurangi jarak antar elemen */
+}
+
+/* Jumlah produk */
+.cart-details .quantity {
+  font-size: 12px;
+  color: #777;
+}
+
+/* Total harga produk */
+.cart-details .total {
+  font-weight: bold;
+  font-size: 14px;
+  color: #0070f3;  /* Warna biru untuk total */
+  margin-top: 5px; /* Memberi jarak sedikit dengan elemen sebelumnya */
+}
+
+
+
+    @media (max-width: 600px) {
+      .checkout-container {
+        padding: 15px;
+      }
+    }

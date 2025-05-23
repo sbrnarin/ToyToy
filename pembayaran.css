@@ -1,0 +1,108 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f6f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.payment-container {
+  max-width: 900px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2, h3 {
+  color: #333;
+  text-align: center;
+}
+
+.order-summary {
+  margin-bottom: 40px;
+}
+
+.product-details {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 15px;
+}
+
+.product-item {
+  display: flex;
+}
+
+.product-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.product-item div {
+  flex-grow: 1;
+}
+
+.shipping-method-summary, .total-summary {
+  margin-top: 20px;
+}
+
+.total-summary hr {
+  margin: 10px 0;
+}
+
+.payment-form {
+  margin-top: 20px;
+}
+
+.payment-form .form-group {
+  margin-bottom: 20px;
+}
+
+.payment-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.payment-form select, .payment-form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.submit-btn {
+  background-color: #2c3e50;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #3498db;
+}
+
+.back-btn {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.back-btn button {
+  background-color: #E3D2C3;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-btn button:hover {
+  background-color: #e9dcd1;
+}

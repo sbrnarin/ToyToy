@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="registerr.css">
+</head>
+<body>
+<div class="register-container">
+    <h2>Register</h2>
+    <form method="post" action="register.php">
+        <div class="form-group">
+            <input type="text" name="username" placeholder="Username" required>
+        </div>
+        
+        <div class="form-group">
+            <input type="password" name="password" id="password" placeholder="Password" required>
+            <span class="toggle-password" onclick="togglePassword('password')">👁</span>
+        </div>
+
+        <div class="form-group">
+            <input type="password" name="confirm_password" id="confirm_password" placeholder="Konfirmasi Password" required>
+            <span class="toggle-password" onclick="togglePassword('confirm_password')">👁</span>
+        </div>
+        
+        <button type="submit" name="register">Register</button>
+        
+        <div class="login-link">
+            Sudah punya akun? <a href="login.php">Login</a>
+        </div>
+    </form>
+</div>
+</body>
+<script>
+    function togglePassword(id) {
+    var input = document.getElementById(id);
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
+</html>

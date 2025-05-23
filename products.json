@@ -1,0 +1,30 @@
+[
+    {
+      "id": "p001",
+      "name": "Boneka Pinguin",
+      "price": 50000,
+      "mainImage": "img/pinguin.jpg",
+      "thumbnails": [
+        "img/pinguin.jpg"
+      ]
+    },
+    {
+      "id": "p002",
+      "name": "Boneka Jerapah",
+      "price": 50000,
+      "mainImage": "img/jerapah.jpg",
+      "thumbnails": [
+        "img/jerapah.jpg"
+      ]
+    },
+    {
+      "id": "p003",
+      "name": "Boneka Ayam",
+      "price": 50000,
+      "mainImage": "img/ayam.jpg",
+      "thumbnails": [
+        "img/ayam.jpg"
+      ]
+    }
+  ]
+  

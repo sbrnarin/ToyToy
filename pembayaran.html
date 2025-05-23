@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pembayaran Toytoy</title>
+  <link rel="stylesheet" href="pembayaran.css">
+  <style>
+    .product-item {
+      display: flex;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+    .product-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      margin-right: 15px;
+    }
+    .notification {
+      display: none;
+      background: #4CAF50;
+      color: white;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="payment-container">
+  <h2>Pembayaran</h2>
+
+  <div class="order-summary">
+    <h3>Ringkasan Pesanan</h3>
+    <div class="product-details" id="product-details">
+      <!-- Produk akan dimasukkan secara dinamis melalui JavaScript -->
+    </div>
+    <div class="shipping-method-summary">
+      <p><strong>Metode Pengiriman:</strong> <span id="shipping-method"></span></p>
+      <p><strong>Ongkir:</strong> <span id="shipping-cost"></span></p>
+    </div>
+    <div class="total-summary">
+      <hr>
+      <p><strong>Total Pembayaran:</strong> <span id="final-total"></span></p>
+    </div>
+  </div>
+
+  <div class="payment-form">
+    <h3>Metode Pembayaran</h3>
+    <form id="payment-form">
+      <div class="form-group">
+        <label for="payment-method">Pilih Metode Pembayaran</label>
+        <select id="payment-method" required>
+          <option value="">Pilih metode...</option>
+          <option value="transfer">Transfer Bank</option>
+          <option value="cod">Bayar Di Tempat (COD)</option>
+        </select>
+      </div>
+      <div class="form-group" id="payment-detail-group">
+        <label for="payment-detail">Rincian Pembayaran</label>
+        <input type="text" id="payment-detail" placeholder="Masukkan rincian (misalnya, nomor rekening)">
+      </div>
+      <button type="submit" class="submit-btn">Selesaikan Pembayaran</button>
+    </form>
+  </div>
+
+  <div class="back-btn">
+    <button onclick="goBack()">Kembali ke Checkout</button>
+  </div>
+
+  <!-- Notifikasi Pembayaran -->
+  <div id="payment-notification" class="notification">
+    <p>Terima kasih, pembayaran berhasil!</p>
+    <button onclick="goToPesananSaya()">Lihat Pesanan Saya</button>
+  </div>
+
+</div>
+
+<script>
+// Format Rupiah
+function formatRupiah(num) {
+  return num.toLocaleString('id-ID');  
+}
+
+// Fungsi untuk menampilkan produk
+function displayProducts(products) {
+  const container = document.getElementById('product-details');
+  container.innerHTML = '';
+  
+  if (!products || products.length === 0) {
+    container.innerHTML = '<p>Tidak ada produk</p>';
+    return;
+  }
+
+  products.forEach(product => {
+    const productElement = document.createElement('div');
+    productElement.className = 'product-item';
+    
+    productElement.innerHTML = `
+      <img src="${product.image || 'placeholder.jpg'}" alt="${product.name}">
+      <div>
+        <p><strong>${product.name}</strong></p>
+        <p>Harga: Rp ${formatRupiah(product.price)}</p>
+        <p>Jumlah: ${product.quantity}</p>
+        <p>Subtotal: Rp ${formatRupiah(product.price * product.quantity)}</p>
+      </div>
+    `;
+    
+    container.appendChild(productElement);
+  });
+}
+
+// Ambil data checkout
+const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
+
+if (checkoutData) {
+  // Menampilkan produk (handle baik single product maupun multiple products)
+  const products = checkoutData.products || 
+                 (checkoutData.product ? [checkoutData.product] : []);
+  
+  displayProducts(products);
+
+  // Menampilkan informasi pengiriman dan total
+  document.getElementById('shipping-method').textContent = checkoutData.shippingMethod || '-';
+  document.getElementById('shipping-cost').textContent = checkoutData.shippingCost === 0 ? 
+    'FREE' : `Rp ${formatRupiah(checkoutData.shippingCost)}`;
+  document.getElementById('final-total').textContent = `Rp ${formatRupiah(checkoutData.totalCost)}`;
+} else {
+  alert("Data checkout tidak ditemukan. Silakan kembali ke halaman checkout.");
+  // window.location.href = "cekot.php"; // Uncomment untuk redirect otomatis
+}
+
+// Fungsi untuk kembali ke halaman checkout
+function goBack() {
+  window.location.href = "cekot.php";
+}
+
+// Fungsi untuk menyelesaikan pembayaran
+document.getElementById("payment-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+  
+  // Validasi form
+  const paymentMethod = document.getElementById('payment-method').value;
+  if (!paymentMethod) {
+    alert('Silakan pilih metode pembayaran');
+    return;
+  }
+
+  // Menyimpan status pembayaran
+  localStorage.setItem('paymentStatus', 'success');
+
+  // Membuat data pesanan
+  const orderData = {
+    date: new Date().toLocaleString(),
+    products: checkoutData.products || 
+             (checkoutData.product ? [checkoutData.product] : []),
+    shipping: {
+      method: checkoutData.shippingMethod,
+      cost: checkoutData.shippingCost
+    },
+    payment: {
+      method: paymentMethod,
+      details: document.getElementById('payment-detail').value
+    },
+    total: checkoutData.totalCost,
+    status: 'Completed'
+  };
+
+  // Menyimpan pesanan ke history
+  const existingOrders = JSON.parse(localStorage.getItem('userOrders')) || [];
+  existingOrders.push(orderData);
+  localStorage.setItem('userOrders', JSON.stringify(existingOrders));
+
+  // Hapus data checkout
+  localStorage.removeItem('checkoutData');
+
+  // Tampilkan notifikasi
+  document.getElementById('payment-notification').style.display = 'block';
+  document.getElementById('payment-form').style.display = 'none';
+});
+
+// Fungsi untuk mengalihkan ke halaman "Pesanan Saya"
+function goToPesananSaya() {
+  window.location.href = "pesanan.html"; 
+}
+
+// Sembunyikan input detail jika COD dipilih
+document.getElementById('payment-method').addEventListener('change', function() {
+  const detailGroup = document.getElementById('payment-detail-group');
+  if (this.value === 'cod') {
+    detailGroup.style.display = 'none';
+  } else {
+    detailGroup.style.display = 'block';
+  }
+});
+</script>
+
+</body>
+</html>

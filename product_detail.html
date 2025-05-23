@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Detail Produk</title>
+  <link rel="stylesheet" href="detail_produk.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="login">
+            <a href="#location">Location</a>
+            <a href="login.php">Login</a>
+            <a href="register.php">Register</a>
+            <a href="#contact">Contact</a>
+        </div>
+        
+        <header>
+            <div class="header-container">
+                <!-- Logo Toko -->
+                <div class="logo_toko">
+                    <img src="c:\Users\LENOVO\Downloads\Kids_Toys_Logo-removebg-preview.png" alt="Toy logo" class="nav_logo"/>
+                </div>
+                
+                <!-- Search Bar -->
+
+                <form class="search-form" onsubmit="return searchProducts(event)">
+                  <div class="search">
+                    <span class="search-icon material-symbols-outlined">search</span>
+                    <input class="search-input" type="search" placeholder="Search" />
+                  </div>
+                </form>
+                  
+                <div class="header-icons">
+                  <div class="wishlist-link" id="wishlist-toggle">
+                    <span class="material-symbols-outlined">favorite</span>
+                    
+                    <!-- Dropdown Wishlist -->
+                    <div class="wishlist-dropdown">
+                      <div class="wishlist-header">
+                        <h3>Wishlist Saya</h3>
+                        <button class="close-wishlist" aria-label="Close wishlist">
+                          <span class="material-symbols-outlined">close</span>
+                        </button>
+                      </div>
+                      <div class="wishlist-items">
+                        <div class="empty-message">
+                          <span class="material-symbols-outlined">favorite</span>
+                          <p>Wishlist Anda kosong</p>
+                        </div>
+                      </div>
+                      <div class="wishlist-footer">
+                        <button class="btn-view-all">Lihat Semua</button>
+                      </div>
+                    </div>
+                  </div>
+
+
+                    <a href="user.html" class="icon-link">
+                        <span class="material-symbols-outlined">person</span>
+                    </a>
+                    <div class="cart-icon-wrapper">
+                      <a href="#" id="cart-icon" class="icon-link">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        <span class="cart-count">0</span> <!-- jumlah item -->
+                      </a>
+                      <div id="cart-popup" class="cart-popup">
+                        <h4>Keranjang</h4>
+                        <ul id="cart-list-navbar">
+                          <li id="empty-cart" class="empty-cart">
+                            <h4>Keranjang Anda Kosong</h4>
+                            <button onclick="window.location.href='#'" class="btn-continue">Lanjutkan belanja</button>
+                            <p><strong>Sudah punya akun ?</strong></p>
+                            <p><a href="login.php">Login</a> untuk checkout lebih cepat</p>
+                          </li>
+                        </ul>
+                        <p id="cart-total" class="cart-total">Total: Rp 0</p>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="nav_link">
+              <a href="#Home">Home</a>
+                <div class="nav-item dropdown">
+                    <a href="#toys&games" class="dropdown-toggle">Toys & Games 
+                        <span class="material-symbols-outlined">arrow_drop_down</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="puzzles.html">Building Blocks</a>
+                        <a href="figuriens.html">Action Figures</a>
+                        <a href="playdoh.html">Toy Clay</a>
+                        <a href="dolls.html">Dolls & Accessories</a>
+                    </div>
+                </div>
+
+                <div class="nav-item dropdown">
+                    <a href="#videogames" class="dropdown-toggle">Video Games & Consoles
+                        <span class="material-symbols-outlined">arrow_drop_down</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="#">Console Accessories</a>
+                        <a href="#">Game Consoles</a>
+                        <a href="video-games.html">Video Game</a>
+                    </div>
+                </div>
+
+                <div class="nav-item dropdown">
+                    <a href="#brands" class="dropdown-toggle">Brands
+                        <span class="material-symbols-outlined">arrow_drop_down</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="playdoh.html">Play-Doh</a>
+                        <a href="lego.html">Lego</a>
+                        <a href="nerf.html">Nerf</a>
+                        <a href="bebyalive.html">Beby Alive</a>
+                    </div>
+                </div>
+
+            </nav>
+
+        </header>
+
+  <div class="detail-container">
+    <div class="image-section">
+      <img id="product-image" src="" alt="Gambar Produk">
+    </div>
+    <div class="info-section">
+      <h2 id="product-name">Nama Produk</h2>
+      <p id="product-description">Deskripsi produk ditampilkan di sini.</p>
+      <div class="quantity">
+        <button onclick="decreaseQuantity()">-</button>
+        <input type="number" id="quantity" value="1" readonly>
+        <button onclick="increaseQuantity()">+</button>
+      </div>
+      <div class="pembelianan">
+        <p>Total Pembelian: <span id="product-price">Rp 0</span></p>
+      </div>
+      <div class="buttons">
+        <button class="cart-btn">+ Keranjang</button>
+        <button class="buy-btn">Beli Sekarang</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mengambil produk dari localStorage dan menampilkan info produk
+    window.addEventListener("DOMContentLoaded", () => {
+      const product = JSON.parse(localStorage.getItem("selectedProduct"));
+      if (product) {
+        document.getElementById("product-name").textContent = product.name;
+        document.getElementById("product-price").textContent = "Rp " + Number(product.price).toLocaleString();
+        document.getElementById("product-image").src = product.image;
+      }
+    });
+
+    function increaseQuantity() {
+      const qty = document.getElementById("quantity");
+      qty.value = parseInt(qty.value) + 1;
+      updatePrice();
+    }
+
+    function decreaseQuantity() {
+      const qty = document.getElementById("quantity");
+      if (parseInt(qty.value) > 1) {
+        qty.value = parseInt(qty.value) - 1;
+        updatePrice();
+      }
+    }
+
+    // Update harga total berdasarkan jumlah
+    function updatePrice() {
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const product = JSON.parse(localStorage.getItem("selectedProduct"));
+      const totalPrice = product.price * quantity;
+      document.getElementById("product-price").textContent = "Rp " + totalPrice.toLocaleString();
+      product.quantity = quantity; // Simpan quantity ke dalam objek product
+      localStorage.setItem("selectedProduct", JSON.stringify(product)); // Update localStorage
+    }
+
+    // Menyimpan produk yang dipilih dan mengarahkan ke halaman checkout
+    document.querySelector(".buy-btn").addEventListener("click", () => {
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const product = JSON.parse(localStorage.getItem("selectedProduct"));
+
+      // Menyimpan produk yang dipilih dan jumlahnya ke localStorage
+      const checkoutItem = {
+        ...product,
+        quantity: quantity
+      };
+
+      localStorage.setItem("checkoutItem", JSON.stringify(checkoutItem));
+
+      // Redirect ke halaman checkout
+      window.location.href = "cekot.php";
+    });
+  </script>
+
+</body>
+</html>
