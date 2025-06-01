@@ -13,7 +13,7 @@
 
     <nav class="navbar">
         <div class="login">
-            <a href="#location">Location</a>
+            <a href="location.html">Location</a>
             <a href="login.php">Login</a>
             <a href="register.php">Register</a>
             <a href="footer">Contact</a>
@@ -23,7 +23,7 @@
             <div class="header-container">
                 <!-- Logo Toko -->
                 <div class="logo_toko">
-                    <img src="c:\Users\LENOVO\Downloads\Kids_Toys_Logo-removebg-preview.png" alt="Toy logo" class="nav_logo"/>
+                    <img src="gambar\Kids Toys Logo (1).png" alt="Toy logo" class="nav_logo"/>
                 </div>
                 
                 <!-- Search Bar -->
@@ -60,7 +60,7 @@
                   </div>
 
 
-                    <a href="user.html" class="icon-link">
+                    <a href="user.php" class="icon-link">
                         <span class="material-symbols-outlined">person</span>
                     </a>
                     <div class="cart-icon-wrapper">
@@ -89,7 +89,7 @@
             
             <!-- Navigation Links -->
             <nav class="nav_link">
-              <a href="#Home">Home</a>
+              <a href="Home">Home</a>
                 <div class="nav-item dropdown">
                     <a href="#toys&games" class="dropdown-toggle">Toys & Games 
                         <span class="material-symbols-outlined">arrow_drop_down</span>
@@ -133,13 +133,13 @@
         <div class="slider">
             <figure>
                 <div class="slide">
-                    <img src="gambar/6fb01ce64a9c70d8f447d246ff8cc54a.jpg" alt="lego">
+                    <img src="gambar/slide3.jpg" alt="lego">
                 </div>
                 <div class="slide">
                     <img src="gambar/slide2.jpg" alt="car">
                 </div>
                 <div class="slide">
-                    <img src="gambar/slide3.jpg" alt="baby">
+                    <img src="gambar\bg1.jpg" alt="baby">
                 </div>
             </figure>
             </div>
@@ -226,14 +226,11 @@
                 </div>
               </div>
             </section>
-            
-              
-            
+                        
 
             <div class="gambarr">
                 <img src="gambar/slide2.jpg" alt="gambar">                
             </div>
-
                     
 
             <section class="products-showcase">
@@ -354,9 +351,9 @@
                         <h3 class="social-title">IKUTI KAMI</h3>
                         <div class="social-media">
                             <a href="#facebook"><i class="fa fa-facebook"></i></a>
-                            <a href="#instagram"><i class="fa fa-instagram"></i></a>
-                            <a href="#twitter"><i class="fa fa-twitter"></i></a>
-                            <a href="#youtube"><i class="fa fa-youtube"></i></a>
+                            <a href="https://www.instagram.com/toytoy_kidsstore?igsh=MWNybDZkemhtdGx0dA=="><i class="fa fa-instagram"></i></a>
+                            <a href="https://wa.me/nomor_anda"><i class="fa fa-whatsapp"></i></a>
+                            <a href="https://youtube.com/@toytoyshop?si=yNXNYKnuUr-zLk1G"><i class="fa fa-youtube"></i></a>
                         </div>
                     </div>
                 </div>
@@ -396,295 +393,291 @@
               </script>
                 
 <script>
-  const cart = [];
-  const cartListNavbar = document.getElementById('cart-list-navbar');
-  const cartCount = document.querySelector('.cart-count');
-  const cartIcon = document.getElementById('cart-icon');
-  const cartPopup = document.getElementById('cart-popup');
-  const cartTotal = document.getElementById('cart-total');
-  const emptyCartMessage = document.getElementById('empty-cart');
+// keranjang
+const cart = [];
+const cartListNavbar = document.getElementById('cart-list-navbar');
+const cartCount = document.querySelector('.cart-count');
+const cartIcon = document.getElementById('cart-icon');
+const cartPopup = document.getElementById('cart-popup');
+const cartTotal = document.getElementById('cart-total');
+const emptyCartMessage = document.getElementById('empty-cart');
 
-  function updateCartUI() {
+function updateCartUI() {
     if (!cartListNavbar || !cartTotal) return;
 
     cartListNavbar.innerHTML = '';
     let total = 0;
 
     if (cart.length === 0) {
-      if (emptyCartMessage) {
-        cartListNavbar.appendChild(emptyCartMessage);
-        emptyCartMessage.style.display = 'block';
-      }
-      cartTotal.textContent = 'Total: Rp 0';
-      return;
+        if (emptyCartMessage) {
+            cartListNavbar.appendChild(emptyCartMessage);
+            emptyCartMessage.style.display = 'block';
+        }
+        cartTotal.textContent = 'Total: Rp 0';
+        return;
     }
 
     cart.forEach((item, index) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <img src="${item.image}" alt="${item.title}" style="width: 40px; height: auto; vertical-align: middle; margin-right: 8px;">
-        ${item.title} - ${item.price}
-        <button class="remove-item" data-index="${index}">&times;</button>
-      `;
-      cartListNavbar.appendChild(li);
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <img src="${item.image}" alt="${item.title}" style="width: 40px; height: auto; vertical-align: middle; margin-right: 8px;">
+            ${item.title} - ${item.price}
+            <button class="remove-item" data-index="${index}">&times;</button>
+        `;
+        cartListNavbar.appendChild(li);
 
-      const priceNum = parseInt(item.price.replace(/[^\d]/g, ''), 10);
-      total += priceNum * item.quantity;
+        const priceNum = parseInt(item.price.replace(/[^\d]/g, ''), 10);
+        total += priceNum * item.quantity;
     });
 
     if (emptyCartMessage) emptyCartMessage.style.display = 'none';
     cartTotal.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
-  }
+}
 
-  function saveCartToLocalStorage() {
+function saveCartToLocalStorage() {
     localStorage.setItem('cart', JSON.stringify(cart));
-  }
+}
 
-  function loadCartFromLocalStorage() {
+function loadCartFromLocalStorage() {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
-      cart.push(...JSON.parse(savedCart));
-      cartCount.textContent = cart.length;
-      updateCartUI();
+        cart.push(...JSON.parse(savedCart));
+        cartCount.textContent = cart.length;
+        updateCartUI();
     }
-  }
+}
 
-  document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', function () {
-      const productCard = button.closest('.product-card');
-      const title = productCard.querySelector('.product-title').textContent;
-      const price = productCard.querySelector('.product-price').textContent;
-      const image = productCard.querySelector('img').getAttribute('src');
+// Add to cart functionality
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const productCard = button.closest('.product-card');
+        const title = productCard.querySelector('.product-title').textContent;
+        const price = productCard.querySelector('.product-price').textContent;
+        const image = productCard.querySelector('img').getAttribute('src');
 
-      // Cek apakah produk sudah ada
-      const existingItem = cart.find(item => item.title === title && item.price === price);
+        const existingItem = cart.find(item => item.title === title && item.price === price);
 
-      if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        cart.push({ title, price, image, quantity: 1 });
-      }
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ title, price, image, quantity: 1 });
+        }
 
-      cartCount.textContent = cart.length;
-      updateCartUI();
-      saveCartToLocalStorage();
+        cartCount.textContent = cart.length;
+        updateCartUI();
+        saveCartToLocalStorage();
+
+        showNotification(`${title} ditambahkan ke keranjang`);
     });
-  });
+});
 
-  cartListNavbar?.addEventListener('click', function (e) {
+// Remove item from cart
+cartListNavbar?.addEventListener('click', function(e) {
     if (e.target.classList.contains('remove-item')) {
-      const index = parseInt(e.target.dataset.index, 10);
-      cart.splice(index, 1);
-      cartCount.textContent = cart.length;
-      updateCartUI();
-      saveCartToLocalStorage();
-    }
-  });
+        const index = parseInt(e.target.dataset.index, 10);
+        const removedItem = cart[index];
+        cart.splice(index, 1);
+        cartCount.textContent = cart.length;
+        updateCartUI();
+        saveCartToLocalStorage();
 
-  cartIcon?.addEventListener('click', function (e) {
+        showNotification(`${removedItem.title} dihapus dari keranjang`);
+    }
+});
+
+// Toggle cart popup
+cartIcon?.addEventListener('click', function(e) {
     e.preventDefault();
     if (cartPopup) {
-      cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
+        cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
     }
-  });
+});
 
-  document.addEventListener('click', function (e) {
+// Close cart when clicking outside
+document.addEventListener('click', function(e) {
     if (!cartIcon?.contains(e.target) && !cartPopup?.contains(e.target)) {
-      if (cartPopup) cartPopup.style.display = 'none';
+        if (cartPopup) cartPopup.style.display = 'none';
     }
-  });
+});
 
-  loadCartFromLocalStorage();
-</script>
+// ==================== WISHLIST FUNCTIONALITY ====================
+let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+const wishlistToggle = document.getElementById('wishlist-toggle');
+const wishlistDropdown = document.querySelector('.wishlist-dropdown');
+const wishlistItemsContainer = document.querySelector('.wishlist-items');
 
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // 1. Gunakan localStorage untuk persistensi data
-  let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-  
-  const wishlistToggle = document.getElementById('wishlist-toggle');
-  const wishlistDropdown = document.querySelector('.wishlist-dropdown');
-  const wishlistItemsContainer = document.querySelector('.wishlist-items');
-  
-  // 2. Inisialisasi tampilan tombol wishlist di produk
-  function initializeWishlistButtons() {
+// Initialize wishlist buttons
+function initializeWishlistButtons() {
     document.querySelectorAll('.wishlist-btn').forEach(btn => {
-      const productCard = btn.closest('.product-card');
-      const productId = productCard.dataset.productId || generateId(productCard);
-      
-      // Tandai jika produk sudah ada di wishlist
-      if (wishlist.some(item => item.id === productId)) {
-        btn.classList.add('active');
-      }
-      
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        toggleWishlistItem(productCard, btn);
-      });
+        const productCard = btn.closest('.product-card');
+        const productId = productCard.dataset.productId || generateId(productCard);
+
+        if (wishlist.some(item => item.id === productId)) {
+            btn.classList.add('active');
+        }
+
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleWishlistItem(productCard, btn);
+        });
     });
-  }
-  
-  // 3. Fungsi untuk menambah/menghapus dari wishlist
-  function toggleWishlistItem(productCard, btn) {
+}
+
+function toggleWishlistItem(productCard, btn) {
     const productId = productCard.dataset.productId || generateId(productCard);
     const productName = productCard.querySelector('.product-title').textContent;
     const productPrice = productCard.querySelector('.product-price').textContent;
     const productImage = productCard.querySelector('img').src;
-    
+
     const existingIndex = wishlist.findIndex(item => item.id === productId);
-    
+
     if (existingIndex === -1) {
-      // Tambahkan ke wishlist
-      wishlist.push({
-        id: productId,
-        name: productName,
-        price: productPrice,
-        image: productImage
-      });
-      btn.classList.add('active');
-      showWishlistNotification(`${productName} ditambahkan ke wishlist`);
+        wishlist.push({ id: productId, name: productName, price: productPrice, image: productImage });
+        btn.classList.add('active');
+        showNotification(`${productName} ditambahkan ke wishlist`);
     } else {
-      // Hapus dari wishlist
-      wishlist.splice(existingIndex, 1);
-      btn.classList.remove('active');
-      showWishlistNotification(`${productName} dihapus dari wishlist`);
+        wishlist.splice(existingIndex, 1);
+        btn.classList.remove('active');
+        showNotification(`${productName} dihapus dari wishlist`);
     }
-    
-    // Simpan ke localStorage
+
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
     updateWishlistDisplay();
-  }
-  
-  // 4. Fungsi pembantu untuk generate ID jika tidak ada
-  function generateId(element) {
+}
+
+function generateId(element) {
     if (!element.dataset.productId) {
-      element.dataset.productId = 'prod-' + Math.random().toString(36).substr(2, 9);
+        element.dataset.productId = 'prod-' + Math.random().toString(36).substr(2, 9);
     }
     return element.dataset.productId;
-  }
-  
-  // 5. Update tampilan wishlist (sama seperti milik Anda)
-  function updateWishlistDisplay() {
+}
+
+function updateWishlistDisplay() {
+    if (!wishlistItemsContainer) return;
+
     if (wishlist.length === 0) {
-      wishlistItemsContainer.innerHTML = `
-        <div class="empty-message">
-          <span class="material-symbols-outlined">favorite</span>
-          <p>Wishlist Anda kosong</p>
-        </div>
-      `;
-      return;
+        wishlistItemsContainer.innerHTML = `
+            <div class="empty-message">
+                <span class="material-symbols-outlined">favorite</span>
+                <p>Wishlist Anda kosong</p>
+            </div>
+        `;
+        return;
     }
-    
+
     let itemsHTML = '';
     wishlist.forEach(item => {
-      itemsHTML += `
-        <div class="wishlist-item" data-id="${item.id}">
-          <img src="${item.image}" alt="${item.name}">
-          <div class="wishlist-item-details">
-            <div class="wishlist-item-name">${item.name}</div>
-            <div class="wishlist-item-price">${item.price}</div>
-          </div>
-          <button class="remove-wishlist">
-            <span class="material-symbols-outlined">close</span>
-          </button>
-        </div>
-      `;
+        itemsHTML += `
+            <div class="wishlist-item" data-id="${item.id}">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="wishlist-item-details">
+                    <div class="wishlist-item-name">${item.name}</div>
+                    <div class="wishlist-item-price">${item.price}</div>
+                </div>
+                <button class="remove-wishlist">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+        `;
     });
-    
+
     wishlistItemsContainer.innerHTML = itemsHTML;
-    
-    // Event delegation untuk tombol hapus
-    wishlistItemsContainer.addEventListener('click', function(e) {
-      if (e.target.closest('.remove-wishlist')) {
+}
+
+wishlistItemsContainer?.addEventListener('click', function(e) {
+    if (e.target.closest('.remove-wishlist')) {
         const itemElement = e.target.closest('.wishlist-item');
         const productId = itemElement.dataset.id;
-        
+
         wishlist = wishlist.filter(item => item.id !== productId);
         localStorage.setItem('wishlist', JSON.stringify(wishlist));
         updateWishlistDisplay();
-        
-        // Update tombol di product card
+
         document.querySelectorAll(`.product-card[data-product-id="${productId}"] .wishlist-btn`)
-          .forEach(btn => btn.classList.remove('active'));
-      }
-    });
-  }
-  
-  // 6. Fungsi notifikasi (tetap sama dengan milik Anda)
-  function showWishlistNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'wishlist-notification';
-    notification.innerHTML = `
-      <span class="material-symbols-outlined">check_circle</span>
-      <span>${message}</span>
-    `;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-      notification.classList.add('show');
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-      }, 3000);
-    }, 10);
-  }
-  
-  // Inisialisasi
-  initializeWishlistButtons();
-  updateWishlistDisplay();
-  
-  // Toggle dropdown (tetap sama dengan milik Anda)
-  wishlistToggle.addEventListener('click', function(e) {
+            .forEach(btn => btn.classList.remove('active'));
+
+        showNotification("Item dihapus dari wishlist");
+    }
+});
+
+wishlistToggle?.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     wishlistDropdown.classList.toggle('show');
-  });
-  
-  document.addEventListener('click', function(e) {
+});
+
+document.addEventListener('click', function(e) {
     if (!wishlistToggle.contains(e.target) && !wishlistDropdown.contains(e.target)) {
-      wishlistDropdown.classList.remove('show');
+        wishlistDropdown.classList.remove('show');
     }
-  });
-  
-  document.querySelector('.close-wishlist')?.addEventListener('click', function() {
+});
+
+document.querySelector('.close-wishlist')?.addEventListener('click', function() {
     wishlistDropdown.classList.remove('show');
-  });
+});
+
+// ==================== SEARCH FUNCTIONALITY ====================
+const searchInput = document.getElementById('search-input');
+const searchButton = document.getElementById('search-button');
+const productCards = document.querySelectorAll('.product-card');
+
+function performSearch() {
+    const searchTerm = searchInput.value.toLowerCase();
+
+    productCards.forEach(card => {
+        const productName = card.querySelector('.product-title').textContent.toLowerCase();
+        const productDesc = card.querySelector('.product-desc')?.textContent.toLowerCase() || '';
+
+        if (productName.includes(searchTerm) || productDesc.includes(searchTerm)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+searchButton?.addEventListener('click', performSearch);
+searchInput?.addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') {
+        performSearch();
+    }
+});
+
+// ==================== PRODUCT DETAIL NAVIGATION ====================
+document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', function(e) {
+        if (!e.target.closest('button')) {
+            const name = card.getAttribute('data-name') || card.querySelector('.product-title').textContent;
+            const price = card.getAttribute('data-price') || card.querySelector('.product-price').textContent;
+            const image = card.getAttribute('data-image') || card.querySelector('img').src;
+
+            const product = { name, price, image };
+            localStorage.setItem('selectedProduct', JSON.stringify(product));
+            window.location.href = 'product_detail.html';
+        }
+    });
+});
+
+// ==================== NOTIFICATION FUNCTION ====================
+function showNotification(message) {
+    alert(message); // native browser notification
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', function() {
+    loadCartFromLocalStorage();
+    initializeWishlistButtons();
+    updateWishlistDisplay();
 });
 </script>
 
-<!-- detail produk -->
-
-<script>
-  document.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('click', function (e) {
-      const isWishlist = e.target.closest('.wishlist-btn');
-      const isCart = e.target.closest('.add-to-cart');
-
-      if (!isWishlist && !isCart) {
-        const name = card.getAttribute('data-name');
-        const price = card.getAttribute('data-price');
-        const image = card.getAttribute('data-image');
-
-        const product = { name, price, image };
-        localStorage.setItem('selectedProduct', JSON.stringify(product));
-        window.location.href = 'product_detail.html';
-      }
-    });
-  });
-
-  function toggleWishlist(event) {
-    event.stopPropagation();
-    alert("Ditambahkan ke wishlist!");
-  }
-
-  function addToCart(event) {
-    event.stopPropagation();
-    alert("Ditambahkan ke keranjang!");
-  }
 </script>
 
+
+<script>
+  lucide.createIcons();
+</script>
   
 </body>
 </html>
