@@ -4,11 +4,10 @@ $username = "root";
 $password = "";
 $dbname = "sabrinalina"; 
 
-// Membuat koneksi
-$conn = new mysqli($servername, $username, $password, $dbname);
 
-// Cek koneksi
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
+$koneksi = new mysqli($servername, $username, $password, $dbname);
+
+if ($koneksi->connect_error) {
+    die("Koneksi gagal: " . $koneksi->connect_error);
 }
 ?>

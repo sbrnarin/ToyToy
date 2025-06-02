@@ -23,5 +23,8 @@
   <label>Tanggal Masuk:</label><br>
   <input type="date" name="tanggal_masuk" required><br><br>
 
+   <label>Upload Gambar:</label><br>
+  <input type="file" name="nama_file" required><br><br>
+
   <button type="submit">Simpan</button>
 </form>

@@ -1,19 +1,38 @@
 <?php
 include "koneksi.php";
 
-$nama = $_POST['nama_produk'];
-$deskripsi = $_POST['deskripsi'];
+// Ambil data dari form
+$nama_produk = $_POST['nama_produk'];
 $harga = $_POST['harga'];
 $stok = $_POST['stok'];
 $id_merk = $_POST['id_merk'];
 $id_kategori = $_POST['id_kategori'];
-$tanggal = $_POST['tanggal_masuk'];
+$tanggal_masuk = $_POST['tanggal_masuk'];
 
-$sql = "INSERT INTO produk (nama_produk, deskripsi, harga, stok, id_merk, id_kategori, tanggal_masuk) 
-        VALUES ('$nama', '$deskripsi', '$harga', '$stok', '$id_merk', '$id_kategori', '$tanggal')";
+// Upload gambar
+$nama_file = $_FILES['nama_file']['nama'];
+$tmp_file = $_FILES['nama_file']['tmp_nama'];
+$folder_tujuan = ".gambar1/"; // Pastikan folder ini sudah ada dan writable
+$path_simpan = $folder_tujuan . $nama_file;
 
-if (mysqli_query($koneksi, $sql)) {
-    header("Location: daftar_produk.php"); // ubah ke file utama kamu
+// Pindahkan file ke folder tujuan
+if(move_uploaded_file($tmp_file, $path_simpan)) {
+    // Simpan data ke database (hanya nama file disimpan di DB)
+    $sql = "INSERT INTO produk (nama_produk, harga, stok, id_merk, id_kategori, tanggal_masuk, nama_file)
+            VALUES ('$nama_produk', '$harga', '$stok', '$id_merk', '$id_kategori', '$tanggal_masuk', '$nama_file')";
+    $query = mysqli_query($koneksi, $sql);
+
+    if($query){
+        header("Location: admin.php?simpan=sukses");
+        exit;
+    } else {
+        // Jika query gagal
+        header("Location: admin.php?simpan=gagal_query");
+        exit;
+    }
 } else {
-    echo "Gagal menambah produk: " . mysqli_error($koneksi);
+    // Jika upload file gagal
+    header("Location: admin.php?simpan=gagal_upload");
+    exit;
 }
+?>

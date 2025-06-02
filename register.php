@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "INSERT INTO pembeli (username, password, nama_pembeli, email, alamat, no_telp, kota) 
             VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
+    $stmt = $koneksi->prepare($sql);
     $stmt->bind_param("sssssis", $username, $password_hashed, $nama_pembeli, $email, $alamat, $no_telp, $kota);
 
     if ($stmt->execute()) {

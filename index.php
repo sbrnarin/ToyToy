@@ -366,28 +366,26 @@
               <!-- search -->
               <script>
                 function searchProducts(event) {
-                  event.preventDefault(); // Mencegah form dari reload halaman
+                  event.preventDefault(); // Mencegah reload
               
-                  // Ambil nilai input pencarian dan ubah menjadi lowercase untuk pencarian case-insensitive
+                  //case-insensitive
                   const query = document.querySelector('.search-input').value.toLowerCase();
                   
                   // Ambil semua produk
                   const products = document.querySelectorAll('.product-card');
               
-                  // Loop semua produk dan periksa apakah nama produk cocok dengan query
+                  // produk query
                   products.forEach(product => {
                     const name = product.getAttribute('data-name').toLowerCase();
               
-                    // Jika input kosong, tampilkan semua produk
+                    // Jika input kosong
                     if (query === "") {
                       product.style.display = "block";
                     } else {
-                      // Tampilkan produk jika nama mengandung query
                       product.style.display = name.includes(query) ? "block" : "none";
                     }
                   });
                   
-                  // Mengembalikan false agar form tidak melakukan reload halaman
                   return false;
                 }
               </script>
@@ -447,7 +445,7 @@ function loadCartFromLocalStorage() {
     }
 }
 
-// Add to cart functionality
+// Add to cart 
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', function() {
         const productCard = button.closest('.product-card');
@@ -471,7 +469,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
     });
 });
 
-// Remove item from cart
+// Remove item cart
 cartListNavbar?.addEventListener('click', function(e) {
     if (e.target.classList.contains('remove-item')) {
         const index = parseInt(e.target.dataset.index, 10);
@@ -485,7 +483,7 @@ cartListNavbar?.addEventListener('click', function(e) {
     }
 });
 
-// Toggle cart popup
+//cart popup
 cartIcon?.addEventListener('click', function(e) {
     e.preventDefault();
     if (cartPopup) {
@@ -493,20 +491,20 @@ cartIcon?.addEventListener('click', function(e) {
     }
 });
 
-// Close cart when clicking outside
+// cart
 document.addEventListener('click', function(e) {
     if (!cartIcon?.contains(e.target) && !cartPopup?.contains(e.target)) {
         if (cartPopup) cartPopup.style.display = 'none';
     }
 });
 
-// ==================== WISHLIST FUNCTIONALITY ====================
+// WISHLIST
 let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 const wishlistToggle = document.getElementById('wishlist-toggle');
 const wishlistDropdown = document.querySelector('.wishlist-dropdown');
 const wishlistItemsContainer = document.querySelector('.wishlist-items');
 
-// Initialize wishlist buttons
+// wishlist buttons
 function initializeWishlistButtons() {
     document.querySelectorAll('.wishlist-btn').forEach(btn => {
         const productCard = btn.closest('.product-card');
@@ -617,7 +615,7 @@ document.querySelector('.close-wishlist')?.addEventListener('click', function() 
     wishlistDropdown.classList.remove('show');
 });
 
-// ==================== SEARCH FUNCTIONALITY ====================
+// SEARCH
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 const productCards = document.querySelectorAll('.product-card');
@@ -644,7 +642,7 @@ searchInput?.addEventListener('keyup', function(e) {
     }
 });
 
-// ==================== PRODUCT DETAIL NAVIGATION ====================
+//  NAFIGASI DETAIL PRODUK
 document.querySelectorAll('.product-card').forEach(card => {
     card.addEventListener('click', function(e) {
         if (!e.target.closest('button')) {
@@ -659,12 +657,11 @@ document.querySelectorAll('.product-card').forEach(card => {
     });
 });
 
-// ==================== NOTIFICATION FUNCTION ====================
+// NOTIFICATION
 function showNotification(message) {
     alert(message); // native browser notification
 }
 
-// ==================== INIT ====================
 document.addEventListener('DOMContentLoaded', function() {
     loadCartFromLocalStorage();
     initializeWishlistButtons();
