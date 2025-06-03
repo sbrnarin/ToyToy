@@ -185,7 +185,7 @@
                     <div class="hero-text">
                         <h1>Welcome to ToyToy Kids Store!</h1>
                         <p>ToyToy is the most explorative toy store that offers a unique experience for play where parents & kids can team up together. Let your imagination run as you embark on a new adventure filled with thrills and excitement. Welcome to ToyToy Imagine Play</p>
-                        <a href="allproduct.html" class="hero-button">Explore Now</a>
+                        <a href="allproduct.php" class="hero-button">Explore Now</a>
                     </div>
                 </div>
             </div>
@@ -236,7 +236,7 @@
             <section class="products-showcase">
   <div class="products-header">
     <h2></h2>
-    <a href="allproduct.html" class="see-all-btn">
+    <a href="allproduct.php" class="see-all-btn">
       See All Products <i data-lucide="arrow-up-right"></i>
     </a>
     
