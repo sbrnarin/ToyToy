@@ -114,7 +114,6 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
     }
 
     .completed { border-left: 6px solid #4CAF50; }
-    .pending { border-left: 6px solid #FFC107; }
     .canceled { border-left: 6px solid #F44336; }
     .total { border-left: 6px solid #2196F3; }
   </style>
@@ -144,10 +143,6 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
         <div class="box completed">
           <div class="label">Selesai</div>
           <div class="count"><?= $completed_order ?></div>
-        </div>
-        <div class="box pending">
-          <div class="label">Pending</div>
-          <div class="count"><?= $pending_order ?></div>
         </div>
         <div class="box canceled">
           <div class="label">Dibatalkan</div>

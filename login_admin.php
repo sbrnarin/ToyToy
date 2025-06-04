@@ -1,42 +1,37 @@
 <?php
 session_start();
-
-if (isset($_SESSION["adminname"])) {
-    header("Location: akun_admin.php");
-    exit;
-}
+include("db_config.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include("db_config.php");
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    $admin = $_POST["adminname"];
-    $password = $_POST["password"];
-
-    $sql = "SELECT * FROM admin WHERE adminname = ?";
+    // Cek admin
+    $sql = "SELECT * FROM admin WHERE username = ?";
     $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($stmt) {
-        $stmt->bind_param("s", $adminname);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    if (password_verify($password, $row['password'])) {
-        $_SESSION["adminname"] = $adminname;
-
-        header("Location: akun_admin.php");
-        exit;
+    // Jika ada data
+    if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        // Verifikasi password
+        if (password_verify($password, $row['password'])) {
+            $_SESSION['admin'] = $row['username'];
+            header("Location: dash_admin.php");
+            exit();
+        } else {
+            $error_message = "Password salah.";
+        }
     } else {
-        $error_message = "Username atau password salah!";
+        $error_message = "Username tidak ditemukan.";
     }
-} else {
-    $error_message = "Username atau password salah!";
+    $stmt->close();
 }
-
-    }
-}
+$conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="id">
@@ -49,7 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     body {
     background: url('gambar/slide2.jpg') no-repeat center center fixed;
     font-family: Arial, sans-serif;
-    /* background-color: #624db7; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -93,7 +87,7 @@ input[type="text"], input[type="password"] {
     font-size: 14px;
     border: 1px solid #f3efef;
     border-radius: 4px;
-    box-sizing: border-box;
+    box-sizing: border-box;`
 }
 
 button[type="submit"] {
@@ -136,7 +130,7 @@ p a {
             <p class="error"><?php echo $error_message; ?></p>
         <?php } ?>
         
-        <form method="POST" action="login.php">
+        <form method="POST" action="login_admin.php">
             <div class="form-group">
                 <label for="username">Admin</label>
                 <input type="text" id="username" name="username" class="form-control" required placeholder="Masukkan Username">
