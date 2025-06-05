@@ -141,6 +141,7 @@ $query = mysqli_query($koneksi, "SELECT * FROM produk");
       <tr>
         <th>Id Produk</th>
         <th>Nama Produk</th>
+        <th>Deskripsi</th>
         <th>Gambar</th>
         <th>Harga</th>
         <th>Stok</th>
@@ -160,6 +161,7 @@ $query = mysqli_query($koneksi, "SELECT * FROM produk");
             <span>-</span>
           <?php } ?>
         </td>
+        <td><?=$produk['deskripsi']?></td>
         <td><?=$produk['harga']?></td>
         <td><?=$produk['stok']?></td>
         <td><?=$produk['id_merk']?></td>
