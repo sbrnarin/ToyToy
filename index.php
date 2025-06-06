@@ -669,9 +669,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-</script>
-
-
 <script>
   lucide.createIcons();
 </script>
