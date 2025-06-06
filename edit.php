@@ -1,7 +1,7 @@
 <?php
 include "koneksi.php";
-$id = $_GET['id_produk'];
-$sql = "SELECT * FROM produk WHERE id_produk = $id";
+$id_produk= $_GET['id_produk'];
+$sql = "SELECT * FROM produk WHERE id_produk = '$id_produk'";
 $query = mysqli_query($koneksi, $sql);
 $produk = mysqli_fetch_assoc($query);
 ?>
@@ -30,6 +30,9 @@ $produk = mysqli_fetch_assoc($query);
 
   <label>Tanggal Masuk:</label><br>
   <input type="date" name="tanggal_masuk" value="<?=$produk['tanggal_masuk']?>" required><br><br>
+
+  <label>Upload Gambar:</label><br>
+  <input type="file" name="nama_file" required><br><br>
 
   <button type="submit">Update</button>
 </form>

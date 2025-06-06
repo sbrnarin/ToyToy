@@ -142,34 +142,34 @@ $query = mysqli_query($koneksi, "SELECT * FROM produk");
         <th>Id Produk</th>
         <th>Nama Produk</th>
         <th>Deskripsi</th>
-        <th>Gambar</th>
         <th>Harga</th>
         <th>Stok</th>
-        <th>Id Merk</th>
-        <th>Id Kategori</th>
+        <th>Nama Merk</th>
+        <th>Nama Kategori</th>
         <th>Tanggal Masuk</th>
+        <th>Gambar</th>
         <th>Aksi</th>
       </tr>
       <?php while($produk = mysqli_fetch_assoc($query)) { ?>
       <tr>
-        <td><?=$produk['id']?></td>
+        <td><?=$produk['id_produk']?></td>
         <td><?=$produk['nama_produk']?></td>
+        <td><?=$produk['deskripsi']?></td>
+        <td><?=$produk['harga']?></td>
+        <td><?=$produk['stok']?></td>
+        <td><?=$produk['nama_merk']?></td>
+        <td><?=$produk['nama_kategori']?></td>
+        <td><?=$produk['tanggal_masuk']?></td>
         <td>
-          <?php if (!empty($produk['gambar'])) { ?>
+          <?php if (!empty($produk['nama_gambar'])) { ?>
             <img src="gambar_produk/<?=$produk['gambar']?>" width="100" />
           <?php } else { ?>
             <span>-</span>
           <?php } ?>
         </td>
-        <td><?=$produk['deskripsi']?></td>
-        <td><?=$produk['harga']?></td>
-        <td><?=$produk['stok']?></td>
-        <td><?=$produk['id_merk']?></td>
-        <td><?=$produk['id_kategori']?></td>
-        <td><?=$produk['tanggal_masuk']?></td>
         <td class="action">
-          <a href="edit.php?id=<?=$produk['id']?>">Edit</a> |
-          <a href="hapus.php?id=<?=$produk['id']?>" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+          <a href="edit.php?id_produk=<?=$produk['id_produk']?>">Edit</a> |
+          <a href="hapus.php?id_produk=<?=$produk['id_produk']?>" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
         </td>
       </tr>
       <?php } ?>

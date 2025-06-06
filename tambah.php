@@ -1,7 +1,7 @@
 <?php include "koneksi.php"; ?>
 
 <h2>Tambah Produk</h2>
-<form action="proses_tambah.php" method="POST">
+<form action="proses_tambah.php" method="POST" enctype="multipart/form-data">
   <label>Nama Produk:</label><br>
   <input type="text" name="nama_produk" required><br>
 
@@ -23,7 +23,7 @@
   <label>Tanggal Masuk:</label><br>
   <input type="date" name="tanggal_masuk" required><br><br>
 
-   <label>Upload Gambar:</label><br>
+  <label>Upload Gambar:</label><br>
   <input type="file" name="nama_file" required><br><br>
 
   <button type="submit">Simpan</button>
