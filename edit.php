@@ -1,38 +1,47 @@
 <?php
 include "koneksi.php";
-$id_produk= $_GET['id_produk'];
-$sql = "SELECT * FROM produk WHERE id_produk = '$id_produk'";
-$query = mysqli_query($koneksi, $sql);
-$produk = mysqli_fetch_assoc($query);
+
+$id = $_GET['id_produk'];
+$produk = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT * FROM produk WHERE id_produk = $id"));
+$merk = mysqli_query($koneksi, "SELECT * FROM merk");
+$kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
 ?>
 
-<h2>Edit Produk</h2>
-<form action="proses_edit.php" method="POST">
-  <input type="hidden" name="id_produk" value="<?=$produk['id_produk']?>">
+<form action="proses_edit.php" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
 
   <label>Nama Produk:</label><br>
-  <input type="text" name="nama_produk" value="<?=$produk['nama_produk']?>" required><br>
+  <input type="text" name="nama_produk" value="<?= $produk['nama_produk'] ?>"><br><br>
 
   <label>Deskripsi:</label><br>
-  <textarea name="deskripsi" required><?=$produk['deskripsi']?></textarea><br>
+  <textarea name="deskripsi" rows="4" cols="40" required></textarea><br><br>
 
   <label>Harga:</label><br>
-  <input type="number" name="harga" value="<?=$produk['harga']?>" required><br>
+  <input type="number" name="harga" value="<?= $produk['harga'] ?>"><br><br>
 
   <label>Stok:</label><br>
-  <input type="number" name="stok" value="<?=$produk['stok']?>" required><br>
+  <input type="number" name="stok" value="<?= $produk['stok'] ?>"><br><br>
 
-  <label>ID Merk:</label><br>
-  <input type="text" name="id_merk" value="<?=$produk['id_merk']?>" required><br>
+  <label>Merk:</label><br>
+  <select name="id_merk">
+    <?php while ($m = mysqli_fetch_assoc($merk)) { ?>
+      <option value="<?= $m['id_merk'] ?>" <?= $m['id_merk'] == $produk['id_merk'] ? 'selected' : '' ?>>
+        <?= $m['nama_merk'] ?>
+      </option>
+    <?php } ?>
+  </select><br><br>
 
-  <label>ID Kategori:</label><br>
-  <input type="text" name="id_kategori" value="<?=$produk['id_kategori']?>" required><br>
+  <label>Kategori:</label><br>
+  <select name="id_kategori">
+    <?php while ($k = mysqli_fetch_assoc($kategori)) { ?>
+      <option value="<?= $k['id_kategori'] ?>" <?= $k['id_kategori'] == $produk['id_kategori'] ? 'selected' : '' ?>>
+        <?= $k['nama_kategori'] ?>
+      </option>
+    <?php } ?>
+  </select><br><br>
 
-  <label>Tanggal Masuk:</label><br>
-  <input type="date" name="tanggal_masuk" value="<?=$produk['tanggal_masuk']?>" required><br><br>
+  <label>Ganti Gambar (opsional):</label><br>
+  <input type="file" name="gambar"><br><br>
 
-  <label>Upload Gambar:</label><br>
-  <input type="file" name="nama_file" required><br><br>
-
-  <button type="submit">Update</button>
+  <button type="submit">Simpan Perubahan</button>
 </form>

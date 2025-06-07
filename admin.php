@@ -1,6 +1,12 @@
 <?php
 include "koneksi.php";
-$query = mysqli_query($koneksi, "SELECT * FROM produk");
+$query = mysqli_query($koneksi, "
+  SELECT p.*, m.nama_merk, k.nama_kategori
+  FROM produk p
+  JOIN merk m ON p.id_merk = m.id_merk
+  JOIN kategori k ON p.id_kategori = k.id_kategori
+");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -4,48 +4,230 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Checkout Toytoy</title>
-  <link rel="stylesheet" href="cekot.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f3f3f3;
+    }
+
+    .checkout-container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2, h3 {
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .shipping-method {
+      margin-top: 30px;
+    }
+
+    .shipping-method label {
+      display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .shipping-method input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .summary {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 30px;
+    }
+
+    .summary p {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .summary hr {
+      margin: 10px 0;
+      border: 0;
+      border-top: 1px solid #ddd;
+    }
+
+    .summary strong {
+      font-size: 1.1em;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0a1c4c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #14378a;
+    }
+
+    .cart-items-container {
+      margin-top: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 15px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      margin-bottom: 15px;
+    }
+
+    .cart-item img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .cart-details {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .cart-details .left {
+      flex: 1;
+    }
+
+    .cart-details .right {
+      flex: 1;
+      text-align: right;
+    }
+
+    .cart-details .name {
+      font-weight: bold;
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .cart-details .price {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .cart-details .quantity {
+      font-size: 13px;
+      color: #777;
+    }
+
+    .cart-details .total {
+      font-weight: bold;
+      font-size: 15px;
+      color: #0a1c4c;
+      margin-top: 5px;
+    }
+
+    .error {
+      border-color: red !important;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .checkout-container {
+        padding: 15px;
+      }
+      
+      .cart-details {
+        flex-direction: column;
+      }
+      
+      .cart-details .right {
+        text-align: left;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
 <div class="checkout-container">
   <h2>Informasi Pengiriman</h2>
 
   <form id="checkout-form" method="POST" action="proses_cekot.php">
-    <!-- Form input tetap sama -->
     <div class="form-group">
       <label for="nama">Nama Lengkap</label>
       <input type="text" id="nama" name="nama" required>
+      <div class="error-message" id="nama-error">Harap isi nama lengkap</div>
     </div>
     <div class="form-group">
       <label for="alamat">Alamat Lengkap</label>
       <input type="text" id="alamat" name="alamat" required>
+      <div class="error-message" id="alamat-error">Harap isi alamat lengkap</div>
     </div>
     <div class="form-group">
       <label for="kota">Kota</label>
       <input type="text" id="kota" name="kota" required>
+      <div class="error-message" id="kota-error">Harap isi kota</div>
     </div>
     <div class="form-group">
       <label for="provinsi">Provinsi</label>
       <select id="provinsi" name="provinsi" required onchange="updateShippingOptions()">
         <option value="">Pilih Provinsi</option>
-        <!-- Pulau Jawa -->
         <option value="DKI Jakarta">DKI Jakarta</option>
         <option value="Jawa Barat">Jawa Barat</option>
         <option value="Jawa Tengah">Jawa Tengah</option>
         <option value="DI Yogyakarta">DI Yogyakarta</option>
         <option value="Jawa Timur">Jawa Timur</option>
         <option value="Banten">Banten</option>
-        <!-- Luar Jawa -->
         <option value="Bali">Bali</option>
         <option value="Sumatera Utara">Sumatera Utara</option>
         <option value="Kalimantan Barat">Kalimantan Barat</option>
-        <!-- Tambahkan provinsi lainnya sesuai kebutuhan -->
       </select>
+      <div class="error-message" id="provinsi-error">Harap pilih provinsi</div>
     </div>
     <div class="form-group">
       <label for="nohp">Nomor Handphone</label>
       <input type="text" id="nohp" name="nohp" required>
+      <div class="error-message" id="nohp-error">Harap isi nomor handphone yang valid</div>
     </div>
 
     <!-- Input hidden -->
@@ -55,11 +237,10 @@
     <input type="hidden" id="shippingCost" name="shippingCost">
 
     <h3>Produk</h3>
-    <div id="cart-items"></div>
+    <div class="cart-items-container" id="cart-items"></div>
 
     <div class="shipping-method" id="shipping-method-container">
       <h3>Metode Pengiriman</h3>
-      <!-- Opsi pengiriman akan diupdate berdasarkan provinsi -->
     </div>
 
     <div class="summary">
@@ -75,26 +256,35 @@
 </div>
 
 <script>
-// Daftar provinsi di Pulau Jawa
+// daftar provinsi Jawa
 const javaProvinces = [
   "DKI Jakarta", "Jawa Barat", "Jawa Tengah", 
   "DI Yogyakarta", "Jawa Timur", "Banten"
 ];
 
-// Fungsi untuk mengecek apakah provinsi termasuk Pulau Jawa
+// memeriksa provinsi
 function isJavaProvince(province) {
   return javaProvinces.includes(province);
 }
 
-// Fungsi untuk mengupdate opsi pengiriman berdasarkan provinsi
+// opsi pengiriman berdasarkan provinsi
 function updateShippingOptions() {
   const province = document.getElementById("provinsi").value;
   const container = document.getElementById("shipping-method-container");
   
-  if (!province) return;
+  // Validasi provinsi
+  const provinsiError = document.getElementById("provinsi-error");
+  if (!province) {
+    provinsiError.style.display = 'block';
+    document.getElementById("provinsi").classList.add('error');
+    return;
+  } else {
+    provinsiError.style.display = 'none';
+    document.getElementById("provinsi").classList.remove('error');
+  }
 
+  // jawa
   if (isJavaProvince(province)) {
-    // Gratis ongkir untuk Pulau Jawa
     container.innerHTML = `
       <h3>Metode Pengiriman</h3>
       <label>
@@ -107,7 +297,6 @@ function updateShippingOptions() {
       </label>
     `;
   } else {
-    // Berbayar untuk luar Jawa
     container.innerHTML = `
       <h3>Metode Pengiriman</h3>
       <label>
@@ -121,7 +310,7 @@ function updateShippingOptions() {
     `;
   }
   
-  // Tambahkan event listener untuk opsi baru
+  // listener untuk opsi baru
   document.querySelectorAll('input[name="shipping"]').forEach(radio => {
     radio.addEventListener('change', updateTotal);
   });
@@ -129,96 +318,192 @@ function updateShippingOptions() {
   updateTotal();
 }
 
-// Fungsi format Rupiah
+
 function formatRupiah(num) {
   return 'Rp ' + num.toLocaleString('id-ID');
 }
 
-// Fungsi untuk menampilkan produk yang akan dibeli
+//menampilkan item checkout
 function displayCheckoutItems() {
   const container = document.getElementById("cart-items");
   container.innerHTML = "";
   
-  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-  const checkoutItem = JSON.parse(localStorage.getItem("checkoutItem"));
+  let checkoutData = JSON.parse(localStorage.getItem("checkoutItems")) || [];
   
-  if (checkoutItem) {
+  // single item checkout 
+  if (checkoutData.length === 0) {
+    const singleItem = JSON.parse(localStorage.getItem("checkoutItem"));
+    if (singleItem) {
+      checkoutData = [singleItem];
+    }
+  }
+  
+  if (checkoutData.length === 0) {
+    container.innerHTML = "<p>Tidak ada produk yang dipilih.</p>";
+    return;
+  }
+  
+  // semua item dalam keranjang
+  checkoutData.forEach(item => {
     const productElement = document.createElement("div");
     productElement.classList.add("cart-item");
     
     productElement.innerHTML = `
-      <img src="${checkoutItem.image}" alt="${checkoutItem.name}">
+      <img src="${item.image || 'placeholder.jpg'}" alt="${item.name}">
       <div class="cart-details">
         <div class="left">
-          <p class="name">${checkoutItem.name}</p>
-          <p class="price">${formatRupiah(checkoutItem.price)}</p>
+          <p class="name">${item.name}</p>
+          <p class="price">${formatRupiah(item.price)}</p>
         </div>
         <div class="right">
-          <p class="quantity">Jumlah: ${checkoutItem.quantity}</p>
-          <p class="total">Total: ${formatRupiah(checkoutItem.price * checkoutItem.quantity)}</p>
+          <p class="quantity">Jumlah: ${item.quantity}</p>
+          <p class="total">Total: ${formatRupiah(item.price * item.quantity)}</p>
         </div>
       </div>
     `;
     container.appendChild(productElement);
-  } else if (cartItems.length > 0) {
-    cartItems.forEach(item => {
-      const productElement = document.createElement("div");
-      productElement.classList.add("cart-item");
-      
-      productElement.innerHTML = `
-        <img src="${item.image}" alt="${item.name}">
-        <div class="cart-details">
-          <div class="left">
-            <p class="name">${item.name}</p>
-            <p class="price">${formatRupiah(item.price)}</p>
-          </div>
-          <div class="right">
-            <p class="quantity">Jumlah: ${item.quantity}</p>
-            <p class="total">Total: ${formatRupiah(item.price * item.quantity)}</p>
-          </div>
-        </div>
-      `;
-      container.appendChild(productElement);
-    });
-  } else {
-    container.innerHTML = "<p>Tidak ada produk yang dipilih.</p>";
-  }
+  });
 }
 
-// Fungsi untuk menghitung subtotal
+// menghitung subtotal
 function calculateSubtotal() {
-  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-  const checkoutItem = JSON.parse(localStorage.getItem("checkoutItem"));
+  let checkoutData = JSON.parse(localStorage.getItem("checkoutItems")) || [];
   
-  if (checkoutItem) {
-    return checkoutItem.price * checkoutItem.quantity;
-  } else if (cartItems.length > 0) {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  // Fallback single item checkout 
+  if (checkoutData.length === 0) {
+    const singleItem = JSON.parse(localStorage.getItem("checkoutItem"));
+    if (singleItem) {
+      checkoutData = [singleItem];
+    }
   }
-  return 0;
+  
+  return checkoutData.reduce((total, item) => {
+    return total + (item.price * item.quantity);
+  }, 0);
 }
 
-// Fungsi untuk memperbarui total
+// memperbarui total
 function updateTotal() {
   const subtotal = calculateSubtotal();
-  const selected = document.querySelector('input[name="shipping"]:checked');
-  const shippingValue = selected ? parseInt(selected.value) : 0;
-  const shippingMethod = selected ? selected.getAttribute('data-name') : '';
-
-  document.getElementById('shipping').textContent = 
-    shippingValue === 0 ? "FREE" : formatRupiah(shippingValue);
-  document.getElementById('total-display').textContent = formatRupiah(subtotal + shippingValue);
-  document.getElementById('subtotal').textContent = formatRupiah(subtotal);
+  const selectedShipping = document.querySelector('input[name="shipping"]:checked');
   
-  // Update hidden inputs
+  const shippingCost = selectedShipping ? parseInt(selectedShipping.value) : 0;
+  const shippingMethod = selectedShipping ? selectedShipping.getAttribute('data-name') : '';
+  const total = subtotal + shippingCost;
+
+  document.getElementById('subtotal').textContent = formatRupiah(subtotal);
+  document.getElementById('shipping').textContent = shippingCost === 0 ? "FREE" : formatRupiah(shippingCost);
+  document.getElementById('total-display').textContent = formatRupiah(total);
+  
+  // Update input hidden
   document.getElementById('shippingMethod').value = shippingMethod;
-  document.getElementById('shippingCost').value = shippingValue;
+  document.getElementById('shippingCost').value = shippingCost;
+  document.getElementById('total').value = total;
+  
+
+  let checkoutData = JSON.parse(localStorage.getItem("checkoutItems")) || [];
+  
+  // Fallback singgel item
+  if (checkoutData.length === 0) {
+    const singleItem = JSON.parse(localStorage.getItem("checkoutItem"));
+    if (singleItem) {
+      checkoutData = [singleItem];
+    }
+  }
+  
+  document.getElementById("produkData").value = JSON.stringify(checkoutData);
 }
 
-// Fungsi untuk mengarahkan ke halaman pembayaran
+// validasi form
+function validateForm() {
+  let isValid = true;
+  
+  // nama
+  const nama = document.getElementById("nama");
+  const namaError = document.getElementById("nama-error");
+  if (!nama.value.trim()) {
+    nama.classList.add('error');
+    namaError.style.display = 'block';
+    isValid = false;
+  } else {
+    nama.classList.remove('error');
+    namaError.style.display = 'none';
+  }
+  
+  // alamat
+  const alamat = document.getElementById("alamat");
+  const alamatError = document.getElementById("alamat-error");
+  if (!alamat.value.trim()) {
+    alamat.classList.add('error');
+    alamatError.style.display = 'block';
+    isValid = false;
+  } else {
+    alamat.classList.remove('error');
+    alamatError.style.display = 'none';
+  }
+  
+  // kota
+  const kota = document.getElementById("kota");
+  const kotaError = document.getElementById("kota-error");
+  if (!kota.value.trim()) {
+    kota.classList.add('error');
+    kotaError.style.display = 'block';
+    isValid = false;
+  } else {
+    kota.classList.remove('error');
+    kotaError.style.display = 'none';
+  }
+  
+  // provinsi
+  const provinsi = document.getElementById("provinsi");
+  const provinsiError = document.getElementById("provinsi-error");
+  if (!provinsi.value) {
+    provinsi.classList.add('error');
+    provinsiError.style.display = 'block';
+    isValid = false;
+  } else {
+    provinsi.classList.remove('error');
+    provinsiError.style.display = 'none';
+  }
+  
+  // no HP
+  const nohp = document.getElementById("nohp");
+  const nohpError = document.getElementById("nohp-error");
+  const phoneRegex = /^[0-9]{10,13}$/;
+  if (!phoneRegex.test(nohp.value)) {
+    nohp.classList.add('error');
+    nohpError.style.display = 'block';
+    isValid = false;
+  } else {
+    nohp.classList.remove('error');
+    nohpError.style.display = 'none';
+  }
+  
+  return isValid;
+}
+
+// proses pembayaran
 function goToPayment() {
-  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-  const checkoutItem = JSON.parse(localStorage.getItem("checkoutItem"));
+  let checkoutData = JSON.parse(localStorage.getItem("checkoutItems")) || [];
+  
+  // untuk single item checkout 
+  if (checkoutData.length === 0) {
+    const singleItem = JSON.parse(localStorage.getItem("checkoutItem"));
+    if (singleItem) {
+      checkoutData = [singleItem];
+    }
+  }
+  
+  if (checkoutData.length === 0) {
+    alert("Tidak ada produk yang dipilih untuk checkout");
+    return;
+  }
+  
+  // Validasi form
+  if (!validateForm()) {
+    return;
+  }
+  
   const selectedShipping = document.querySelector('input[name="shipping"]:checked');
   
   if (!selectedShipping) {
@@ -226,70 +511,54 @@ function goToPayment() {
     return;
   }
   
-  const shippingValue = parseInt(selectedShipping.value);
-  const shippingMethod = selectedShipping.getAttribute('data-name');
-  
-  let products = [];
-  let total = 0;
-  
-  if (checkoutItem) {
-    products = [checkoutItem];
-    total = checkoutItem.price * checkoutItem.quantity + shippingValue;
-  } else if (cartItems.length > 0) {
-    products = cartItems;
-    total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) + shippingValue;
-  }
+  // Submit form
+  document.getElementById("checkout-form").submit();
+}
 
-  // Validasi form
-  const form = document.getElementById("checkout-form");
-  const inputs = form.querySelectorAll("[required]");
-  let isValid = true;
+// Inisialisasi halaman dimuat
+document.addEventListener("DOMContentLoaded", () => {
+  // Tampilkan item checkout
+  displayCheckoutItems();
   
-  inputs.forEach(input => {
-    if (!input.value) {
-      input.style.borderColor = "red";
-      isValid = false;
-    } else {
-      input.style.borderColor = "";
+  // opsi pengiriman
+  updateShippingOptions();
+  
+  // validasi real-time
+  document.getElementById("nama").addEventListener('input', function() {
+    if (this.value.trim()) {
+      this.classList.remove('error');
+      document.getElementById("nama-error").style.display = 'none';
     }
   });
   
-  if (!isValid) {
-    alert("Harap lengkapi semua informasi pengiriman");
-    return;
-  }
-
-  // Simpan data checkout
-  const checkoutData = {
-    shippingMethod: shippingMethod,
-    shippingCost: shippingValue,
-    totalCost: total,
-    products: products,
-    customerInfo: {
-      name: document.getElementById("nama").value,
-      address: document.getElementById("alamat").value,
-      city: document.getElementById("kota").value,
-      province: document.getElementById("provinsi").value,
-      phone: document.getElementById("nohp").value
+  document.getElementById("alamat").addEventListener('input', function() {
+    if (this.value.trim()) {
+      this.classList.remove('error');
+      document.getElementById("alamat-error").style.display = 'none';
     }
-  };
+  });
   
-  localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
-
-  // Isi input hidden
-  document.getElementById("produkData").value = JSON.stringify(products);
-  document.getElementById("total").value = total;
-  document.getElementById("shippingMethod").value = shippingMethod;
-  document.getElementById("shippingCost").value = shippingValue;
-
-  // Submit form
-  form.submit();
-}
-
-// Inisialisasi saat halaman dibuka
-document.addEventListener("DOMContentLoaded", () => {
-  displayCheckoutItems();
-  updateShippingOptions();
+  document.getElementById("kota").addEventListener('input', function() {
+    if (this.value.trim()) {
+      this.classList.remove('error');
+      document.getElementById("kota-error").style.display = 'none';
+    }
+  });
+  
+  document.getElementById("provinsi").addEventListener('change', function() {
+    if (this.value) {
+      this.classList.remove('error');
+      document.getElementById("provinsi-error").style.display = 'none';
+    }
+  });
+  
+  document.getElementById("nohp").addEventListener('input', function() {
+    const phoneRegex = /^[0-9]{10,13}$/;
+    if (phoneRegex.test(this.value)) {
+      this.classList.remove('error');
+      document.getElementById("nohp-error").style.display = 'none';
+    }
+  });
 });
 </script>
 
