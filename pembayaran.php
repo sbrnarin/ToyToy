@@ -171,28 +171,6 @@ function formatRupiah($angka) {
         .payment-instruction.active { 
             display: block; 
         }
-        .ringkasan-pesanan {
-    font-family: Arial, sans-serif;
-    color: #333;
-    line-height: 1.5;
-}
-
-.ringkasan-pesanan table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.ringkasan-pesanan th, 
-.ringkasan-pesanan td {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.ringkasan-pesanan .total-section {
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
-    margin-top: 10px;
-}
     </style>
 </head>
 <body>
@@ -205,40 +183,37 @@ function formatRupiah($angka) {
             <p><strong>Nomor Handphone:</strong> <?= htmlspecialchars($dataPesanan['no_telp']) ?></p>
         </div>
 
-<h3>Ringkasan Pesanan</h3>
-<div style="margin-bottom: 20px;">
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
-        <thead>
-            <tr style="border-bottom: 1px solid #ddd;">
-                <th style="text-align: left; padding: 8px 0; font-weight: normal;">Produk</th>
-                <th style="text-align: right; padding: 8px 0; font-weight: normal;">Harga</th>
-                <th style="text-align: center; padding: 8px 0; font-weight: normal;">Jumlah</th>
-                <th style="text-align: right; padding: 8px 0; font-weight: normal;">Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($produk as $item): ?>
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 8px 0;"><?= htmlspecialchars($item['name']) ?></td>
-                <td style="text-align: right; padding: 8px 0;"><?= formatRupiah($item['price']) ?></td>
-                <td style="text-align: center; padding: 8px 0;"><?= (int)$item['quantity'] ?></td>
-                <td style="text-align: right; padding: 8px 0;"><?= formatRupiah($item['price'] * $item['quantity']) ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    
-    <div style="border-top: 1px solid #ddd; padding-top: 10px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <span>Ongkos Kirim (<?= htmlspecialchars($dataPesanan['metode_pengiriman']) ?>)</span>
-            <span><?= formatRupiah($dataPesanan['ongkir']) ?></span>
-        </div>
-        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1em; margin-top: 10px;">
-            <span>Total Pembayaran</span>
-            <span><?= formatRupiah($dataPesanan['total_harga']) ?></span>
-        </div>
-    </div>
-</div>
+        <h3>Ringkasan Pesanan</h3>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Produk</th>
+                    <th>Harga</th>
+                    <th>Jumlah</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($produk as $item): ?>
+                <tr>
+                    <td><?= htmlspecialchars($item['name']) ?></td>
+                    <td><?= formatRupiah($item['price']) ?></td>
+                    <td><?= (int)$item['quantity'] ?></td>
+                    <td><?= formatRupiah($item['price'] * $item['quantity']) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">Ongkos Kirim (<?= htmlspecialchars($dataPesanan['metode_pengiriman']) ?>)</td>
+                    <td><?= formatRupiah($dataPesanan['ongkir']) ?></td>
+                </tr>
+                <tr>
+                    <td colspan="3">Total Pembayaran</td>
+                    <td><strong><?= formatRupiah($dataPesanan['total_harga']) ?></strong></td>
+                </tr>
+            </tfoot>
+        </table>
 
         <div class="payment-method">
             <h3>Pilih Metode Pembayaran</h3>
