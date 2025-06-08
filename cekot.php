@@ -149,6 +149,7 @@
     }
   </style>
 </head>
+
 <body>
 
 <div class="checkout-container">

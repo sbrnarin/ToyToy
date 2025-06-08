@@ -1,7 +1,7 @@
 <?php
 include "koneksi.php";
 
-$id = $_POST['id_produk'];
+$id_produk = $_POST['id_produk'];
 $nama = $_POST['nama_produk'];
 $deskripsi = $_POST['deskripsi'];
 $harga = $_POST['harga'];
@@ -18,10 +18,10 @@ $sql = "UPDATE produk SET
         id_merk = '$id_merk',
         id_kategori = '$id_kategori',
         tanggal_masuk = '$tanggal'
-        WHERE id_produk = $id";
+        WHERE id_produk = '$id_produk'";
 
 if (mysqli_query($koneksi, $sql)) {
-    header("Location: daftar_produk.php"); // ubah ke file utama kamu
+    header("Location: admin.php"); // ubah ke file utama kamu
 } else {
     echo "Gagal mengedit produk: " . mysqli_error($koneksi);
 }
