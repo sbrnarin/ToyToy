@@ -445,29 +445,55 @@ function loadCartFromLocalStorage() {
     }
 }
 
-// Add to cart 
+// Add to cart functionality
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', function() {
         const productCard = button.closest('.product-card');
-        const title = productCard.querySelector('.product-title').textContent;
-        const price = productCard.querySelector('.product-price').textContent;
-        const image = productCard.querySelector('img').getAttribute('src');
+        
+        // Get product details more safely
+        const title = productCard.querySelector('.product-title')?.textContent?.trim() || 'Unknown Product';
+        const price = productCard.querySelector('.product-price')?.textContent?.trim() || 'N/A';
+        const image = productCard.querySelector('img')?.src || 'default-image.jpg';
+        const productId = productCard.dataset.productId || generateUniqueId(); // Add data-product-id to your HTML
 
-        const existingItem = cart.find(item => item.title === title && item.price === price);
+        // Find existing item by ID if available, otherwise by title+price
+        const existingItem = productId 
+            ? cart.find(item => item.id === productId)
+            : cart.find(item => item.title === title && item.price === price);
 
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
-            cart.push({ title, price, image, quantity: 1 });
+            cart.push({ 
+                id: productId,
+                title, 
+                price, 
+                image, 
+                quantity: 1 
+            });
         }
 
-        cartCount.textContent = cart.length;
+        // Update cart count (counting total items, not unique products)
+        cartCount.textContent = calculateTotalItems();
         updateCartUI();
         saveCartToLocalStorage();
 
         showNotification(`${title} ditambahkan ke keranjang`);
     });
 });
+
+// Helper functions
+function calculateTotalItems() {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+}
+
+function generateUniqueId() {
+    return Math.random().toString(36).substring(2, 15);
+}
+
+
+
+//sini
 
 // Remove item cart
 cartListNavbar?.addEventListener('click', function(e) {
@@ -659,7 +685,7 @@ document.querySelectorAll('.product-card').forEach(card => {
 
 // NOTIFICATION
 function showNotification(message) {
-    alert(message); // native browser notification
+    alert(message); 
 }
 
 document.addEventListener('DOMContentLoaded', function() {
