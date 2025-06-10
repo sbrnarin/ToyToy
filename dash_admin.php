@@ -5,13 +5,13 @@ include 'koneksi.php';
 $total_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan")->fetch_assoc()['total'];
 
 // pesanan selesai
-$completed_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status = 'completed'")->fetch_assoc()['total'];
+$completed_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'completed'")->fetch_assoc()['total'];
 
 // pesanan pending
-$pending_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status = 'pending'")->fetch_assoc()['total'];
+$pending_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'pending'")->fetch_assoc()['total'];
 
 // pesanan dibatalkan
-$canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status = 'canceled'")->fetch_assoc()['total'];
+$canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'canceled'")->fetch_assoc()['total'];
 ?>
 
 <!DOCTYPE html>
@@ -30,7 +30,7 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
 
     .sidebar {
         width: 230px;
-        background-color: #e2d2c2;
+        background-color: #081F5C;
         height: 100vh;
         position: fixed;
         padding: 20px;
@@ -56,7 +56,7 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
     }
 
     .sidebar nav ul li a {
-        color: #000;
+        color: white;
         text-decoration: none;
         font-weight: 600;
         display: flex;
@@ -68,7 +68,7 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
     }
 
     .sidebar nav ul li a:hover {
-        background-color: #d6c0ae;
+        background-color: #000000;
     }
 
     .main-content {
@@ -101,6 +101,16 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
         max-width: 240px;
     }
 
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+       transition: transform 0.2s ease;
+  }
+
+    .card-link:hover {
+       transform: scale(1.02);
+  }
+
     .label {
         font-size: 15px;
         color: #555;
@@ -113,9 +123,9 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
         margin-top: 8px;
     }
 
-    .completed { border-left: 6px solid #4CAF50; }
-    .canceled { border-left: 6px solid #F44336; }
-    .total { border-left: 6px solid #2196F3; }
+    .completed { border-left: 6px solid #081F5C; }
+    .canceled { border-left: 6px solid #081F5C; }
+    .total { border-left: 6px solid #081F5C; }
   </style>
 </head>
 <body>
@@ -135,19 +145,28 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
   <div class="main-content">
     <div class="dashboard">
       <h1>Dashboard Admin</h1>
+      <a href="data_pesanan.php" class="card-link">
       <div class="box-container">
         <div class="box total">
           <div class="label">Total Pesanan</div>
-          <div class="count"><?= $total_order ?></div>
+          <div class="count"><?= $total_order ?>
         </div>
+
+        </div>
+        <a href="total_akun.php" class="card-link">
         <div class="box completed">
-          <div class="label">Selesai</div>
+          <div class="label">Total Akun</div>
           <div class="count"><?= $completed_order ?></div>
         </div>
+        </a>
+        
+        <a href="" class="card-link">
         <div class="box canceled">
           <div class="label">Dibatalkan</div>
           <div class="count"><?= $canceled_order ?></div>
         </div>
+        </a>
+
       </div>
     </div>
   </div>

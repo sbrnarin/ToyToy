@@ -18,14 +18,14 @@ $admin = [
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5ede8;
+      background: #081F5C;
       margin: 0;
       color: #333;
     }
 
    .sidebar {
       width: 230px;
-      background-color: #e2d2c2;
+      background-color: #081F5C;
       height: 100vh;
       position: fixed;
       padding: 20px;
@@ -51,7 +51,7 @@ $admin = [
     }
 
     .sidebar nav ul li a {
-      color: #000;
+      color: white;
       text-decoration: none;
       font-weight: 600;
       display: flex;
@@ -63,7 +63,7 @@ $admin = [
     }
 
     .sidebar nav ul li a:hover {
-      background-color: #d6c0ae;
+      background-color: #000000;
     }
 
     /* Main content */
@@ -71,7 +71,7 @@ $admin = [
       margin-left: 250px;
       padding: 30px 40px;
       min-height: 100vh;
-      background-color: #f5ede8;
+      background-color: white;
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -79,7 +79,7 @@ $admin = [
 
     /* Profile Card */
     .profile-card {
-      background-color: white;
+      background-color: #D9D9D9;
       border-radius: 12px;
       padding: 40px;
       max-width: 450px;
@@ -92,7 +92,7 @@ $admin = [
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      border: 3px solid #c8a98c;
+      border: 3px solid #081F5C;
       margin: 0 auto 25px auto;
       background: url('https://cdn-icons-png.flaticon.com/512/149/149071.png') center/cover no-repeat;
     }
@@ -101,13 +101,13 @@ $admin = [
       font-weight: 700;
       font-size: 22px;
       margin-bottom: 8px;
-      color: #5a3d2b;
+      color: #000000;
     }
 
     .profile-card .admin-name {
       font-size: 18px;
       margin-bottom: 25px;
-      color: #7f5e4f;
+      color: #000000;
     }
 
     .profile-card .icon-row {
@@ -118,13 +118,13 @@ $admin = [
 
     .profile-card .icon-row i {
       font-size: 26px;
-      color: #a98b7e;
+      color: #081F5C;
       cursor: pointer;
       transition: color 0.3s ease;
     }
 
     .profile-card .icon-row i:hover {
-      color: #6f4e37;
+      color: #081F5C;
     }
   </style>
 </head>

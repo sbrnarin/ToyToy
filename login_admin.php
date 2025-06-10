@@ -6,32 +6,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Cek admin
-    $sql = "SELECT * FROM admin WHERE username = ?";
+    $sql = "SELECT * FROM akun WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $res = $stmt->get_result();
 
-    // Jika ada data
-    if ($result->num_rows == 1) {
-        $row = $result->fetch_assoc();
-        // Verifikasi password
+    if ($res->num_rows === 1) {
+        $row = $res->fetch_assoc();
         if (password_verify($password, $row['password'])) {
-            $_SESSION['admin'] = $row['username'];
-            header("Location: dash_admin.php");
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['role'] = $row['role'];
+            header("Location: dash_" . $row['role'] . ".php");
             exit();
-        } else {
-            $error_message = "Password salah.";
         }
-    } else {
-        $error_message = "Username tidak ditemukan.";
     }
-    $stmt->close();
+    echo "Login gagal";
 }
-$conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="id">

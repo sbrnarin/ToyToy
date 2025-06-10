@@ -24,7 +24,7 @@ $query = mysqli_query($koneksi, "
 
     .sidebar {
       width: 230px;
-      background-color: #e2d2c2;
+      background-color: #081F5C;
       height: 100vh;
       position: fixed;
       padding: 20px;
@@ -50,7 +50,7 @@ $query = mysqli_query($koneksi, "
     }
 
     .sidebar nav ul li a {
-      color: #000;
+      color: white;
       text-decoration: none;
       font-weight: 600;
       display: flex;
@@ -62,7 +62,7 @@ $query = mysqli_query($koneksi, "
     }
 
     .sidebar nav ul li a:hover {
-      background-color: #d6c0ae;
+      background-color: #000000;
     }
 
     .main-content {
@@ -78,7 +78,7 @@ $query = mysqli_query($koneksi, "
     .btn-tambah {
       display: inline-block;
       padding: 10px 20px;
-      background:#d6bfae;
+      background: #081F5C;
       color: white;
       text-decoration: none;
       border-radius: 6px;
@@ -88,7 +88,7 @@ $query = mysqli_query($koneksi, "
     }
 
     .btn-tambah:hover {
-      background-color:#bfa791;
+      background-color: #000000;
     }
 
     table {
@@ -105,7 +105,7 @@ $query = mysqli_query($koneksi, "
     }
 
     th {
-      background-color:#d6bfae;
+      background-color: #081F5C;
       color: white;
     }
 
@@ -167,8 +167,8 @@ $query = mysqli_query($koneksi, "
         <td><?=$produk['nama_kategori']?></td>
         <td><?=$produk['tanggal_masuk']?></td>
         <td>
-          <?php if (!empty($produk['nama_gambar'])) { ?>
-            <img src="gambar_produk/<?=$produk['gambar']?>" width="100" />
+          <?php if (!empty($produk['nama_file'])) { ?>
+            <img src="gambar/<?=$produk['nama_file']?>" width="100" />
           <?php } else { ?>
             <span>-</span>
           <?php } ?>

@@ -95,10 +95,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="puzzles.html">Building Blocks</a>
-                        <a href="figuriens.html">Action Figures</a>
-                        <a href="playdoh.html">Toy Clay</a>
-                        <a href="dolls.html">Dolls & Accessories</a>
+                        <a href="puzzles.php">Building Blocks</a>
+                        <a href="figuriens.php">Action Figures</a>
+                        <a href="playdoh.php">Toy Clay</a>
+                        <a href="dolls.php">Dolls & Accessories</a>
                     </div>
                 </div>
 
@@ -118,10 +118,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="playdoh.html">Play-Doh</a>
-                        <a href="lego.html">Lego</a>
-                        <a href="nerf.html">Nerf</a>
-                        <a href="bebyalive.html">Beby Alive</a>
+                        <a href="playdoh.php">Play-Doh</a>
+                        <a href="lego.php">Lego</a>
+                        <a href="nerf.php">Nerf</a>
+                        <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
 
@@ -149,25 +149,25 @@
                     <h2 class="section-title">Our Featured Brands</h2>
                     <div class="brands-grid">
                             <div class="brand-item">
-                                <a href="playdoh.html">
+                                <a href="playdoh.php">
                                 <img src="gambar/playdohhhhhhh.png" alt="Baby Alive">
                               </a>
                           </div>
 
                           <div class="brand-item">
-                              <a href="lego.html">
+                              <a href="lego.php">
                                 <img src="gambar/LEGO-Logo-1972-1998.png" alt="LEGO" width="200px">
                               </a>
                             </div>
                           
                             <div class="brand-item">
-                              <a href="nerf.html">
+                              <a href="nerf.php">
                                 <img src="gambar/Nerf-Logo.png" alt="NERF">
                               </a>
                             </div>
                           
                             <div class="brand-item">
-                              <a href="bebyalive.html">
+                              <a href="bebyalive.php">
                                 <img src="gambar/baby-alive-logo-467633A3DB-seeklogo.com.png" alt="Baby Alive">
                               </a>
                           </div>
@@ -195,31 +195,31 @@
               <h2 class="section-title">Shop By Category</h2>
               <div class="categories">
                 <div class="category">
-                  <a href="toys-cars.html">
+                  <a href="toys-cars.php">
                     <i data-lucide="car" class="icon"></i>
                     <p class="blue">Toys Cars</p>
                   </a>
                 </div>
                 <div class="category">
-                  <a href="figuriens.html">
+                  <a href="figuriens.php">
                     <i data-lucide="smile" class="icon"></i>
                     <p class="brown">FIGURINES</p>
                   </a>
                 </div>
                 <div class="category">
-                  <a href="puzzles.html">
+                  <a href="puzzles.php">
                     <i data-lucide="puzzle" class="icon"></i>
                     <p class="green">PUZZLES</p>
                   </a>
                 </div>
                 <div class="category">
-                  <a href="video-games.html">
+                  <a href="video-games.php">
                     <i data-lucide="gamepad" class="icon"></i>
                     <p class="purple">VIDEO GAMES</p>
                   </a>
                 </div>
                 <div class="category">
-                  <a href="dolls.html">
+                  <a href="dolls.php">
                     <i data-lucide="baby" class="icon"></i>
                     <p class="brown">DOLLS</p>
                   </a>

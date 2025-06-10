@@ -54,8 +54,7 @@
                         </div>
                       </div>
                       <div class="wishlist-footer">
-                        <a href="wishlist.html" class="btn-view-full-wishlist" onclick="window.location.href='wishlist.html'">Lihat wishlist Lengkap</a>
-                       
+                         <a href="wishlist.html" class="btn-view-full-wishlist" onclick="window.location.href='wishlist.html'">Lihat wishlist Lengkap</a>
                       </div>
                     </div>
                   </div>
@@ -95,10 +94,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="puzzles.html">Building Blocks</a>
-                        <a href="figuriens.html">Action Figures</a>
-                        <a href="playdoh.html">Toy Clay</a>
-                        <a href="dolls.html">Dolls & Accessories</a>
+                        <a href="puzzles.php">Building Blocks</a>
+                        <a href="figuriens.php">Action Figures</a>
+                        <a href="playdoh.php">Toy Clay</a>
+                        <a href="dolls.php">Dolls & Accessories</a>
                     </div>
                 </div>
 
@@ -108,7 +107,7 @@
                     </a>
                     <div class="dropdown-menu">
                         <a href="#">Console Accessories</a>
-                        <a href="game_consoles.html">Game Consoles</a>
+                        <a href="#">Game Consoles</a>
                         <a href="video-games.html">Video Game</a>
                     </div>
                 </div>
@@ -118,10 +117,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="playdoh.html">Play-Doh</a>
-                        <a href="lego.html">Lego</a>
-                        <a href="nerf.html">Nerf</a>
-                        <a href="bebyalive.html">Beby Alive</a>
+                        <a href="playdoh.php">Play-Doh</a>
+                        <a href="lego.php">Lego</a>
+                        <a href="nerf.php">Nerf</a>
+                        <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
 
@@ -130,177 +129,48 @@
         </header>
 
     <div class="gambarr">
-        <img src="c:\Users\LENOVO\Downloads\aset linasabrina\WhatsApp Image 2025-04-09 at 21.00.40_68b4aada.jpg" alt="gambar">                 
-    </div>
-
-    <div class="tulis">
-        <h1>DOLLS</h1>
+        <img src="c:\Users\LENOVO\Downloads\aset linasabrina\WhatsApp Image 2025-04-08 at 16.45.12_3fc69e25.jpg" alt="gambar">                 
     </div>
 
 
 <!-- product -->
     <section class="products-showcase">     
-        
   <div class="product-list">
-    <div class="product-card"
-     data-name="MAJORETT-T83WEMAJA"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\01-MAJORETT-T83WEMAJA-MAJ120209R000-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
+    <?php
+    include 'koneksi.php';
 
-  <img src="c:\Users\LENOVO\Downloads\01-MAJORETT-T83WEMAJA-MAJ120209R000-Multicolor.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
-  
-  <div class="info">
-    <p class="product-title">MAJORETT-T83WEMAJA</p>
-    <p class="product-price">Rp. 1.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+    // Ambil semua produk yang merk-nya 'Nerf'
+    $query = mysqli_query($koneksi, "
+      SELECT produk.*, merk.nama_merk 
+      FROM produk 
+      JOIN merk ON produk.id_merk = merk.id_merk 
+      WHERE merk.nama_merk = 'Playdoh'
+    ");
+
+    while ($produk = mysqli_fetch_assoc($query)) {
+    ?>
+      <div class="product-card"
+           data-name="<?php echo $produk['nama_produk']; ?>"
+           data-price="<?php echo $produk['harga']; ?>"
+           data-image="gambar/<?php echo $produk['nama_file']; ?>">
+
+        <button class="wishlist-btn" onclick="toggleWishlist(event)">
+          <i class="heart-icon" data-lucide="heart"></i>
+        </button>
+
+        <img src="gambar/<?php echo $produk['nama_file']; ?>" alt="<?php echo $produk['nama_produk']; ?>" width="100%">
+
+        <div class="info">
+          <p class="product-title"><?php echo $produk['nama_produk']; ?></p>
+          <p class="product-price">Rp. <?php echo number_format($produk['harga'], 0, ',', '.'); ?></p>
+          <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+        </div>
+      </div>
+    <?php
+    }
+    ?>
   </div>
-</div>
-
-
-<div class="product-card"
-     data-name="BABY-ALIVE-T84PYBYAA"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg" alt="Boneka Pinguin" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-T84PYBYAA</p>
-    <p class="product-price">Rp. 1.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    <!-- iniii -->
-
-    <div class="product-card"
-     data-name="Boneka Pinguin"
-     data-price="50000"
-     data-image="c:\Users\LENOVO\Downloads\penguin crafts.png">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="c:\Users\LENOVO\Downloads\penguin crafts.png" alt="Boneka Pinguin jfhekahfk" width="100%">
-  
-  <div class="info">
-    <p class="product-title">Boneka Pinguin</p>
-    <p class="product-price">Rp. 50.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    
-
-
-
-<div class="product-card"
-     data-name="Boneka Ayam"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg" alt="Boneka Pinguin" width="100%">
-  
-  <div class="info">
-    <p class="product-title">Boneka Ayam</p>
-    <p class="product-price">Rp. 1.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-  <div class="product-list">
-    <div class="product-card"
-     data-name="MAJORETT-T83WEMAJA"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\01-MAJORETT-T83WEMAJA-MAJ120209R000-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="c:\Users\LENOVO\Downloads\01-MAJORETT-T83WEMAJA-MAJ120209R000-Multicolor.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
-  
-  <div class="info">
-    <p class="product-title">MAJORETT-T83WEMAJA</p>
-    <p class="product-price">Rp. 1.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-
-<div class="product-card"
-     data-name="BABY-ALIVE-T84PYBYAA"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg" alt="Boneka Pinguin" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-T84PYBYAA</p>
-    <p class="product-price">Rp. 1.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    <!-- iniii -->
-
-    <div class="product-card"
-     data-name="Boneka Pinguin"
-     data-price="50000"
-     data-image="c:\Users\LENOVO\Downloads\penguin crafts.png">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="c:\Users\LENOVO\Downloads\penguin crafts.png" alt="Boneka Pinguin jfhekahfk" width="100%">
-  
-  <div class="info">
-    <p class="product-title">Boneka Pinguin</p>
-    <p class="product-price">Rp. 50.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    
-
-
-
-<div class="product-card"
-     data-name="Boneka Ayam"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg" alt="Boneka Pinguin" width="100%">
-  
-  <div class="info">
-    <p class="product-title">Boneka Ayam</p>
-    <p class="product-price">Rp. 1.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-      </section>
+</section>
 
 
       <footer class="main-footer">
@@ -652,7 +522,7 @@ alert("Ditambahkan ke keranjang!");
 }
 </script>
 
-  
-        
+          
 </body>
+
 </html>

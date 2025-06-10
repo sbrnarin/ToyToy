@@ -1,3 +1,12 @@
+<?php
+include 'koneksi.php';
+$sql = "SELECT produk.*, merk.nama_merk 
+        FROM produk 
+        JOIN merk ON produk.id_merk = merk.id_merk 
+        WHERE merk.nama_merk = 'Baby Alive'";
+
+$result = mysqli_query($koneksi, $sql);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,10 +103,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="puzzles.html">Building Blocks</a>
-                        <a href="figuriens.html">Action Figures</a>
-                        <a href="playdoh.html">Toy Clay</a>
-                        <a href="dolls.html">Dolls & Accessories</a>
+                        <a href="puzzles.php">Building Blocks</a>
+                        <a href="figuriens.php">Action Figures</a>
+                        <a href="playdoh.php">Toy Clay</a>
+                        <a href="dolls.php">Dolls & Accessories</a>
                     </div>
                 </div>
 
@@ -117,10 +126,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="playdoh.html">Play-Doh</a>
-                        <a href="lego.html">Lego</a>
-                        <a href="nerf.html">Nerf</a>
-                        <a href="bebyalive.html">Beby Alive</a>
+                        <a href="playdoh.php">Play-Doh</a>
+                        <a href="lego.php">Lego</a>
+                        <a href="nerf.php">Nerf</a>
+                        <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
 
@@ -134,178 +143,43 @@
 
 
 <!-- product -->
-    <section class="products-showcase">     
-        
+   <section class="products-showcase">     
   <div class="product-list">
-    <div class="product-card"
-     data-name="BABY-ALIVE-BYAF9856"
-     data-price="70000"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF9856-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
+    <?php
+    include 'koneksi.php';
 
-  <img src="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF9856-Multicolor.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-BYAF9856</p>
-    <p class="product-price">Rp. 70.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+    // Ambil semua produk yang merk-nya 'Nerf'
+    $query = mysqli_query($koneksi, "
+      SELECT produk.*, merk.nama_merk 
+      FROM produk 
+      JOIN merk ON produk.id_merk = merk.id_merk 
+      WHERE merk.nama_merk = 'Baby Alive'
+    ");
+
+    while ($produk = mysqli_fetch_assoc($query)) {
+    ?>
+      <div class="product-card"
+           data-name="<?php echo $produk['nama_produk']; ?>"
+           data-price="<?php echo $produk['harga']; ?>"
+           data-image="gambar/<?php echo $produk['nama_file']; ?>">
+
+        <button class="wishlist-btn" onclick="toggleWishlist(event)">
+          <i class="heart-icon" data-lucide="heart"></i>
+        </button>
+
+        <img src="gambar/<?php echo $produk['nama_file']; ?>" alt="<?php echo $produk['nama_produk']; ?>" width="100%">
+
+        <div class="info">
+          <p class="product-title"><?php echo $produk['nama_produk']; ?></p>
+          <p class="product-price">Rp. <?php echo number_format($produk['harga'], 0, ',', '.'); ?></p>
+          <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+        </div>
+      </div>
+    <?php
+    }
+    ?>
   </div>
-</div>
-
-
-
-<div class="product-card"
-     data-name="BABY-ALIVE-BYAF9119"
-     data-price="60000"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF9119-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF9119-Multicolor.jpg" alt="beby alive" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-BYAF9119</p>
-    <p class="product-price">Rp. 60.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-
-
-    <!-- iniii -->
-
-    <div class="product-card"
-     data-name="BABY-ALIVE-BYAF5649"
-     data-price="50000"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg" alt="Boneka Pinguin jfhekahfk" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-BYAF5649</p>
-    <p class="product-price">Rp. 50.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    
-
-
-
-<div class="product-card"
-     data-name="BABY-ALIVE-BYAE5841"
-     data-price="1000"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYA0-BYAE5841-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="gambar/01-BABY-ALIVE-T84PYBYA0-BYAE5841-Multicolor.jpg" alt="Boneka Pinguin" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-BYAE5841</p>
-    <p class="product-price">Rp. 1.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-
-
-
-  <div class="product-list">
-    <div class="product-card"
-     data-name="BABY-ALIVE-BYAF7536"
-     data-price="75000"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF7536-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF7536-Multicolor.jpg" alt="BABY-ALIVE-BYAF7536" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-BYAF7536</p>
-    <p class="product-price">Rp. 75.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-
-
-<div class="product-card"
-     data-name="BABY-ALIVE-BYAF9852"
-     data-price="85000"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF9852-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF9852-Multicolor.jpg" alt="Boneka Pinguin" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-BYAF9852</p>
-    <p class="product-price">Rp. 85.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
- 
-
-    <div class="product-card"
-     data-name="BABY-ALIVE-BYAF3551"
-     data-price="50000"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYA0-BYAF3551-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="gambar/01-BABY-ALIVE-T84PYBYA0-BYAF3551-Multicolor.jpg" alt="Alive" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-BYAF3551</p>
-    <p class="product-price">Rp. 50.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    
-
-
-
-<div class="product-card"
-     data-name="BABY-ALIVE-BYAF4150"
-     data-price="49500"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF9709-Multicolor.jpg==">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-luc il,ide="heart"></i>
-  </button>
-
-  <img src="gambar/01-BABY-ALIVE-T84PYBYAA-BYAF9709-Multicolor.jpg" alt="BABY-ALIVE-BYAF4150" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-BYAF4150</p>
-    <p class="product-price">Rp. 49.500</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-  </div>
-  </div>
-      </section>
+</section> 
 
 
       <footer class="main-footer">

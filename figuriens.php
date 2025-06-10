@@ -55,7 +55,6 @@
                       </div>
                       <div class="wishlist-footer">
                         <a href="wishlist.html" class="btn-view-full-wishlist" onclick="window.location.href='wishlist.html'">Lihat wishlist Lengkap</a>
-                        
                       </div>
                     </div>
                   </div>
@@ -95,10 +94,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="puzzles.html">Building Blocks</a>
-                        <a href="figuriens.html">Action Figures</a>
-                        <a href="playdoh.html">Toy Clay</a>
-                        <a href="dolls.html">Dolls & Accessories</a>
+                        <a href="puzzles.php">Building Blocks</a>
+                        <a href="figuriens.php">Action Figures</a>
+                        <a href="playdoh.php">Toy Clay</a>
+                        <a href="dolls.php">Dolls & Accessories</a>
                     </div>
                 </div>
 
@@ -108,7 +107,7 @@
                     </a>
                     <div class="dropdown-menu">
                         <a href="#">Console Accessories</a>
-                        <a href="#">Game Consoles</a>
+                        <a href="game_consoles.html">Game Consoles</a>
                         <a href="video-games.html">Video Game</a>
                     </div>
                 </div>
@@ -118,10 +117,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="playdoh.html">Play-Doh</a>
-                        <a href="lego.html">Lego</a>
-                        <a href="nerf.html">Nerf</a>
-                        <a href="bebyalive.html">Beby Alive</a>
+                        <a href="playdoh.php">Play-Doh</a>
+                        <a href="lego.php">Lego</a>
+                        <a href="nerf.php">Nerf</a>
+                        <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
 
@@ -130,7 +129,11 @@
         </header>
 
     <div class="gambarr">
-        <img src="c:\Users\LENOVO\Downloads\aset linasabrina\WhatsApp Image 2025-04-08 at 16.45.12_3fc69e25.jpg" alt="gambar">                 
+        <img src="c:\Users\LENOVO\Downloads\aset linasabrina\WhatsApp Image 2025-04-09 at 20.59.31_a84f0288.jpg" alt="gambar">                 
+    </div>
+
+    <div class="tulis">
+        <h1>FIGURINES</h1>
     </div>
 
 
@@ -139,57 +142,60 @@
         
   <div class="product-list">
     <div class="product-card"
-     data-name="MAJORETT-T83WEMAJA"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\01-MAJORETT-T83WEMAJA-MAJ120209R000-Multicolor.jpg">
+     data-name="BABY-ALIVE-BYAF9856"
+     data-price="70000"
+     data-image="c:\Users\LENOVO\Downloads\WhatsApp Image 2025-05-10 at 21.34.55_c3b9b96c.jpg">
   
   <button class="wishlist-btn" onclick="toggleWishlist(event)">
     <i class="heart-icon" data-lucide="heart"></i>
   </button>
 
-  <img src="c:\Users\LENOVO\Downloads\01-MAJORETT-T83WEMAJA-MAJ120209R000-Multicolor.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
+  <img src="c:\Users\LENOVO\Downloads\WhatsApp Image 2025-05-10 at 21.34.55_c3b9b96c.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
   
   <div class="info">
-    <p class="product-title">MAJORETT-T83WEMAJA</p>
-    <p class="product-price">Rp. 1.000</p>
+    <p class="product-title">BABY-ALIVE-BYAF9856</p>
+    <p class="product-price">Rp. 70.000</p>
     <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
   </div>
 </div>
 
 
+
 <div class="product-card"
-     data-name="BABY-ALIVE-T84PYBYAA"
-     data-price="1000"
+     data-name="BABY-ALIVE-BYAF9119"
+     data-price="60000"
+     data-image="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF9119-Multicolor.jpg">
+  
+  <button class="wishlist-btn" onclick="toggleWishlist(event)">
+    <i class="heart-icon" data-lucide="heart"></i>
+  </button>
+
+  <img src="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF9119-Multicolor.jpg" alt="beby alive" width="100%">
+  
+  <div class="info">
+    <p class="product-title">BABY-ALIVE-BYAF9119</p>
+    <p class="product-price">Rp. 60.000</p>
+    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+  </div>
+</div>
+
+
+
+    <!-- iniii -->
+
+    <div class="product-card"
+     data-name="BABY-ALIVE-BYAF5649"
+     data-price="50000"
      data-image="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg">
   
   <button class="wishlist-btn" onclick="toggleWishlist(event)">
     <i class="heart-icon" data-lucide="heart"></i>
   </button>
 
-  <img src="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg" alt="Boneka Pinguin" width="100%">
+  <img src="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg" alt="Boneka Pinguin jfhekahfk" width="100%">
   
   <div class="info">
-    <p class="product-title">BABY-ALIVE-T84PYBYAA</p>
-    <p class="product-price">Rp. 1.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    <!-- iniii -->
-
-    <div class="product-card"
-     data-name="Boneka Pinguin"
-     data-price="50000"
-     data-image="c:\Users\LENOVO\Downloads\penguin crafts.png">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
-
-  <img src="c:\Users\LENOVO\Downloads\penguin crafts.png" alt="Boneka Pinguin jfhekahfk" width="100%">
-  
-  <div class="info">
-    <p class="product-title">Boneka Pinguin</p>
+    <p class="product-title">BABY-ALIVE-BYAF5649</p>
     <p class="product-price">Rp. 50.000</p>
     <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
   </div>
@@ -200,76 +206,80 @@
 
 
 <div class="product-card"
-     data-name="Boneka Ayam"
+     data-name="BABY-ALIVE-BYAE5841"
      data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg">
+     data-image="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYA0-BYAE5841-Multicolor.jpg">
   
   <button class="wishlist-btn" onclick="toggleWishlist(event)">
     <i class="heart-icon" data-lucide="heart"></i>
   </button>
 
-  <img src="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg" alt="Boneka Pinguin" width="100%">
+  <img src="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYA0-BYAE5841-Multicolor.jpg" alt="Boneka Pinguin" width="100%">
   
   <div class="info">
-    <p class="product-title">Boneka Ayam</p>
+    <p class="product-title">BABY-ALIVE-BYAE5841</p>
     <p class="product-price">Rp. 1.000</p>
     <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
   </div>
 </div>
+
+
+
 
   <div class="product-list">
     <div class="product-card"
-     data-name="MAJORETT-T83WEMAJA"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\01-MAJORETT-T83WEMAJA-MAJ120209R000-Multicolor.jpg">
+     data-name="BABY-ALIVE-BYAF7536"
+     data-price="75000"
+     data-image="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg">
   
   <button class="wishlist-btn" onclick="toggleWishlist(event)">
     <i class="heart-icon" data-lucide="heart"></i>
   </button>
 
-  <img src="c:\Users\LENOVO\Downloads\01-MAJORETT-T83WEMAJA-MAJ120209R000-Multicolor.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
+  <img src="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg" alt="BABY-ALIVE-BYAF7536" width="100%">
   
   <div class="info">
-    <p class="product-title">MAJORETT-T83WEMAJA</p>
-    <p class="product-price">Rp. 1.000</p>
+    <p class="product-title">BABY-ALIVE-BYAF7536</p>
+    <p class="product-price">Rp. 75.000</p>
     <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
   </div>
 </div>
+
 
 
 <div class="product-card"
-     data-name="BABY-ALIVE-T84PYBYAA"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg">
+     data-name="BABY-ALIVE-BYAF9852"
+     data-price="85000"
+     data-image="c:\Users\LENOVO\Downloads\c6320257-9dcd-4c00-b438-51129cf18884.jpeg">
   
   <button class="wishlist-btn" onclick="toggleWishlist(event)">
     <i class="heart-icon" data-lucide="heart"></i>
   </button>
 
-  <img src="c:\Users\LENOVO\Downloads\01-BABY-ALIVE-T84PYBYAA-BYAF5649-Multicolor.jpg" alt="Boneka Pinguin" width="100%">
+  <img src="c:\Users\LENOVO\Downloads\c6320257-9dcd-4c00-b438-51129cf18884.jpeg" width="100%">
   
   <div class="info">
-    <p class="product-title">BABY-ALIVE-T84PYBYAA</p>
-    <p class="product-price">Rp. 1.000</p>
+    <p class="product-title">BABY-ALIVE-BYAF9852</p>
+    <p class="product-price">Rp. 85.000</p>
     <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
   </div>
 </div>
 
-    <!-- iniii -->
+ 
 
     <div class="product-card"
-     data-name="Boneka Pinguin"
+     data-name="HERMIONE GRANGER"
      data-price="50000"
-     data-image="c:\Users\LENOVO\Downloads\penguin crafts.png">
+     data-image="c:\Users\LENOVO\Downloads\HERMIONE GRANGER.jpeg">
   
   <button class="wishlist-btn" onclick="toggleWishlist(event)">
     <i class="heart-icon" data-lucide="heart"></i>
   </button>
 
-  <img src="c:\Users\LENOVO\Downloads\penguin crafts.png" alt="Boneka Pinguin jfhekahfk" width="100%">
+  <img src="c:\Users\LENOVO\Downloads\HERMIONE GRANGER.jpeg" alt="Alive" width="100%">
   
   <div class="info">
-    <p class="product-title">Boneka Pinguin</p>
+    <p class="product-title">HERMIONE GRANGER</p>
     <p class="product-price">Rp. 50.000</p>
     <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
   </div>
@@ -280,22 +290,23 @@
 
 
 <div class="product-card"
-     data-name="Boneka Ayam"
-     data-price="1000"
-     data-image="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg">
+     data-name="BABY-ALIVE-BYAF4150"
+     data-price="49500"
+     data-image="c:\Users\LENOVO\Downloads\9e854ccd-4b51-4e61-ae06-5fd3407cbf99.jpeg">
   
   <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
+    <i class="heart-icon" data-luc il,ide="heart"></i>
   </button>
 
-  <img src="c:\Users\LENOVO\Downloads\3a33fb90-1f3a-42c4-84e6-8e3bca9fb074.jpeg" alt="Boneka Pinguin" width="100%">
+  <img src="c:\Users\LENOVO\Downloads\9e854ccd-4b51-4e61-ae06-5fd3407cbf99.jpeg" alt="BABY-ALIVE-BYAF4150" width="100%">
   
   <div class="info">
-    <p class="product-title">Boneka Ayam</p>
-    <p class="product-price">Rp. 1.000</p>
+    <p class="product-title">BABY-ALIVE-BYAF4150</p>
+    <p class="product-price">Rp. 49.500</p>
     <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
   </div>
-</div>
+  </div>
+  </div>
       </section>
 
 

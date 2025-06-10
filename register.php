@@ -4,30 +4,52 @@ include 'koneksi.php';
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST["username"];
-    $password = $_POST["password"];
-    $nama_pembeli = $_POST["name"];
-    $email = $_POST["email"];
-    $alamat = $_POST["alamat"];
-    $no_telp = $_POST["phone"];
-    $kota = $_POST["kota"];
+    $username     = $_POST["username"];
+    $password     = $_POST["password"];
+    $nama         = $_POST["nama"];
+    $email        = $_POST["email"];
+    $alamat       = $_POST["alamat"];
+    $no_telp      = $_POST["no_telp"];
+    $kota         = $_POST["kota"];
 
-    $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+    // Cek apakah username sudah digunakan
+    $cek_username = $koneksi->prepare("SELECT id_akun FROM akun WHERE username = ?");
+    $cek_username->bind_param("s", $username);
+    $cek_username->execute();
+    $cek_username->store_result();
 
-    $sql = "INSERT INTO pembeli (username, password, nama_pembeli, email, alamat, no_telp, kota) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $koneksi->prepare($sql);
-    $stmt->bind_param("sssssis", $username, $password_hashed, $nama_pembeli, $email, $alamat, $no_telp, $kota);
-
-    if ($stmt->execute()) {
-        header("Location: login.php");
-        exit;
+    if ($cek_username->num_rows > 0) {
+        $error_message = "Username sudah digunakan. Silakan pilih username lain.";
     } else {
-        $error_message = "Terjadi kesalahan saat registrasi.";
+        // Hash password
+        $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insert ke tabel akun
+        $akun_sql = "INSERT INTO akun (username, password, role) VALUES (?, ?, 'user')";
+        $stmt_akun = $koneksi->prepare($akun_sql);
+        $stmt_akun->bind_param("ss", $username, $password_hashed);
+
+        if ($stmt_akun->execute()) {
+            $id_akun = $koneksi->insert_id;
+
+            // Insert ke tabel pembeli
+            $pembeli_sql = "INSERT INTO pembeli (id_akun, nama_pembeli, email, alamat, no_telp, kota) 
+                            VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt_pembeli = $koneksi->prepare($pembeli_sql);
+            $stmt_pembeli->bind_param"("isssss", '$id_akun', '$nama', '$email', '$alamat', '$no_telp', '$kota')";
+
+            if ($stmt_pembeli->execute()) {
+                header("Location: login.php");
+                exit;
+            } else {
+                $error_message = "Gagal menyimpan data pembeli: " . $stmt_pembeli->error;
+            }
+        } else {
+            $error_message = "Gagal membuat akun: " . $stmt_akun->error;
+        }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -35,9 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Daftar Akun</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        body {
-            background-color: #f8fafc;
-        }
+        body { background-color: #f8fafc; }
         .form-container {
             max-width: 400px;
             margin: 40px auto;
@@ -65,37 +85,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2 class="text-center">Daftar Akun</h2>
 
     <?php if (!empty($error_message)): ?>
-        <div class="alert alert-danger"><?= $error_message ?></div>
+        <div class="alert alert-danger"><?= htmlspecialchars($error_message) ?></div>
     <?php endif; ?>
 
     <form method="POST" action="">
         <div class="mb-3">
             <label>Username</label>
-            <input type="text" name="username" class="form-control" placeholder="Masukkan Username" required>
+            <input type="text" name="username" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Password</label>
-            <input type="password" name="password" class="form-control" placeholder="Masukkan Password" required>
+            <input type="password" name="password" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Nama</label>
-            <input type="text" name="name" class="form-control" placeholder="Masukkan Nama Lengkap" required>
+            <input type="text" name="nama" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Email</label>
-            <input type="email" name="email" class="form-control" placeholder="Masukkan Email" required>
+            <input type="email" name="email" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Nomor Telepon</label>
-            <input type="number" name="phone" class="form-control" placeholder="Masukkan Nomor Telepon" required>
+            <input type="text" name="no_telp" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Alamat</label>
-            <input type="text" name="alamat" class="form-control" placeholder="Masukkan Alamat Lengkap" required>
+            <input type="text" name="alamat" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Kota</label>
-            <input type="text" name="kota" class="form-control" placeholder="Masukkan Kota" required>
+            <input type="text" name="kota" class="form-control" required>
         </div>
         <button type="submit" class="btn btn-dark w-100">Daftar</button>
     </form>

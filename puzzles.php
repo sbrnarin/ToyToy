@@ -95,10 +95,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="puzzles.html">Building Blocks</a>
-                        <a href="figuriens.html">Action Figures</a>
-                        <a href="playdoh.html">Toy Clay</a>
-                        <a href="dolls.html">Dolls & Accessories</a>
+                        <a href="puzzles.php">Building Blocks</a>
+                        <a href="figuriens.php">Action Figures</a>
+                        <a href="playdoh.php">Toy Clay</a>
+                        <a href="dolls.php">Dolls & Accessories</a>
                     </div>
                 </div>
 
@@ -118,10 +118,10 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="playdoh.html">Play-Doh</a>
-                        <a href="lego.html">Lego</a>
-                        <a href="nerf.html">Nerf</a>
-                        <a href="bebyalive.html">Beby Alive</a>
+                        <a href="playdoh.php">Play-Doh</a>
+                        <a href="lego.php">Lego</a>
+                        <a href="nerf.php">Nerf</a>
+                        <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
 
