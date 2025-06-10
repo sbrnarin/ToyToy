@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $pembeli_sql = "INSERT INTO pembeli (id_akun, nama_pembeli, email, alamat, no_telp, kota) 
                             VALUES (?, ?, ?, ?, ?, ?)";
             $stmt_pembeli = $koneksi->prepare($pembeli_sql);
-            $stmt_pembeli->bind_param"("isssss", '$id_akun', '$nama', '$email', '$alamat', '$no_telp', '$kota')";
+            $stmt_pembeli->bind_param("isssss", $id_akun, $nama, $email, $alamat, $no_telp, $kota);
 
             if ($stmt_pembeli->execute()) {
                 header("Location: login.php");

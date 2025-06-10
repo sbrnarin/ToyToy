@@ -34,13 +34,13 @@ $id_pembeli = $pembeli['id_pembeli'];
 
 // Ambil data pesanan
 $stmt = $conn->prepare("
-    SELECT p.id_pesanan, p.tanggal_transaksi, p.status, p.total_harga, p.metode_pembayaran,
+    SELECT p.id_pesanan, p.tanggal_pesan, p.status_pengiriman, p.total_harga, p.metode_pembayaran,
            pr.nama_produk, pr.harga, dp.jumlah
     FROM pesanan p
     JOIN detail_pesanan dp ON p.id_pesanan = dp.id_pesanan
     JOIN produk pr ON dp.id_produk = pr.id_produk
     WHERE p.id_pembeli = ?
-    ORDER BY p.tanggal_transaksi DESC
+    ORDER BY p.tanggal_pesan DESC
 ");
 $stmt->bind_param("i", $id_pembeli);
 $stmt->execute();

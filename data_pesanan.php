@@ -77,10 +77,10 @@ $query = mysqli_query($koneksi, $sql);
                             <option value="Dikirim" <?= $pesanan['status_pengiriman'] == 'Dikirim' ? 'selected' : '' ?>>Dikirim</option>
                             <option value="Selesai" <?= $pesanan['status_pengiriman'] == 'Selesai' ? 'selected' : '' ?>>Selesai</option>
                         </select>
-                        <button type="submit">Ubah</button>
+                    <button type="submit">Ubah</button>
                     </form>
                 </td>
-                <td><?= $pesanan['bukti_transfer'] ? "<a href='uploads/{$pesanan['bukti_transfer']}' target='_blank'>Lihat</a>" : '-' ?></td>
+                <td><?= $pesanan['bukti_pembayaran'] ? "<a href='uploads/{$pesanan['bukti_pembayaran']}' target='_blank'>Lihat</a>" : '-' ?></td>
                 <td><?= $pesanan['status_pembayaran'] ?></td>
                 <td><?= $pesanan['metode_pembayaran'] ?></td>
                 <td class="aksi-btn">
