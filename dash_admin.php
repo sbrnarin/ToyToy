@@ -116,6 +116,40 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
     .completed { border-left: 6px solid #4CAF50; }
     .canceled { border-left: 6px solid #F44336; }
     .total { border-left: 6px solid #2196F3; }
+
+
+            h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #002B5B;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        select, button {
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+        }
+        .aksi-btn {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
   </style>
 </head>
 <body>
@@ -151,5 +185,72 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
       </div>
     </div>
   </div>
+
+   <form action="ubah_status.php" method="POST">
+                        <input type="hidden" name="id_pesanan" value="12345">
+                        <select name="status_pengiriman">
+                            <option value="belum diproses">Belum diproses</option>
+                            <option value="dikemas">Dikemas</option>
+                            <option value="dikirim">Dikirim</option>
+                            <option value="selesai">Selesai</option>
+                        </select>
+                        <button type="submit">Ubah</button>
+                    </form>
+                </td>
+                <td class="aksi-btn">
+                  <h2>Data Pesanan</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>ID Pesanan</th>
+                                <th>Tanggal</th>
+                                <th>Nama Pemesan</th>
+                                <th>Produk</th>
+                                <th>Jumlah</th>
+                                <th>Total Harga</th>
+                                <th>Status Pembayaran</th>
+                                <th>Status Pengiriman</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Contoh data dummy -->
+                            <tr>
+                                <td>1</td>
+                                <td>ORD12345</td>
+                                <td>2025-06-08</td>
+                                <td>Lina</td>
+                                <td>Boneka, Puzzle</td>
+                                <td>2</td>
+                                <td>Rp150.000</td>
+                                <td>Sudah</td>
+                                <td>
+                                    <form action="ubah_status.php" method="POST">
+                                        <input type="hidden" name="id_pesanan" value="12345">
+                                        <select name="status_pengiriman">
+                                            <option value="belum diproses">Belum diproses</option>
+                                            <option value="dikemas">Dikemas</option>
+                                            <option value="dikirim">Dikirim</option>
+                                            <option value="selesai">Selesai</option>
+                                        </select>
+                                        <button type="submit">Ubah</button>
+                                    </form>
+                                </td>
+                                <td class="aksi-btn">
+                                    <form action="detail_pesanan.php" method="GET" style="display:inline;">
+                                        <input type="hidden" name="id_pesanan" value="12345">
+                                        <button>Lihat</button>
+                                    </form>
+                                    <form action="hapus_pesanan.php" method="POST" style="display:inline;">
+                                        <input type="hidden" name="id_pesanan" value="12345">
+                                        <button onclick="return confirm('Yakin mau hapus?')">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
 </body>
 </html>

@@ -1,35 +1,36 @@
 <?php
-// koneksi
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "sabrinalina";
 
-$conn = new mysqli($host, $user, $pass, $dbname);
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
+$koneksi = new mysqli("localhost", "root", "", "sabrinalina");
+
+// Cek koneksi
+if ($koneksi->connect_error) {
+    die("Koneksi gagal: " . $koneksi->connect_error);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama = trim($_POST['nama'] ?? '');
-    $alamat = trim($_POST['alamat'] ?? '');
-    $kota = trim($_POST['kota'] ?? '');
-    $provinsi = trim($_POST['provinsi'] ?? '');
-    $no_telp = trim($_POST['nohp'] ?? '');
+    // Validasi dan sanitasi input
+    $nama = trim($conn->real_escape_string($_POST['nama'] ?? ''));
+    $alamat = trim($conn->real_escape_string($_POST['alamat'] ?? ''));
+    $kota = trim($conn->real_escape_string($_POST['kota'] ?? ''));
+    $provinsi = trim($conn->real_escape_string($_POST['provinsi'] ?? ''));
+    $no_telp = trim($conn->real_escape_string($_POST['nohp'] ?? ''));
     $produkJson = $_POST['produk'] ?? '[]';
     $total = isset($_POST['total']) ? (int)$_POST['total'] : 0;
-    $metode_pembayaran = trim($_POST['payment_method'] ?? 'tunai'); // sesuai form
+    $metode_pembayaran = trim($conn->real_escape_string($_POST['payment_method'] ?? 'tunai'));
+    $ongkir = isset($_POST['ongkir']) ? (int)$_POST['ongkir'] : 0;
+    $metode_pengiriman = trim($conn->real_escape_string($_POST['metode_pengiriman'] ?? ''));
     $tanggal_transaksi = date('Y-m-d');
+    $waktu_expired = date('Y-m-d H:i:s', strtotime('+1 hour')); // Batas waktu pembayaran 1 jam
 
     $produkList = json_decode($produkJson, true);
     if (!is_array($produkList) || empty($produkList)) {
-        die("Data produk tidak valid.");
+        die(json_encode(['error' => 'Data produk tidak valid.']));
     }
 
     $conn->begin_transaction();
 
     try {
-        // cek pembeli berdasarkan no_telp
+        // Cek atau tambahkan pembeli
         $stmt = $conn->prepare("SELECT id_pembeli FROM pembeli WHERE no_telp = ?");
         $stmt->bind_param("s", $no_telp);
         $stmt->execute();
@@ -39,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_result($id_pembeli);
             $stmt->fetch();
         } else {
-            // insert pembeli baru
             $stmtInsert = $conn->prepare("INSERT INTO pembeli (nama_pembeli, alamat, kota, provinsi, no_telp) VALUES (?, ?, ?, ?, ?)");
             $stmtInsert->bind_param("sssss", $nama, $alamat, $kota, $provinsi, $no_telp);
             $stmtInsert->execute();
@@ -48,27 +48,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmt->close();
 
+        // Insert pesanan
         $status = "tertunda";
         $status_pembayaran = "belum bayar";
-
-        // insert pesanan
-        $stmtPesanan = $conn->prepare("INSERT INTO pesanan (id_pembeli, tanggal_transaksi, status, total_harga, status_pembayaran, metode_pembayaran) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmtPesanan->bind_param("ississ", $id_pembeli, $tanggal_transaksi, $status, $total, $status_pembayaran, $metode_pembayaran);
+        
+        $stmtPesanan = $conn->prepare("INSERT INTO pesanan (
+            id_pembeli, tanggal_transaksi, status, total_harga, 
+            status_pembayaran, metode_pembayaran, ongkir, 
+            metode_pengiriman, waktu_expired
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        
+        $stmtPesanan->bind_param(
+            "issississ", 
+            $id_pembeli, $tanggal_transaksi, $status, $total,
+            $status_pembayaran, $metode_pembayaran, $ongkir,
+            $metode_pengiriman, $waktu_expired
+        );
+        
         $stmtPesanan->execute();
         $id_pesanan = $stmtPesanan->insert_id;
         $stmtPesanan->close();
 
-        // insert detail pesanan
+        // Insert detail pesanan
         $stmtDetail = $conn->prepare("INSERT INTO detail_pesanan (id_pesanan, id_produk, jumlah, harga_saat_beli) VALUES (?, ?, ?, ?)");
 
         foreach ($produkList as $item) {
             $id_produk = (int)($item['id_produk'] ?? 0);
-            $jumlah = (int)($item['quantity'] ?? 1);  // kamu bisa sesuaikan key, misal 'quantity' sesuai form JSON produk
-            $harga = (int)($item['price'] ?? 0);      // sesuaikan dengan key harga
+            $jumlah = (int)($item['quantity'] ?? 1);
+            $harga = (float)($item['price'] ?? 0);
 
             if ($id_produk <= 0) continue;
 
-            // cek produk ada tidak
+            // Validasi produk
             $cekProduk = $conn->prepare("SELECT id_produk FROM produk WHERE id_produk = ?");
             $cekProduk->bind_param("i", $id_produk);
             $cekProduk->execute();
@@ -79,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $cekProduk->close();
 
-            $stmtDetail->bind_param("iiii", $id_pesanan, $id_produk, $jumlah, $harga);
+            $stmtDetail->bind_param("iiid", $id_pesanan, $id_produk, $jumlah, $harga);
             $stmtDetail->execute();
         }
 
@@ -96,4 +107,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(405);
     echo "Metode tidak diperbolehkan";
 }
-?>
+?>    

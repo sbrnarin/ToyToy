@@ -92,7 +92,7 @@ function formatRupiah($angka) {
             transition: background 0.3s;
         }
         .btn-submit:hover {
-            background:rgb(45, 79, 112);
+            background: #14378a;
         }
     </style>
 </head>

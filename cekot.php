@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout Toytoy</title>
   <style>
-    /* CSS sesuai sebelumnya (rapi & lengkap) */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -155,7 +154,6 @@
 <div class="checkout-container">
   <h2>Informasi Pengiriman</h2>
 
-  <!-- Ganti action ke proses_cekot.php -->
   <form id="checkout-form" method="POST" action="proses_cekot.php" onsubmit="return validateForm()">
     <div class="form-group">
       <label for="nama">Nama Lengkap</label>
@@ -194,7 +192,6 @@
 
     <div class="shipping-method" id="shipping-method-container">
       <h3>Metode Pengiriman</h3>
-      <!-- Radio buttons akan muncul di sini -->
     </div>
 
     <div class="summary">
@@ -205,7 +202,7 @@
       <p><strong>Total: <span id="total-display">Rp 0</span></strong></p>
     </div>
 
-    <!-- Input hidden untuk kirim data ke proses -->
+    <!-- Hidden inputs -->
     <input type="hidden" id="produkData" name="produk" />
     <input type="hidden" id="total" name="total" />
     <input type="hidden" id="shippingMethod" name="shippingMethod" />
@@ -218,21 +215,21 @@
 <script>
   const javaProvinces = ["DKI Jakarta", "Jawa Barat", "Jawa Tengah", "DI Yogyakarta", "Jawa Timur", "Banten"];
 
-  function isJavaProvince(province) {
-    return javaProvinces.includes(province);
+  function isJavaProvince(prov) {
+    return javaProvinces.includes(prov);
   }
 
   function updateShippingOptions() {
-    const province = document.getElementById("provinsi").value;
+    const prov = document.getElementById("provinsi").value;
     const container = document.getElementById("shipping-method-container");
 
-    if (!province) {
+    if (!prov) {
       container.innerHTML = '<p>Harap pilih provinsi terlebih dahulu</p>';
       updateTotal();
       return;
     }
 
-    if (isJavaProvince(province)) {
+    if (isJavaProvince(prov)) {
       container.innerHTML = `
         <h3>Metode Pengiriman</h3>
         <label><input type="radio" name="shipping" value="0" data-name="JNE Regular" checked> JNE Regular (Gratis Ongkir)</label>
@@ -247,10 +244,7 @@
     }
 
     const radios = document.querySelectorAll('input[name="shipping"]');
-    radios.forEach(radio => {
-      radio.addEventListener('change', updateTotal);
-    });
-
+    radios.forEach(r => r.addEventListener('change', updateTotal));
     updateTotal();
   }
 
@@ -259,15 +253,17 @@
   }
 
   function getCheckoutItems() {
-    let items = localStorage.getItem('checkoutItems');
-    if (!items) {
-      items = JSON.stringify([
-        {id:"001", name:"Mainan Mobil", price:120000, quantity:1, image:"assets/images/mobil.jpg"},
-        {id:"002", name:"Mainan Robot", price:90000, quantity:2, image:"assets/images/robot.jpg"}
-      ]);
-      localStorage.setItem('checkoutItems', items);
-    }
-    return JSON.parse(items);
+    const items = localStorage.getItem('checkoutItems');
+    return items ? JSON.parse(items) : [];
+  }
+
+  function getFormattedItems() {
+    const rawItems = getCheckoutItems();
+    return rawItems.map(item => ({
+      id_produk: item.id,
+      price: item.price,
+      quantity: item.quantity
+    }));
   }
 
   function displayCheckoutItems() {
@@ -306,22 +302,16 @@
   }
 
   function updateTotal() {
-    const subtotalElem = document.getElementById('subtotal');
-    const shippingElem = document.getElementById('shipping');
-    const totalElem = document.getElementById('total-display');
-
     const subtotal = calculateSubtotal();
-
     const shippingRadio = document.querySelector('input[name="shipping"]:checked');
     const shippingCost = shippingRadio ? parseInt(shippingRadio.value) : 0;
     const shippingName = shippingRadio ? shippingRadio.getAttribute('data-name') : 'FREE';
 
-    subtotalElem.textContent = formatRupiah(subtotal);
-    shippingElem.textContent = shippingCost === 0 ? 'FREE' : formatRupiah(shippingCost);
-    totalElem.textContent = formatRupiah(subtotal + shippingCost);
+    document.getElementById('subtotal').textContent = formatRupiah(subtotal);
+    document.getElementById('shipping').textContent = shippingCost === 0 ? 'FREE' : formatRupiah(shippingCost);
+    document.getElementById('total-display').textContent = formatRupiah(subtotal + shippingCost);
 
-    // Update hidden input supaya dikirim ke server
-    document.getElementById('produkData').value = JSON.stringify(getCheckoutItems());
+    document.getElementById('produkData').value = JSON.stringify(getFormattedItems());
     document.getElementById('total').value = subtotal + shippingCost;
     document.getElementById('shippingMethod').value = shippingName;
     document.getElementById('shippingCost').value = shippingCost;
@@ -335,13 +325,11 @@
     }
 
     const phone = form.nohp.value.trim();
-    const phoneRegex = /^[0-9]{8,15}$/;
-    if (!phoneRegex.test(phone)) {
+    if (!/^[0-9]{8,15}$/.test(phone)) {
       alert('Nomor handphone harus berupa angka dan 8-15 digit');
       return false;
     }
 
-    // Pastikan ada produk di keranjang
     const items = getCheckoutItems();
     if (items.length === 0) {
       alert('Keranjang kosong!');
@@ -351,7 +339,6 @@
     return true;
   }
 
-  // Init page
   window.onload = () => {
     displayCheckoutItems();
     updateShippingOptions();

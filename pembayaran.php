@@ -2,13 +2,19 @@
 $conn = new mysqli("localhost", "root", "", "sabrinalina");
 if ($conn->connect_error) die("Koneksi gagal: " . $conn->connect_error);
 
-$pesanan_id = $_GET['pesanan_id'] ?? 0;
-$pesanan_id = (int)$pesanan_id;
+$pesanan_id = isset($_GET['pesanan_id']) ? (int)$_GET['pesanan_id'] : 0;
+if ($pesanan_id <= 0) {
+    header("Location: pesanan.php");
+    exit();
+}
 
+// Ambil data pesanan
 $stmt = $conn->prepare("
-    SELECT p.id_pesanan, p.total_harga, p.status_pembayaran, p.metode_pembayaran, p.ongkir, p.metode_pengiriman, p.kode_pembayaran,
+    SELECT p.id_pesanan, p.total_harga, p.status_pembayaran, 
+           p.metode_pembayaran, p.tanggal_transaksi, p.ongkir, 
+           p.metode_pengiriman, p.kode_pembayaran,
            pb.nama_pembeli, pb.alamat, pb.kota, pb.provinsi, pb.no_telp 
-    FROM pesanan p 
+    FROM pesanan p
     JOIN pembeli pb ON p.id_pembeli = pb.id_pembeli 
     WHERE p.id_pesanan = ?
 ");
@@ -18,12 +24,17 @@ $result = $stmt->get_result();
 $dataPesanan = $result->fetch_assoc();
 
 if (!$dataPesanan) {
-    die("Pesanan tidak ditemukan.");
+    header("Location: pesanan.php");
+    exit();
 }
 
+// Hitung waktu expired (hingga jam 23:59:59 di hari transaksi)
+$waktu_expired = date('Y-m-d H:i:s', strtotime($dataPesanan['tanggal_transaksi'] . ' 23:59:59'));
+
+// Ambil item produk dalam pesanan
 $stmt2 = $conn->prepare("
-    SELECT dp.nama_produk AS name, dp.harga_saat_beli AS price, dp.jumlah AS quantity 
-    FROM detail_pesanan dp 
+    SELECT dp.nama_produk, dp.harga_saat_beli, dp.jumlah 
+    FROM detail_pesanan dp
     WHERE dp.id_pesanan = ?
 ");
 $stmt2->bind_param("i", $pesanan_id);
@@ -37,288 +48,452 @@ while ($row = $result2->fetch_assoc()) {
 function formatRupiah($angka) {
     return "Rp " . number_format($angka, 0, ',', '.');
 }
+
+// Hitung waktu tersisa untuk pembayaran
+$waktu_sekarang = new DateTime();
+$waktu_expired_obj = new DateTime($waktu_expired);
+$interval = $waktu_sekarang->diff($waktu_expired_obj);
+$jam_tersisa = $interval->h;
+$menit_tersisa = $interval->i;
+$detik_tersisa = $interval->s;
+$total_detik_tersisa = ($jam_tersisa * 3600) + ($menit_tersisa * 60) + $detik_tersisa;
+
+// Generate kode pembayaran
+$kode_gopay = "GOPAY-" . date('Ymd') . "-" . strtoupper(substr(md5('gopay' . $pesanan_id), 0, 6));
+$kode_dana = "DANA-" . date('Ymd') . "-" . strtoupper(substr(md5('dana' . $pesanan_id), 0, 6));
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pembayaran Pesanan #<?= htmlspecialchars($pesanan_id) ?></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran - Sabrina Lina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #f7f7f7; 
-            color: #333; 
-            margin: 0; 
-            padding: 20px; 
+        :root {
+            --primary: #0a1c4c;
+            --primary-light: #14378a;
+            --secondary: #f8f9fa;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --dark: #2c3e50;
+            --light: #ffffff;
+            --gray: #6c757d;
+            --border: #e0e0e0;
         }
-        .payment-container { 
-            max-width: 700px; 
-            margin: auto; 
-            background: #fff; 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h2 { 
-            color: #2c3e50; 
-            margin-top: 0; 
-            border-bottom: 2px solid #eee; 
-            padding-bottom: 10px; 
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
         }
-        h3 { 
-            color: #2c3e50; 
-            margin-top: 25px; 
-            font-size: 1.2em; 
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 15px;
         }
-        .customer-info, .payment-instruction { 
-            background: #f8f9fa; 
-            padding: 20px; 
-            border-radius: 8px; 
-            margin-bottom: 25px; 
-            border-left: 4px solid #3498db; 
+        
+        .payment-card {
+            background: var(--light);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
         }
-        .customer-info p { 
-            margin: 8px 0; 
-            line-height: 1.5; 
+        
+        .payment-header {
+            background: var(--primary);
+            color: var(--light);
+            padding: 20px;
+            text-align: center;
         }
-        .summary-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-bottom: 25px; 
+        
+        .payment-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
         }
-        .summary-table th { 
-            background: #2c3e50; 
-            color: white; 
-            padding: 12px 15px; 
-            text-align: left; 
+        
+        .payment-body {
+            padding: 25px;
         }
-        .summary-table td { 
-            padding: 12px 15px; 
-            border-bottom: 1px solid #eee; 
+        
+        .section {
+            margin-bottom: 25px;
         }
-        .summary-table tfoot td { 
-            font-weight: bold; 
-            color: #2c3e50; 
-            font-size: 1.1em; 
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
         }
-        .payment-method { 
-            margin-bottom: 25px; 
+        
+        .customer-info {
+            background: var(--secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
         }
-        .payment-options { 
-            display: flex; 
-            gap: 10px; 
-            flex-wrap: wrap; 
+        
+        .info-item {
+            margin-bottom: 8px;
         }
-        .payment-option { 
-            flex: 1; 
-            min-width: 120px; 
-            padding: 15px; 
-            border: 2px solid #eee; 
-            border-radius: 8px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: all 0.3s; 
+        
+        .info-item strong {
+            font-weight: 500;
         }
-        .payment-option.selected { 
-            border-color: #27ae60; 
-            background: #e8f5e9; 
+        
+        .order-summary {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .payment-option img { 
-            width: 60px; 
-            height: 30px; 
-            object-fit: contain; 
-            margin-bottom: 10px; 
+        
+        .order-summary th, 
+        .order-summary td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
         }
-        .payment-option input { 
-            display: none; 
+        
+        .order-summary th {
+            background: var(--secondary);
+            font-weight: 500;
         }
-        .payment-code { 
-            font-size: 18px; 
-            font-weight: bold; 
-            background: #fff; 
-            padding: 10px; 
-            border: 1px dashed #ccc; 
-            border-radius: 5px; 
-            text-align: center; 
-            margin: 10px 0; 
-            user-select: all; 
+        
+        .order-summary tbody tr:last-child td {
+            border-bottom: none;
         }
-        .btn-confirm { 
-            width: 100%; 
-            padding: 14px; 
-            background: #27ae60; 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            font-size: 16px; 
-            cursor: pointer; 
-            transition: background 0.3s; 
+        
+        .text-right {
+            text-align: right;
         }
-        .btn-confirm:hover { 
-            background: #2ecc71; 
+        
+        .order-total {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary);
         }
-        .timer { 
-            text-align: center; 
-            font-size: 18px; 
-            color: #e74c3c; 
-            margin-top: 10px; 
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
-        .payment-instruction { 
-            display: none; 
+        
+        .payment-method {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
         }
-        .payment-instruction.active { 
-            display: block; 
+        
+        .payment-method:hover {
+            border-color: var(--primary-light);
+        }
+        
+        .payment-method.selected {
+            border-color: var(--primary);
+            background-color: rgba(10, 28, 76, 0.05);
+        }
+        
+        .payment-method img {
+            width: 80px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        
+        .payment-method input {
+            display: none;
+        }
+        
+        .payment-instruction {
+            display: none;
+            background: var(--secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .payment-instruction.active {
+            display: block;
+        }
+        
+        .payment-code {
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: var(--light);
+            padding: 12px;
+            border: 1px dashed var(--gray);
+            border-radius: 6px;
+            text-align: center;
+            margin: 15px 0;
+            user-select: all;
+            color: var(--primary);
+        }
+        
+        .timer {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--danger);
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .btn-confirm {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: var(--light);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 25px;
+        }
+        
+        .btn-confirm:hover {
+            background: var(--primary-light);
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffeeba;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #bee5eb;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .payment-methods {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .order-summary th, 
+            .order-summary td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="payment-container">
-        <h2>Detail Pembayaran</h2>
-        
-        <div class="customer-info">
-            <p><strong>Nama:</strong> <?= htmlspecialchars($dataPesanan['nama_pembeli']) ?></p>
-            <p><strong>Alamat:</strong> <?= htmlspecialchars($dataPesanan['alamat']) ?>, <?= htmlspecialchars($dataPesanan['kota']) ?>, <?= htmlspecialchars($dataPesanan['provinsi']) ?></p>
-            <p><strong>Nomor Handphone:</strong> <?= htmlspecialchars($dataPesanan['no_telp']) ?></p>
-        </div>
-
-        <h3>Ringkasan Pesanan</h3>
-        <table class="summary-table">
-            <thead>
-                <tr>
-                    <th>Produk</th>
-                    <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($produk as $item): ?>
-                <tr>
-                    <td><?= htmlspecialchars($item['name']) ?></td>
-                    <td><?= formatRupiah($item['price']) ?></td>
-                    <td><?= (int)$item['quantity'] ?></td>
-                    <td><?= formatRupiah($item['price'] * $item['quantity']) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3">Ongkos Kirim (<?= htmlspecialchars($dataPesanan['metode_pengiriman']) ?>)</td>
-                    <td><?= formatRupiah($dataPesanan['ongkir']) ?></td>
-                </tr>
-                <tr>
-                    <td colspan="3">Total Pembayaran</td>
-                    <td><strong><?= formatRupiah($dataPesanan['total_harga']) ?></strong></td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <div class="payment-method">
-            <h3>Pilih Metode Pembayaran</h3>
-            <div class="payment-options">
-                <div class="payment-option" onclick="selectPayment('gopay')">
-                    <input type="radio" name="payment" value="gopay" id="gopay">
-                    <img src="assets/payment/gopay.png" alt="GoPay" />
-                    <div>GoPay</div>
+    <div class="container">
+        <div class="payment-card">
+            <div class="payment-header">
+                <h2>Detail Pembayaran</h2>
+            </div>
+            
+            <div class="payment-body">
+                <?php if ($dataPesanan['status_pembayaran'] === 'belum bayar' || $dataPesanan['status_pembayaran'] === NULL): ?>
+                <div class="alert alert-warning">
+                    Silakan selesaikan pembayaran sebelum <?= date('d/m/Y H:i', strtotime($waktu_expired)) ?> untuk menghindari pembatalan otomatis.
                 </div>
-                <div class="payment-option" onclick="selectPayment('dana')">
-                    <input type="radio" name="payment" value="dana" id="dana">
-                    <img src="assets/payment/dana.png" alt="DANA" />
-                    <div>DANA</div>
+                <?php endif; ?>
+                
+                <div class="section">
+                    <div class="section-title">Informasi Pelanggan</div>
+                    <div class="customer-info">
+                        <div class="info-item"><strong>Nama:</strong> <?= htmlspecialchars($dataPesanan['nama_pembeli']) ?></div>
+                        <div class="info-item"><strong>Alamat:</strong> <?= htmlspecialchars($dataPesanan['alamat']) ?>, <?= htmlspecialchars($dataPesanan['kota']) ?>, <?= htmlspecialchars($dataPesanan['provinsi']) ?></div>
+                        <div class="info-item"><strong>No. HP:</strong> <?= htmlspecialchars($dataPesanan['no_telp']) ?></div>
+                        <div class="info-item"><strong>Tanggal Pesanan:</strong> <?= date('d/m/Y', strtotime($dataPesanan['tanggal_transaksi'])) ?></div>
+                    </div>
                 </div>
-            </div>
-
-            <div id="gopay-instruction" class="payment-instruction">
-                <h3>Instruksi Pembayaran GoPay</h3>
-                <div class="payment-code"></div>
-                <ol>
-                    <li>Buka aplikasi Gojek, pilih <strong>Bayar</strong>.</li>
-                    <li>Masukkan kode pembayaran di atas.</li>
-                </ol>
-                <div class="timer">Batas waktu pembayaran: <span>10:00</span></div>
-            </div>
-
-            <div id="dana-instruction" class="payment-instruction">
-                <h3>Instruksi Pembayaran DANA</h3>
-                <div class="payment-code">DANA-<?= date('Ymd') ?>-<?= strtoupper(substr(md5($pesanan_id), 0, 6)) ?></div>
-                <ol>
-                    <li>Buka aplikasi DANA, pilih <strong>Bayar</strong>.</li>
-                    <li>Masukkan kode pembayaran di atas.</li>
-                </ol>
-                <div class="timer">Batas waktu pembayaran: <span>10:00</span></div>
+                
+                <div class="section">
+                    <div class="section-title">Ringkasan Pesanan</div>
+                    <table class="order-summary">
+                        <thead>
+                            <tr>
+                                <th>Produk</th>
+                                <th class="text-right">Harga</th>
+                                <th class="text-right">Jumlah</th>
+                                <th class="text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($produk as $item): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($item['nama_produk']) ?></td>
+                                <td class="text-right"><?= formatRupiah($item['harga_saat_beli']) ?></td>
+                                <td class="text-right"><?= (int)$item['jumlah'] ?></td>
+                                <td class="text-right"><?= formatRupiah($item['harga_saat_beli'] * $item['jumlah']) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3">Ongkos Kirim (<?= htmlspecialchars($dataPesanan['metode_pengiriman']) ?>)</td>
+                                <td class="text-right"><?= formatRupiah($dataPesanan['ongkir']) ?></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="order-total">Total Pembayaran</td>
+                                <td class="text-right order-total"><?= formatRupiah($dataPesanan['total_harga']) ?></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <?php if ($dataPesanan['status_pembayaran'] === 'belum bayar' || $dataPesanan['status_pembayaran'] === NULL): ?>
+                <div class="section">
+                    <div class="section-title">Metode Pembayaran</div>
+                    <div class="payment-methods">
+                        <div class="payment-method" onclick="selectPayment('gopay')">
+                            <input type="radio" name="payment" value="gopay" id="gopay">
+                            <img src="gambar/gopay.png" onerror="this.src='gambar/placeholder.png'" alt="GoPay">
+                            <div>GoPay</div>
+                        </div>
+                        <div class="payment-method" onclick="selectPayment('dana')">
+                            <input type="radio" name="payment" value="dana" id="dana">
+                            <img src="gambar/dana.png" onerror="this.src='gambar/placeholder.png'" alt="DANA">
+                            <div>DANA</div>
+                        </div>
+                    </div>
+                    
+                    <div id="gopay-instruction" class="payment-instruction">
+                        <h3>Instruksi Pembayaran GoPay</h3>
+                        <div class="payment-code"><?= htmlspecialchars($kode_gopay) ?></div>
+                        <ol>
+                            <li>Buka aplikasi Gojek dan pilih <strong>Bayar</strong></li>
+                            <li>Masukkan kode pembayaran di atas atau scan QR code</li>
+                            <li>Pastikan nominal pembayaran sesuai</li>
+                            <li>Selesaikan pembayaran sebelum waktu habis</li>
+                        </ol>
+                        <div class="timer">Batas waktu pembayaran: <span id="gopay-timer"><?= date('H:i', strtotime($waktu_expired)) ?></span></div>
+                    </div>
+                    
+                    <div id="dana-instruction" class="payment-instruction">
+                        <h3>Instruksi Pembayaran DANA</h3>
+                        <div class="payment-code"><?= htmlspecialchars($kode_dana) ?></div>
+                        <ol>
+                            <li>Buka aplikasi DANA dan pilih <strong>Bayar</strong></li>
+                            <li>Masukkan kode pembayaran di atas</li>
+                            <li>Pastikan nominal pembayaran sesuai</li>
+                            <li>Selesaikan pembayaran sebelum waktu habis</li>
+                        </ol>
+                        <div class="timer">Batas waktu pembayaran: <span id="dana-timer"><?= date('H:i', strtotime($waktu_expired)) ?></span></div>
+                    </div>
+                    
+                    <button class="btn-confirm" onclick="confirmPayment()">Konfirmasi Pembayaran</button>
+                </div>
+                <?php else: ?>
+                <div class="alert alert-info">
+                    Status pembayaran: <strong><?= ucfirst($dataPesanan['status_pembayaran']) ?></strong>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
-
-        <button class="btn-confirm" onclick="confirmPayment()">Konfirmasi Pembayaran</button>
     </div>
 
     <script>
-        function generatePaymentCode(method) {
-            const prefix = method === 'gopay' ? 'GOPAY' : 'DANA';
-            const date = new Date();
-            const ymd = date.getFullYear() + ('0' + (date.getMonth()+1)).slice(-2) + ('0' + date.getDate()).slice(-2);
-            const random = Math.random().toString(36).substring(2, 8).toUpperCase();
-            return `${prefix}-${ymd}-${random}`;
-        }
+        let timerInterval;
+        const totalDetikTersisa = <?= $total_detik_tersisa ?>;
 
-        function startTimer(duration, display) {
+        function startTimer(duration, displayId) {
             let timer = duration;
-            clearInterval(window.timerInterval);
-            window.timerInterval = setInterval(() => {
-                let minutes = String(Math.floor(timer / 60)).padStart(2, '0');
-                let seconds = String(timer % 60).padStart(2, '0');
-                display.textContent = `${minutes}:${seconds}`;
-                if (--timer < 0) {
-                    clearInterval(window.timerInterval);
+            clearInterval(timerInterval);
+            
+
+            updateTimerDisplay(timer, displayId);
+            
+            timerInterval = setInterval(() => {
+                timer--;
+                updateTimerDisplay(timer, displayId);
+                
+                if (timer <= 0) {
+                    clearInterval(timerInterval);
                     alert("Waktu pembayaran telah habis. Silakan ulangi proses checkout.");
-                    window.location.href = "checkout.html";
+                    window.location.href = "pesanan.php";
                 }
             }, 1000);
         }
+        
+        function updateTimerDisplay(timer, displayId) {
+            let hours = Math.floor(timer / 3600);
+            let minutes = Math.floor((timer % 3600) / 60);
+            let seconds = timer % 60;
+            
+            hours = String(hours).padStart(2, '0');
+            minutes = String(minutes).padStart(2, '0');
+            seconds = String(seconds).padStart(2, '0');
+            
+            document.getElementById(displayId).textContent = `${hours}:${minutes}:${seconds}`;
+        }
 
         function selectPayment(method) {
-            // Sembunyikan semua instruksi terlebih dahulu
-            document.querySelectorAll('.payment-instruction').forEach(inst => {
-                inst.classList.remove('active');
+            document.querySelectorAll('.payment-instruction').forEach(el => {
+                el.classList.remove('active');
             });
             
-            // Hapus selected dari semua opsi
-            document.querySelectorAll('.payment-option').forEach(opt => {
-                opt.classList.remove('selected');
+
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
             });
             
-            // Tandai opsi yang dipilih
-            document.querySelector(`[onclick="selectPayment('${method}')"]`).classList.add('selected');
-            
-            // Tampilkan instruksi yang sesuai
+
             const instruction = document.getElementById(`${method}-instruction`);
             if (instruction) {
                 instruction.classList.add('active');
-                const code = method === 'dana' 
-                    ? 'DANA-<?= date('Ymd') ?>-<?= strtoupper(substr(md5($pesanan_id), 0, 6)) ?>'
-                    : generatePaymentCode(method);
-                instruction.querySelector('.payment-code').textContent = code;
-                startTimer(600, instruction.querySelector('.timer span'));
+                startTimer(totalDetikTersisa, `${method}-timer`);
             }
+            
+            event.currentTarget.classList.add('selected');
         }
 
-
-    function confirmPayment() {
-        const selectedMethod = document.querySelector('.payment-option.selected');
-        if (!selectedMethod) {
-            alert('Silakan pilih metode pembayaran terlebih dahulu.');
-            return;
+        function confirmPayment() {
+            const selectedMethod = document.querySelector('.payment-method.selected');
+            
+            if (!selectedMethod) {
+                alert('Silakan pilih metode pembayaran terlebih dahulu.');
+                return;
+            }
+            
+            const method = selectedMethod.querySelector('input').value;
+            window.location.href = `upload_bukti.php?pesanan_id=<?= $pesanan_id ?>&method=${method}`;
         }
         
-        // Ambil metode pembayaran yang dipilih
-        const method = selectedMethod.querySelector('input').value;
-        
-        // Redirect ke halaman upload bukti pembayaran dengan membawa data pesanan
-        window.location.href = `upload_bukti.php?pesanan_id=<?= $pesanan_id ?>&method=${method}`;
-    }
-</script>
+        // otomatis pilih
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstMethod = document.querySelector('.payment-method');
+            if (firstMethod) {
+                firstMethod.click();
+            }
+        });
     </script>
 </body>
 </html>
