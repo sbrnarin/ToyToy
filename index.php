@@ -80,7 +80,7 @@
                         </ul>
                         <p id="cart-total" class="cart-total">Total: Rp 0</p>
                         <!-- ini -->
-                        <a href="keranjang.html" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
+                        <a href="keranjang.php" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
                       </div>
                     </div>
 

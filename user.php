@@ -11,20 +11,37 @@ include("db_config.php");
 $username = $_SESSION['username'];
 $message = '';
 
-// Ambil data user dari database
+// Initialize userData with default values
+$userData = [
+    'nama_pembeli' => '',
+    'email' => '',
+    'no_telp' => '',
+    'alamat' => '',
+    'profile_image' => ''
+];
+
+// Get user data from database
 $sql = "SELECT nama_pembeli, email, no_telp, alamat, profile_image FROM pembeli WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
-$userData = $result->fetch_assoc();
 
-// Jika kolom profile_image belum ada, agar tidak error, kita bisa set default:
-if (!isset($userData['profile_image'])) {
-    $userData['profile_image'] = '';
+if ($result && $result->num_rows > 0) {
+    $dbData = $result->fetch_assoc();
+    if ($dbData) {
+        // Merge database data with defaults (only non-null values)
+        foreach ($dbData as $key => $value) {
+            if ($value !== null) {
+                $userData[$key] = $value;
+            }
+        }
+    }
+} else {
+    $message = "Data pengguna tidak ditemukan.";
 }
 
-// Update profil jika form disubmit
+// Update profile if form is submitted
 if (isset($_POST['update'])) {
     $nama_pembeli = $_POST['name'];
     $email = $_POST['email'];
@@ -36,9 +53,9 @@ if (isset($_POST['update'])) {
         mkdir($upload_dir, 0755, true);
     }
 
-    $profile_picture = $userData['profile_image'];  // default photo lama
+    $profile_picture = $userData['profile_image'];  // keep old photo by default
 
-    // Handle upload foto profil baru
+    // Handle new profile picture upload
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
         $file_tmp = $_FILES['profile_picture']['tmp_name'];
         $file_name = $_FILES['profile_picture']['name'];
@@ -48,6 +65,11 @@ if (isset($_POST['update'])) {
         if (in_array($file_ext, $allowed_ext)) {
             $profile_picture = uniqid() . '.' . $file_ext;
             move_uploaded_file($file_tmp, $upload_dir . $profile_picture);
+            
+            // Delete old profile picture if it exists
+            if (!empty($userData['profile_image']) && file_exists($upload_dir . $userData['profile_image'])) {
+                unlink($upload_dir . $userData['profile_image']);
+            }
         } else {
             $message = "Format file foto harus jpg, jpeg, atau png.";
         }
@@ -69,15 +91,26 @@ if (isset($_POST['update'])) {
     if ($stmt->execute()) {
         $message = "Profil berhasil diperbarui.";
 
-        // Refresh data setelah update
+        // Refresh data after update
         $sql = "SELECT nama_pembeli, email, no_telp, alamat, profile_image FROM pembeli WHERE username = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
-        $userData = $result->fetch_assoc();
+        
+        if ($result && $result->num_rows > 0) {
+            $dbData = $result->fetch_assoc();
+            if ($dbData) {
+                // Merge database data with defaults (only non-null values)
+                foreach ($dbData as $key => $value) {
+                    if ($value !== null) {
+                        $userData[$key] = $value;
+                    }
+                }
+            }
+        }
     } else {
-        $message = "Terjadi kesalahan saat memperbarui profil.";
+        $message = "Terjadi kesalahan saat memperbarui profil: " . $conn->error;
     }
 }
 ?>

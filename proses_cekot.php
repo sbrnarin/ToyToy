@@ -1,5 +1,7 @@
 <?php
+session_start();
 include "db_config.php";
+
 $conn = new mysqli("localhost", "root", "", "sabrinalina");
 
 // Cek koneksi
@@ -8,31 +10,37 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validasi dan sanitasi input
-    $nama = trim($conn->real_escape_string($_POST['nama'] ?? ''));
-    $alamat = trim($conn->real_escape_string($_POST['alamat'] ?? ''));
-    $kota = trim($conn->real_escape_string($_POST['kota'] ?? ''));
-    $provinsi = trim($conn->real_escape_string($_POST['provinsi'] ?? ''));
-    $no_telp = trim($conn->real_escape_string($_POST['nohp'] ?? ''));
+    // Ambil data dari form
+    $nama       = trim($conn->real_escape_string($_POST['nama'] ?? ''));
+    $alamat     = trim($conn->real_escape_string($_POST['alamat'] ?? ''));
+    $kota       = trim($conn->real_escape_string($_POST['kota'] ?? ''));
+    $provinsi   = trim($conn->real_escape_string($_POST['provinsi'] ?? ''));
+    $no_telp    = trim($conn->real_escape_string($_POST['nohp'] ?? ''));
     $produkJson = $_POST['produk'] ?? '[]';
-    $total = isset($_POST['total']) ? (int)$_POST['total'] : 0;
-    $metode_pembayaran = trim($conn->real_escape_string($_POST['payment_method'] ?? 'tunai'));
-    $ongkir = isset($_POST['ongkir']) ? (int)$_POST['ongkir'] : 0;
-    $metode_pengiriman = trim($conn->real_escape_string($_POST['metode_pengiriman'] ?? ''));
+    $total      = isset($_POST['total']) ? (int)$_POST['total'] : 0;
+    $ongkir     = isset($_POST['shippingCost']) ? (int)$_POST['shippingCost'] : 0;
+    $metode_pengiriman = trim($conn->real_escape_string($_POST['shippingMethod'] ?? ''));
+    $metode_pembayaran = 'tunai'; // default
     $tanggal_pesan = date('Y-m-d');
-    $waktu_expired = date('Y-m-d H:i:s', strtotime('+1 hour')); // Batas waktu pembayaran 1 jam
+    $waktu_expired = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
     $produkList = json_decode($produkJson, true);
     if (!is_array($produkList) || empty($produkList)) {
         die(json_encode(['error' => 'Data produk tidak valid.']));
     }
 
+    // Ambil id_akun dari session (login harus dilakukan)
+    $id_akun = $_SESSION['id_akun'] ?? null;
+    if (!$id_akun) {
+        die("Silakan login terlebih dahulu.");
+    }
+
     $conn->begin_transaction();
 
     try {
         // Cek atau tambahkan pembeli
-        $stmt = $conn->prepare("SELECT id_pembeli FROM pembeli WHERE no_telp = ?");
-        $stmt->bind_param("s", $no_telp);
+        $stmt = $conn->prepare("SELECT id_pembeli FROM pembeli WHERE id_akun = ?");
+        $stmt->bind_param("i", $id_akun);
         $stmt->execute();
         $stmt->store_result();
 
@@ -40,18 +48,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_result($id_pembeli);
             $stmt->fetch();
         } else {
-            $stmtInsert = $conn->prepare("INSERT INTO pembeli (nama_pembeli, alamat, kota, provinsi, no_telp) VALUES (?, ?, ?, ?, ?)");
-            $stmtInsert->bind_param("sssss", $nama, $alamat, $kota, $provinsi, $no_telp);
+            $stmtInsert = $conn->prepare("INSERT INTO pembeli (id_akun, nama_pembeli, alamat, kota, provinsi, no_telp) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmtInsert->bind_param("isssss", $id_akun, $nama, $alamat, $kota, $provinsi, $no_telp);
             $stmtInsert->execute();
             $id_pembeli = $stmtInsert->insert_id;
             $stmtInsert->close();
         }
         $stmt->close();
 
-        // Insert pesanan
+        // Insert ke tabel pesanan
         $status_pengiriman = "tertunda";
         $status_pembayaran = "belum bayar";
-        
+
         $stmtPesanan = $conn->prepare("INSERT INTO pesanan (
             id_pembeli, tanggal_pesan, status_pengiriman, total_harga, 
             status_pembayaran, metode_pembayaran, ongkir, 
@@ -64,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $status_pembayaran, $metode_pembayaran, $ongkir,
             $metode_pengiriman, $waktu_expired
         );
-        
         $stmtPesanan->execute();
         $id_pesanan = $stmtPesanan->insert_id;
         $stmtPesanan->close();
@@ -107,4 +114,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     http_response_code(405);
     echo "Metode tidak diperbolehkan";
 }
-?>    
+?>

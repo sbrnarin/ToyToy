@@ -29,6 +29,13 @@ $filename = 'bukti_' . $pesanan_id . '_' . time() . '.' . $ext;
 $upload_path = 'uploads/bukti_pembayaran/' . $filename;
 
 // Pindahkan file ke folder upload
+$ext_valid = ['jpg', 'jpeg', 'png', 'pdf'];
+$ext_file = strtolower(pathinfo($_FILES['bukti_pembayaran']['name'], PATHINFO_EXTENSION));
+
+if (!in_array($ext_file, $ext_valid)) {
+    die("Ekstensi file tidak diizinkan");
+}
+
 if (!move_uploaded_file($_FILES['bukti_pembayaran']['tmp_name'], $upload_path)) {
     die("Gagal menyimpan file");
 }

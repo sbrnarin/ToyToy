@@ -28,13 +28,12 @@ if (!$dataPesanan) {
     exit();
 }
 
-// Hitung waktu expired (hingga jam 23:59:59 di hari transaksi)
-$waktu_expired = date('Y-m-d H:i:s', strtotime($dataPesanan['tanggal_pesan'] . ' 23:59:59'));
 
-// Ambil item produk dalam pesanan
+$waktu_expired = date('Y-m-d H:i:s', strtotime($dataPesanan['tanggal_pesan'] . ' 23:59:59'));
 $stmt2 = $conn->prepare("
-    SELECT dp.nama_produk, dp.harga_saat_beli, dp.jumlah 
+    SELECT p.nama_produk, dp.harga_saat_beli, dp.jumlah 
     FROM detail_pesanan dp
+    JOIN produk p ON dp.id_produk = p.id_produk
     WHERE dp.id_pesanan = ?
 ");
 $stmt2->bind_param("i", $pesanan_id);

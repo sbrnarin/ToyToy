@@ -1,5 +1,8 @@
 <?php
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $host = "localhost";
 $user = "root";
 $pass = "";
@@ -10,29 +13,28 @@ if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
 
-// Ambil username dari sesi
-$username = $_SESSION['username'] ?? '';
-
-if (!$username) {
-    echo "Anda belum login.";
+// Ambil id_akun dari session
+$id_akun = $_SESSION['id_akun'] ?? 0;
+if (!$id_akun) {
+    header("Location: login.php");
     exit;
 }
 
-// Ambil id_pembeli berdasarkan username
-$stmtUser = $conn->prepare("SELECT id_pembeli FROM pembeli WHERE username = ?");
-$stmtUser->bind_param("s", $username);
-$stmtUser->execute();
-$resultUser = $stmtUser->get_result();
+// Cari id_pembeli berdasarkan id_akun
+$stmtPembeli = $conn->prepare("SELECT id_pembeli FROM pembeli WHERE id_akun = ?");
+$stmtPembeli->bind_param("i", $id_akun);
+$stmtPembeli->execute();
+$resultPembeli = $stmtPembeli->get_result();
 
-if ($resultUser->num_rows === 0) {
+if ($resultPembeli->num_rows === 0) {
     echo "Data pembeli tidak ditemukan.";
     exit;
 }
 
-$pembeli = $resultUser->fetch_assoc();
+$pembeli = $resultPembeli->fetch_assoc();
 $id_pembeli = $pembeli['id_pembeli'];
 
-// Ambil data pesanan
+// Ambil data pesanan berdasarkan id_pembeli
 $stmt = $conn->prepare("
     SELECT p.id_pesanan, p.tanggal_pesan, p.status_pengiriman, p.total_harga, p.metode_pembayaran,
            pr.nama_produk, pr.harga, dp.jumlah
@@ -52,8 +54,8 @@ while ($row = $result->fetch_assoc()) {
     $id_pesanan = $row['id_pesanan'];
     if (!isset($pesananList[$id_pesanan])) {
         $pesananList[$id_pesanan] = [
-            'tanggal' => $row['tanggal_transaksi'],
-            'status' => $row['status'],
+            'tanggal' => $row['tanggal_pesan'],
+            'status' => $row['status_pengiriman'],
             'total' => $row['total_harga'],
             'metode' => $row['metode_pembayaran'],
             'produk' => []

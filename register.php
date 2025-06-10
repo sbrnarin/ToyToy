@@ -1,55 +1,78 @@
 <?php
+session_start();
 include 'koneksi.php';
 
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username     = $_POST["username"];
-    $password     = $_POST["password"];
-    $nama         = $_POST["nama"];
-    $email        = $_POST["email"];
-    $alamat       = $_POST["alamat"];
-    $no_telp      = $_POST["no_telp"];
-    $kota         = $_POST["kota"];
+    // Mulai transaksi
+    $koneksi->begin_transaction();
+    
+    try {
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+        $nama     = $_POST["nama"];
+        $email    = $_POST["email"];
+        $alamat   = $_POST["alamat"];
+        $no_telp  = $_POST["no_telp"];
+        $kota     = $_POST["kota"];
+        // Validasi email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Format email tidak valid.");
+        }
 
-    // Cek apakah username sudah digunakan
-    $cek_username = $koneksi->prepare("SELECT id_akun FROM akun WHERE username = ?");
-    $cek_username->bind_param("s", $username);
-    $cek_username->execute();
-    $cek_username->store_result();
+        // Validasi pas
+        if (strlen($password) < 6) {
+            throw new Exception("Password minimal harus 6 karakter.");
+        }
 
-    if ($cek_username->num_rows > 0) {
-        $error_message = "Username sudah digunakan. Silakan pilih username lain.";
-    } else {
-        // Hash password
-        $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+        // cek username 
+        $cek_username = $koneksi->prepare("SELECT id_akun FROM akun WHERE username = ?");
+        $cek_username->bind_param("s", $username);
+        $cek_username->execute();
+        $cek_username->store_result();
+
+        if ($cek_username->num_rows > 0) {
+            throw new Exception("Username sudah digunakan. Silakan pilih username lain.");
+        }
 
         // Insert ke tabel akun
-        $akun_sql = "INSERT INTO akun (username, password, role) VALUES (?, ?, 'user')";
-        $stmt_akun = $koneksi->prepare($akun_sql);
+        $password_hashed = password_hash($password, PASSWORD_DEFAULT);
+        $stmt_akun = $koneksi->prepare("INSERT INTO akun (username, password, role) VALUES (?, ?, 'user')");
         $stmt_akun->bind_param("ss", $username, $password_hashed);
-
-        if ($stmt_akun->execute()) {
-            $id_akun = $koneksi->insert_id;
-
-            // Insert ke tabel pembeli
-            $pembeli_sql = "INSERT INTO pembeli (id_akun, nama_pembeli, email, alamat, no_telp, kota) 
-                            VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt_pembeli = $koneksi->prepare($pembeli_sql);
-            $stmt_pembeli->bind_param("isssss", $id_akun, $nama, $email, $alamat, $no_telp, $kota);
-
-            if ($stmt_pembeli->execute()) {
-                header("Location: login.php");
-                exit;
-            } else {
-                $error_message = "Gagal menyimpan data pembeli: " . $stmt_pembeli->error;
-            }
-        } else {
-            $error_message = "Gagal membuat akun: " . $stmt_akun->error;
+        
+        if (!$stmt_akun->execute()) {
+            throw new Exception("Gagal membuat akun: " . $stmt_akun->error);
         }
+
+        $id_akun = $koneksi->insert_id;
+
+        // insert ke tabel pembeli
+        $stmt_pembeli = $koneksi->prepare("INSERT INTO pembeli (id_akun, nama_pembeli, email, alamat, no_telp, kota) 
+                                         VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt_pembeli->bind_param("isssss", $id_akun, $nama, $email, $alamat, $no_telp, $kota);
+        
+        if (!$stmt_pembeli->execute()) {
+            throw new Exception("Gagal menyimpan data pembeli: " . $stmt_pembeli->error);
+        }
+
+        // Commit transaksi 
+        $koneksi->commit();
+        
+        $_SESSION['id_pembeli'] = $koneksi->insert_id;
+        $_SESSION['nama_pembeli'] = $nama;
+        $_SESSION['email'] = $email;
+        
+        header("Location: index.php");
+        exit;
+
+    } catch (Exception $e) {
+        $koneksi->rollback();
+        $error_message = $e->getMessage();
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>

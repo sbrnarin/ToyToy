@@ -1,3 +1,36 @@
+<?php
+
+session_start();
+require_once 'koneksi.php';
+
+// Cek user
+$userLoggedIn = isset($_SESSION['id_akun']);
+$user_id = $userLoggedIn ? $_SESSION['id_akun'] : null;
+
+$dbCart = [];
+if ($userLoggedIn) {
+    $query = "SELECT p.id, p.nama, p.harga, p.gambar, p.kategori, k.jumlah 
+              FROM keranjang k 
+              JOIN produk p ON k.produk_id = p.id 
+              WHERE k.user_id = ?";
+    $stmt = mysqli_prepare($koneksi, $query);
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    while ($row = mysqli_fetch_assoc($result)) {
+        $dbCart[] = [
+            'id' => $row['id'],
+            'name' => $row['nama'],
+            'price' => $row['harga'],
+            'image' => $row['gambar'],
+            'category' => $row['kategori'],
+            'quantity' => $row['jumlah'],
+            'selected' => true
+        ];
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -336,7 +369,7 @@
       return parseFloat(numericValue) || 0;
     }
 
-    // Validate image URL
+  
     function validateImage(url) {
       if (!url) return null;
       try {
@@ -347,7 +380,7 @@
       }
     }
 
-    // Render cart items
+
     function renderCart(cart) {
       if (cart.length === 0) {
         cartContainer.innerHTML = `
@@ -386,7 +419,7 @@
       updateCartSummary(cart);
     }
 
-    // Format currency
+
     function formatCurrency(amount) {
       return new Intl.NumberFormat('id-ID', {
         style: 'currency',
@@ -395,7 +428,7 @@
       }).format(amount);
     }
 
-    // Update cart summary
+    // cart summary
     function updateCartSummary(cart) {
       const selectedItems = cart.filter(item => item.selected);
       const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -408,9 +441,8 @@
       checkoutBtn.disabled = selectedItems.length === 0;
     }
 
-    // Setup event listeners
+
     function setupEventListeners() {
-      // Quantity and selection changes
       cartContainer.addEventListener('click', function(e) {
         const index = e.target.dataset.index;
         if (!index) return;
@@ -451,17 +483,16 @@
       });
     }
 
-    // Save cart to localStorage
+    // simpan ke localStorage
     function saveCart(cart) {
       localStorage.setItem("cart", JSON.stringify(cart));
-      // Update cart count in header if exists
       const headerCartCount = document.querySelector('.header-cart-count');
       if (headerCartCount) {
         headerCartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
       }
     }
 
-    // Checkout single item
+    // single item
     function checkoutSingleItem(item) {
       if (confirm(`Checkout ${item.quantity}x ${item.name} seharga ${formatCurrency(item.price * item.quantity)}?`)) {
         localStorage.setItem("checkoutItem", JSON.stringify(item));
@@ -469,7 +500,6 @@
       }
     }
 
-    // Proceed to checkout
     function proceedToCheckout(items) {
       const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       if (confirm(`Checkout ${items.length} produk dengan total ${formatCurrency(total)}?`)) {
