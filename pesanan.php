@@ -34,7 +34,7 @@ if ($resultPembeli->num_rows === 0) {
 $pembeli = $resultPembeli->fetch_assoc();
 $id_pembeli = $pembeli['id_pembeli'];
 
-// Ambil data pesanan berdasarkan id_pembeli
+// Ambil data pesanan
 $stmt = $conn->prepare("
     SELECT p.id_pesanan, p.tanggal_pesan, p.status_pengiriman, p.total_harga, p.metode_pembayaran,
            pr.nama_produk, pr.harga, dp.jumlah
@@ -52,15 +52,18 @@ $result = $stmt->get_result();
 $pesananList = [];
 while ($row = $result->fetch_assoc()) {
     $id_pesanan = $row['id_pesanan'];
+    $status = trim($row['status_pengiriman'] ?? '') ?: 'Belum Diproses'; // ✅ perbaikan penting
+
     if (!isset($pesananList[$id_pesanan])) {
         $pesananList[$id_pesanan] = [
             'tanggal' => $row['tanggal_pesan'],
-            'status' => $row['status_pengiriman'],
+            'status' => $status,
             'total' => $row['total_harga'],
             'metode' => $row['metode_pembayaran'],
             'produk' => []
         ];
     }
+
     $pesananList[$id_pesanan]['produk'][] = [
         'nama' => $row['nama_produk'],
         'harga' => $row['harga'],
@@ -84,6 +87,7 @@ while ($row = $result->fetch_assoc()) {
         }
         .order-header {
             font-weight: bold;
+            margin-bottom: 10px;
         }
         .product-item {
             margin-left: 15px;
@@ -110,15 +114,18 @@ while ($row = $result->fetch_assoc()) {
             <?php foreach ($pesananList as $id => $pesanan): ?>
                 <div class="order-item">
                     <div class="order-header">
-                        Pesanan #<?= $id ?> | <?= $pesanan['tanggal'] ?> | Status: <?= $pesanan['status'] ?> 
+                        Pesanan #<?= htmlspecialchars($id) ?> |
+                        <?= htmlspecialchars($pesanan['tanggal']) ?> |
+                        Status: <?= htmlspecialchars($pesanan['status']) ?>
                     </div>
                     <div>
-                        <p><strong>Metode Pembayaran:</strong> <?= ucfirst($pesanan['metode']) ?></p>
+                        <p><strong>Metode Pembayaran:</strong> <?= htmlspecialchars(ucfirst($pesanan['metode'])) ?></p>
                         <p><strong>Total:</strong> Rp <?= number_format($pesanan['total'], 0, ',', '.') ?></p>
                         <p><strong>Produk:</strong></p>
                         <?php foreach ($pesanan['produk'] as $produk): ?>
                             <div class="product-item">
-                                <?= $produk['nama'] ?> - <?= $produk['jumlah'] ?> x Rp <?= number_format($produk['harga'], 0, ',', '.') ?>
+                                <?= htmlspecialchars($produk['nama']) ?> -
+                                <?= $produk['jumlah'] ?> x Rp <?= number_format($produk['harga'], 0, ',', '.') ?>
                             </div>
                         <?php endforeach; ?>
                     </div>

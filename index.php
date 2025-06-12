@@ -162,7 +162,7 @@
                           
                             <div class="brand-item">
                               <a href="nerf.php">
-                                <img src="gambar/hw logo.jpg" alt="NERF">
+                                <img src="gambar/hwlogo.png" alt="NERF">
                               </a>
                             </div>
                           
@@ -342,10 +342,8 @@
                     <div class="footer-column">
                         <h3 class="footer-title">PEMBAYARAN</h3>
                         <div class="payment-methods">
-                            <img src="assets/payment/visa.png" alt="Visa">
-                            <img src="assets/payment/mastercard.png" alt="Mastercard">
                             <img src="assets/payment/gopay.png" alt="Gopay">
-                            <img src="assets/payment/ovo.png" alt="OVO">
+                            <img src="assets/payment/dana.png" alt="dana">
                         </div>
                         
                         <h3 class="social-title">IKUTI KAMI</h3>
