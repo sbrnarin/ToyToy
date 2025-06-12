@@ -110,7 +110,7 @@ while ($row = $result->fetch_assoc()) {
             <?php foreach ($pesananList as $id => $pesanan): ?>
                 <div class="order-item">
                     <div class="order-header">
-                        Pesanan #<?= $id ?> | <?= $pesanan['tanggal'] ?> | Status: <?= ucfirst($pesanan['status']) ?>
+                        Pesanan #<?= $id ?> | <?= $pesanan['tanggal'] ?> | Status: <?= $pesanan['status'] ?> 
                     </div>
                     <div>
                         <p><strong>Metode Pembayaran:</strong> <?= ucfirst($pesanan['metode']) ?></p>

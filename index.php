@@ -89,27 +89,27 @@
             
             <!-- Navigation Links -->
             <nav class="nav_link">
-              <a href="Home">Home</a>
+              <a href="index.php">Home</a>
                 <div class="nav-item dropdown">
-                    <a href="#toys&games" class="dropdown-toggle">Toys & Games 
+                    <a href="video-games.php" class="dropdown-toggle">Toys & Games 
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
                         <a href="puzzles.php">Building Blocks</a>
-                        <a href="figuriens.php">Action Figures</a>
+                        <a href="figurines.php">Action Figures</a>
                         <a href="playdoh.php">Toy Clay</a>
                         <a href="dolls.php">Dolls & Accessories</a>
                     </div>
                 </div>
 
                 <div class="nav-item dropdown">
-                    <a href="#videogames" class="dropdown-toggle">Video Games & Consoles
+                    <a href="video-games.php" class="dropdown-toggle">Video Games & Consoles
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#">Console Accessories</a>
-                        <a href="#">Game Consoles</a>
-                        <a href="video-games.html">Video Game</a>
+                        <a href="video-games.php">Console Accessories</a>
+                        <a href="video-games.php">Game Consoles</a>
+                        <a href="video-games.php">Video Game</a>
                     </div>
                 </div>
 
@@ -162,7 +162,7 @@
                           
                             <div class="brand-item">
                               <a href="nerf.php">
-                                <img src="gambar/Nerf-Logo.png" alt="NERF">
+                                <img src="gambar/hw logo.jpg" alt="NERF">
                               </a>
                             </div>
                           
@@ -201,7 +201,7 @@
                   </a>
                 </div>
                 <div class="category">
-                  <a href="figuriens.php">
+                  <a href="figurines.php">
                     <i data-lucide="smile" class="icon"></i>
                     <p class="brown">FIGURINES</p>
                   </a>

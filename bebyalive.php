@@ -22,7 +22,7 @@ $result = mysqli_query($koneksi, $sql);
 <body>
     <nav class="navbar">
         <div class="login">
-            <a href="#location">Location</a>
+            <a href="location.html">Location</a>
             <a href="login.php">Login</a>
             <a href="register.php">Register</a>
             <a href="#contact">Contact</a>
@@ -67,7 +67,7 @@ $result = mysqli_query($koneksi, $sql);
                     </div>
                   </div>
 
-                    <a href="user.html" class="icon-link">
+                    <a href="user.php" class="icon-link">
                         <span class="material-symbols-outlined">person</span>
                     </a>
                     <div class="cart-icon-wrapper">
@@ -114,7 +114,7 @@ $result = mysqli_query($koneksi, $sql);
                     <div class="dropdown-menu">
                         <a href="#">Console Accessories</a>
                         <a href="game_consoles.html">Game Consoles</a>
-                        <a href="video-games.html">Video Game</a>
+                        <a href="video-games.php">Video Game</a>
                     </div>
                 </div>
 
@@ -131,10 +131,6 @@ $result = mysqli_query($koneksi, $sql);
                 </div>
             </nav>
         </header>
-
-    <div class="gambarr">
-        <img src="gambar/alive.jpg" alt="gambar">                 
-    </div>
 
 <!-- product -->
 <section class="products-showcase">     

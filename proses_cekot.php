@@ -17,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $provinsi   = trim($conn->real_escape_string($_POST['provinsi'] ?? ''));
     $no_telp    = trim($conn->real_escape_string($_POST['nohp'] ?? ''));
     $produkJson = $_POST['produk'] ?? '[]';
-    $total      = isset($_POST['total']) ? (int)$_POST['total'] : 0;
     $ongkir     = isset($_POST['shippingCost']) ? (int)$_POST['shippingCost'] : 0;
     $metode_pengiriman = trim($conn->real_escape_string($_POST['shippingMethod'] ?? ''));
     $metode_pembayaran = 'tunai'; // default
@@ -60,18 +59,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status_pengiriman = "tertunda";
         $status_pembayaran = "belum bayar";
 
+        $total_produk = 0;
+foreach ($produkList as $item) {
+    $jumlah = (int)($item['quantity'] ?? 1);
+    $total_produk += $jumlah;
+}        
+ $total_harga = 0;
+foreach ($produkList as $item) {
+    $jumlah = (int)($item['quantity'] ?? 1);
+    $harga = (float)($item['price'] ?? 0);
+    $total_harga += $jumlah * $harga;
+}
+
         $stmtPesanan = $conn->prepare("INSERT INTO pesanan (
-            id_pembeli, tanggal_pesan, status_pengiriman, total_harga, 
+            id_pembeli, tanggal_pesan, status_pengiriman, total_harga, total_produk, 
             status_pembayaran, metode_pembayaran, ongkir, 
             metode_pengiriman, waktu_expired
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
-        $stmtPesanan->bind_param(
-            "issississ", 
-            $id_pembeli, $tanggal_pesan, $status_pengiriman, $total,
-            $status_pembayaran, $metode_pembayaran, $ongkir,
-            $metode_pengiriman, $waktu_expired
-        );
+       $stmtPesanan->bind_param(
+    "issississs", 
+    $id_pembeli, $tanggal_pesan, $status_pengiriman, $total_harga, $total_produk,
+    $status_pembayaran, $metode_pembayaran, $ongkir,
+    $metode_pengiriman, $waktu_expired
+);
+
         $stmtPesanan->execute();
         $id_pesanan = $stmtPesanan->insert_id;
         $stmtPesanan->close();

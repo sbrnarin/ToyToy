@@ -1,12 +1,13 @@
 <?php
-
+// Tambahkan ini di bagian paling atas file
 session_start();
-require_once 'koneksi.php';
+'koneksi.php';
 
-// Cek user
-$userLoggedIn = isset($_SESSION['id_akun']);
-$user_id = $userLoggedIn ? $_SESSION['id_akun'] : null;
+// Cek apakah user login
+$userLoggedIn = isset($_SESSION['user_id']);
+$user_id = $userLoggedIn ? $_SESSION['user_id'] : null;
 
+// Ambil data keranjang dari database jika user login
 $dbCart = [];
 if ($userLoggedIn) {
     $query = "SELECT p.id, p.nama, p.harga, p.gambar, p.kategori, k.jumlah 
@@ -31,6 +32,7 @@ if ($userLoggedIn) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>

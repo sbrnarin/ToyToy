@@ -17,54 +17,59 @@ $admin = [
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #081F5C;
-      margin: 0;
-      color: #333;
-    }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    color: #333;
+  }
 
-   .sidebar {
-      width: 230px;
-      background-color: #081F5C;
-      height: 100vh;
-      position: fixed;
-      padding: 20px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+  .sidebar {
+    width: 230px;
+    background-color: #081F5C;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .sidebar .logo img {
-      width: 130px;
-      margin-bottom: 30px;
-    }
+  .sidebar .logo {
+    margin-bottom: 20px;
+  }
 
-    .sidebar nav ul {
-      list-style: none;
-      padding: 0;
-      width: 100%;
-    }
+  .sidebar .logo img {
+    width: 130px;
+  }
 
-    .sidebar nav ul li {
-      margin-bottom: 20px;
-    }
+  .sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+  }
 
-    .sidebar nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 15px;
-      border-radius: 8px;
-      transition: background-color 0.3s;
-    }
+  .sidebar nav ul li {
+    margin-bottom: 15px;
+  }
 
-    .sidebar nav ul li a:hover {
-      background-color: #000000;
-    }
+  .sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+
+  .sidebar nav ul li a:hover {
+    background-color: #000000;
+  }
 
     /* Main content */
     .main-content {

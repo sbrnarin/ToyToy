@@ -5,13 +5,13 @@ include 'koneksi.php';
 $total_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan")->fetch_assoc()['total'];
 
 // pesanan selesai
-$completed_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'completed'")->fetch_assoc()['total'];
+$total_akun = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'completed'")->fetch_assoc()['total'];
 
 // pesanan pending
-$pending_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'pending'")->fetch_assoc()['total'];
+$dikirim = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'dikirim'")->fetch_assoc()['total'];
 
 // pesanan dibatalkan
-$canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'canceled'")->fetch_assoc()['total'];
+$selesai = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'selesai'")->fetch_assoc()['total'];
 ?>
 
 <!DOCTYPE html>
@@ -189,86 +189,26 @@ $canceled_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE s
         <a href="total_akun.php" class="card-link">
         <div class="box completed">
           <div class="label">Total Akun</div>
-          <div class="count"><?= $completed_order ?></div>
+          <div class="count"><?= $total_akun ?></div>
         </div>
         </a>
         
+        <a href="detail_pesanan.php" class="card-link">
+        <div class="box canceled">
+          <div class="label">Dikirim</div>
+           <div class="count"><?= $dikirim ?></div>
+        </div>
+        </a>
+
         <a href="" class="card-link">
         <div class="box canceled">
-          <div class="label">Dibatalkan</div>
-          <div class="count"><?= $canceled_order ?></div>
+          <div class="label">Selesai</div>
+           <div class="count"><?= $selesai ?></div>
         </div>
         </a>
 
       </div>
     </div>
   </div>
-
-   <form action="ubah_status.php" method="POST">
-                        <input type="hidden" name="id_pesanan" value="12345">
-                        <select name="status_pengiriman">
-                            <option value="belum diproses">Belum diproses</option>
-                            <option value="dikemas">Dikemas</option>
-                            <option value="dikirim">Dikirim</option>
-                            <option value="selesai">Selesai</option>
-                        </select>
-                        <button type="submit">Ubah</button>
-                    </form>
-                </td>
-                <td class="aksi-btn">
-                  <h2>Data Pesanan</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>ID Pesanan</th>
-                                <th>Tanggal</th>
-                                <th>Nama Pemesan</th>
-                                <th>Produk</th>
-                                <th>Jumlah</th>
-                                <th>Total Harga</th>
-                                <th>Status Pembayaran</th>
-                                <th>Status Pengiriman</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Contoh data dummy -->
-                            <tr>
-                                <td>1</td>
-                                <td>ORD12345</td>
-                                <td>2025-06-08</td>
-                                <td>Lina</td>
-                                <td>Boneka, Puzzle</td>
-                                <td>2</td>
-                                <td>Rp150.000</td>
-                                <td>Sudah</td>
-                                <td>
-                                    <form action="ubah_status.php" method="POST">
-                                        <input type="hidden" name="id_pesanan" value="12345">
-                                        <select name="status_pengiriman">
-                                            <option value="belum diproses">Belum diproses</option>
-                                            <option value="dikemas">Dikemas</option>
-                                            <option value="dikirim">Dikirim</option>
-                                            <option value="selesai">Selesai</option>
-                                        </select>
-                                        <button type="submit">Ubah</button>
-                                    </form>
-                                </td>
-                                <td class="aksi-btn">
-                                    <form action="detail_pesanan.php" method="GET" style="display:inline;">
-                                        <input type="hidden" name="id_pesanan" value="12345">
-                                        <button>Lihat</button>
-                                    </form>
-                                    <form action="hapus_pesanan.php" method="POST" style="display:inline;">
-                                        <input type="hidden" name="id_pesanan" value="12345">
-                                        <button onclick="return confirm('Yakin mau hapus?')">Hapus</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-
 </body>
 </html>

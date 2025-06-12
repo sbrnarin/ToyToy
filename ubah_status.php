@@ -1,16 +1,14 @@
 <?php
-include("koneksi.php");
+// update_status.php
+include 'koneksi.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = $_POST['id_pesanan'];
-    $status = $_POST['status_pengiriman'];
+$id_pesanan = $_POST['id_pesanan'];
+$status_pengiriman = $_POST['status_pengiriman'];
 
-    $sql = "UPDATE pesanan SET status_pengiriman = ? WHERE id_pesanan = ?";
-    $stmt = $koneksi->prepare($sql);
-    $stmt->bind_param("si", $status, $id);
-    $stmt->execute();
+$stmt = $conn->prepare("UPDATE pesanan SET status_pengiriman = ? WHERE id_pesanan = ?");
+$stmt->bind_param("si", $status_pengiriman, $id_pesanan);
+$stmt->execute();
+$stmt->close();
 
-    header("Location: data_pesanan_admin.php");
-    exit();
-}
+echo "Status pengiriman berhasil diperbarui.";
 ?>

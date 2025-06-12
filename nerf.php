@@ -23,7 +23,7 @@ $result = mysqli_query($koneksi, $sql);
 <body>
     <nav class="navbar">
         <div class="login">
-            <a href="#location">Location</a>
+            <a href="location.html">Location</a>
             <a href="login.php">Login</a>
             <a href="register.php">Register</a>
             <a href="#contact">Contact</a>
@@ -70,7 +70,7 @@ $result = mysqli_query($koneksi, $sql);
                   </div>
 
 
-                    <a href="user.html" class="icon-link">
+                    <a href="user.php" class="icon-link">
                         <span class="material-symbols-outlined">person</span>
                     </a>
                     <div class="cart-icon-wrapper">
@@ -89,7 +89,7 @@ $result = mysqli_query($koneksi, $sql);
                           </li>
                         </ul>
                         <p id="cart-total" class="cart-total">Total: Rp 0</p>
-                        <a href="keranjang.html" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
+                        <a href="keranjang.php" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
                       </div>
                     </div>
 
@@ -116,9 +116,9 @@ $result = mysqli_query($koneksi, $sql);
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#">Console Accessories</a>
-                        <a href="#">Game Consoles</a>
-                        <a href="video-games.html">Video Game</a>
+                        <a href="video-games.php">Console Accessories</a>
+                        <a href="video-games.php">Game Consoles</a>
+                        <a href="video-games.php">Video Game</a>
                     </div>
                 </div>
 
@@ -137,10 +137,6 @@ $result = mysqli_query($koneksi, $sql);
             </nav>
 
         </header>
-
-    <div class="gambarr">
-        <img src="c:\Users\LENOVO\Downloads\aset linasabrina\WhatsApp Image 2025-04-08 at 16.45.12_3fc69e25.jpg" alt="gambar">                 
-    </div>
 
 
 <!-- product -->
