@@ -18,7 +18,7 @@ $admin = [
   <style>
     body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f4f4;
+    background:rgb(255, 255, 255);
     margin: 0;
     color: #333;
   }

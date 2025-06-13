@@ -5,7 +5,7 @@ include 'koneksi.php';
 $total_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan")->fetch_assoc()['total'];
 
 // pesanan selesai
-$total_akun = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'completed'")->fetch_assoc()['total'];
+$total_akun = $koneksi->query("SELECT COUNT(*) AS total FROM akun ")->fetch_assoc()['total'];
 
 // pesanan pending
 $dikirim = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'dikirim'")->fetch_assoc()['total'];
@@ -23,7 +23,7 @@ $selesai = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_p
   <style>
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #f4f4f4;
+        background: #f1f1f1;
         margin: 0;
         color: #333;
     }
@@ -89,6 +89,7 @@ $selesai = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_p
         display: flex;
         gap: 20px;
         flex-wrap: wrap;
+        margin: 30px;
     }
 
     .box {
@@ -204,6 +205,13 @@ $selesai = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_p
         <div class="box canceled">
           <div class="label">Selesai</div>
            <div class="count"><?= $selesai ?></div>
+        </div>
+        </a>
+
+        <a href="admin_rekap.php" class="card-link">
+        <div class="box completed">
+          <div class="label">Rekap</div>
+          <div class="count"><?= $total_akun ?></div>
         </div>
         </a>
 

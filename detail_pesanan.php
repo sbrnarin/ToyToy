@@ -1,7 +1,5 @@
 <?php
-include 'koneksi.php'; // file koneksi ke database
-
-// Ambil semua detail pesanan, sekaligus join ke pesanan dan produk
+include 'koneksi.php'; 
 $query = "
     SELECT dp.*, 
            p.tanggal_pesan, 
@@ -25,7 +23,7 @@ $result = mysqli_query($koneksi, $query);
     <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f4f4;
+    background: #f1f1f1;
     margin: 0;
     color: #333;
   }
