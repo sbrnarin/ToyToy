@@ -12,6 +12,9 @@ $dikirim = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_p
 
 // pesanan dibatalkan
 $selesai = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'selesai'")->fetch_assoc()['total'];
+
+$rekap = $koneksi->query("SELECT COUNT(*) AS total FROM penjualan ")->fetch_assoc()['total'];
+
 ?>
 
 <!DOCTYPE html>
@@ -211,7 +214,7 @@ $selesai = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_p
         <a href="admin_rekap.php" class="card-link">
         <div class="box completed">
           <div class="label">Rekap</div>
-          <div class="count"><?= $total_akun ?></div>
+          <div class="count"><?= $rekap ?></div>
         </div>
         </a>
 
