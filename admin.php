@@ -5,6 +5,7 @@ $query = mysqli_query($koneksi, "
   FROM produk p
   JOIN merk m ON p.id_merk = m.id_merk
   JOIN kategori k ON p.id_kategori = k.id_kategori
+  ORDER BY p.id_produk ASC
 ");
 
 ?>

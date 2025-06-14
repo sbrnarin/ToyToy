@@ -3,12 +3,8 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "sabrinalina";
-
-$conn = new mysqli($host, $user, $pass, $dbname);
+// Koneksi ke database
+$conn = new mysqli("localhost", "root", "", "sabrinalina");
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
@@ -25,16 +21,14 @@ $stmtPembeli = $conn->prepare("SELECT id_pembeli FROM pembeli WHERE id_akun = ?"
 $stmtPembeli->bind_param("i", $id_akun);
 $stmtPembeli->execute();
 $resultPembeli = $stmtPembeli->get_result();
-
 if ($resultPembeli->num_rows === 0) {
     echo "Data pembeli tidak ditemukan.";
     exit;
 }
-
 $pembeli = $resultPembeli->fetch_assoc();
 $id_pembeli = $pembeli['id_pembeli'];
 
-// Ambil data pesanan
+// Ambil data pesanan dan produk
 $stmt = $conn->prepare("
     SELECT p.id_pesanan, p.tanggal_pesan, p.status_pengiriman, p.total_harga, p.metode_pembayaran,
            pr.nama_produk, pr.harga, dp.jumlah
@@ -48,11 +42,10 @@ $stmt->bind_param("i", $id_pembeli);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Gabungkan data pesanan dan detail
 $pesananList = [];
 while ($row = $result->fetch_assoc()) {
     $id_pesanan = $row['id_pesanan'];
-    $status = trim($row['status_pengiriman'] ?? '') ?: 'Belum Diproses'; // ✅ perbaikan penting
+    $status = trim($row['status_pengiriman'] ?? '') ?: 'Belum Diproses';
 
     if (!isset($pesananList[$id_pesanan])) {
         $pesananList[$id_pesanan] = [
@@ -79,22 +72,79 @@ while ($row = $result->fetch_assoc()) {
     <title>Pesanan Saya</title>
     <link rel="stylesheet" href="user.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            min-height: 100vh;
+        }
+        .sidebar h3 {
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .sidebar ul li {
+            margin: 10px 0;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+        .sidebar ul li a.active {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
         .order-item {
-            border: 1px solid #ccc;
-            margin: 15px 0;
-            padding: 10px;
-            border-radius: 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
         }
         .order-header {
             font-weight: bold;
             margin-bottom: 10px;
         }
         .product-item {
-            margin-left: 15px;
+            margin-left: 20px;
+        }
+        button {
+            background-color: #2c3e50;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color:rgb(65, 91, 117);
+        }
+        .kembali-btn {
+            margin-top: 30px;
+            background-color: #2c3e50;
+        }
+        .kembali-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
+
 <div class="container">
     <div class="sidebar">
         <h3>Akun Saya</h3>
@@ -116,26 +166,32 @@ while ($row = $result->fetch_assoc()) {
                     <div class="order-header">
                         Pesanan #<?= htmlspecialchars($id) ?> |
                         <?= htmlspecialchars($pesanan['tanggal']) ?> |
-                        Status: <?= htmlspecialchars($pesanan['status']) ?>
+                        Status: <strong><?= htmlspecialchars($pesanan['status']) ?></strong>
                     </div>
-                    <div>
-                        <p><strong>Metode Pembayaran:</strong> <?= htmlspecialchars(ucfirst($pesanan['metode'])) ?></p>
-                        <p><strong>Total:</strong> Rp <?= number_format($pesanan['total'], 0, ',', '.') ?></p>
-                        <p><strong>Produk:</strong></p>
-                        <?php foreach ($pesanan['produk'] as $produk): ?>
-                            <div class="product-item">
-                                <?= htmlspecialchars($produk['nama']) ?> -
-                                <?= $produk['jumlah'] ?> x Rp <?= number_format($produk['harga'], 0, ',', '.') ?>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+                    <p><strong>Metode Pembayaran:</strong> <?= htmlspecialchars(ucfirst($pesanan['metode'])) ?></p>
+                    <p><strong>Total:</strong> Rp <?= number_format($pesanan['total'], 0, ',', '.') ?></p>
+                    <p><strong>Produk:</strong></p>
+                    <?php foreach ($pesanan['produk'] as $produk): ?>
+                        <div class="product-item">
+                            <?= htmlspecialchars($produk['nama']) ?> - <?= $produk['jumlah'] ?> x Rp <?= number_format($produk['harga'], 0, ',', '.') ?>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <?php if (strtolower($pesanan['status']) !== 'selesai'): ?>
+                        <form method="POST" action="konfirmasi_selesai.php" style="margin-top: 15px;">
+                            <input type="hidden" name="id_pesanan" value="<?= $id ?>">
+                            <button type="submit">Konfirmasi Pesanan Selesai</button>
+                        </form>
+                    <?php else: ?>
+                        <p style="color: green; font-weight: bold; margin-top: 10px;">✔ Pesanan telah selesai.</p>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
 
-        <br>
-        <button onclick="window.location.href='index.php'">Kembali ke Beranda</button>
+        <button class="kembali-btn" onclick="window.location.href='index.php'">Kembali ke Beranda</button>
     </div>
 </div>
+
 </body>
 </html>

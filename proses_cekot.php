@@ -9,11 +9,36 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama       = trim($conn->real_escape_string($_POST['nama'] ?? ''));
-    $alamat     = trim($conn->real_escape_string($_POST['alamat'] ?? ''));
-    $kota       = trim($conn->real_escape_string($_POST['kota'] ?? ''));
-    $provinsi   = trim($conn->real_escape_string($_POST['provinsi'] ?? ''));
-    $no_telp    = trim($conn->real_escape_string($_POST['nohp'] ?? ''));
+   $id_akun = $_SESSION['id_akun'] ?? null;
+if (!$id_akun) {
+    die("Silakan login terlebih dahulu.");
+}
+
+// Cek apakah pembeli sudah ada
+$stmt = $conn->prepare("SELECT id_pembeli, nama_pembeli, alamat, kota, provinsi, no_telp FROM pembeli WHERE id_akun = ?");
+$stmt->bind_param("i", $id_akun);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows > 0) {
+    $stmt->bind_result($id_pembeli, $nama, $alamat, $kota, $provinsi, $no_telp);
+    $stmt->fetch();
+} else {
+    // Kalau belum ada, pakai data dari form
+    $nama     = trim($conn->real_escape_string($_POST['nama'] ?? ''));
+    $alamat   = trim($conn->real_escape_string($_POST['alamat'] ?? ''));
+    $kota     = trim($conn->real_escape_string($_POST['kota'] ?? ''));
+    $provinsi = trim($conn->real_escape_string($_POST['provinsi'] ?? ''));
+    $no_telp  = trim($conn->real_escape_string($_POST['nohp'] ?? ''));
+
+    // Insert data pembeli baru
+    $stmtInsert = $conn->prepare("INSERT INTO pembeli (id_akun, nama_pembeli, alamat, kota, provinsi, no_telp) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmtInsert->bind_param("isssss", $id_akun, $nama, $alamat, $kota, $provinsi, $no_telp);
+    $stmtInsert->execute();
+    $id_pembeli = $stmtInsert->insert_id;
+    $stmtInsert->close();
+}
+$stmt->close();
     $produkJson = $_POST['produk'] ?? '[]';
     $ongkir     = isset($_POST['shippingCost']) ? (int)$_POST['shippingCost'] : 0;
     $metode_pengiriman = trim($conn->real_escape_string($_POST['shippingMethod'] ?? ''));

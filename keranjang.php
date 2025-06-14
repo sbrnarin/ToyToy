@@ -1,18 +1,20 @@
 <?php
-// Tambahkan ini di bagian paling atas file
 session_start();
-'koneksi.php';
+include 'koneksi.php';
 
-// Cek apakah user login
+
 $userLoggedIn = isset($_SESSION['user_id']);
 $user_id = $userLoggedIn ? $_SESSION['user_id'] : null;
 
-// Ambil data keranjang dari database jika user login
+
+
 $dbCart = [];
 if ($userLoggedIn) {
-    $query = "SELECT p.id, p.nama, p.harga, p.gambar, p.kategori, k.jumlah 
+    $query = "SELECT p.id_produk as id, p.nama_produk as name, p.harga as price, 
+                     p.nama_file as image, m.nama_merk as category, k.jumlah as quantity
               FROM keranjang k 
-              JOIN produk p ON k.produk_id = p.id 
+              JOIN produk p ON k.produk_id = p.id_produk 
+              JOIN merk m ON p.id_merk = m.id_merk
               WHERE k.user_id = ?";
     $stmt = mysqli_prepare($koneksi, $query);
     mysqli_stmt_bind_param($stmt, "i", $user_id);
@@ -22,24 +24,27 @@ if ($userLoggedIn) {
     while ($row = mysqli_fetch_assoc($result)) {
         $dbCart[] = [
             'id' => $row['id'],
-            'name' => $row['nama'],
-            'price' => $row['harga'],
-            'image' => $row['gambar'],
-            'category' => $row['kategori'],
-            'quantity' => $row['jumlah'],
+            'name' => $row['name'],
+            'price' => $row['price'],
+            'image' => 'gambar/' . $row['image'],
+            'category' => $row['category'],
+            'quantity' => $row['quantity'],
             'selected' => true
         ];
     }
 }
-?>
 
+
+$initialCart = !empty($dbCart) ? $dbCart : [];
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Keranjang Belanja</title>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja - ToyToyShop</title>
+    <style>
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -100,10 +105,10 @@ if ($userLoggedIn) {
     }
 
     .cart-item img {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       border-radius: 8px;
-      object-fit: cover;
+      object-fit: contain;
       background: #f0f0f0;
     }
 
@@ -297,219 +302,164 @@ if ($userLoggedIn) {
         font-size: 15px;
       }
     }
-  </style>
+</style>
 </head>
 <body>
-  <header>
-    <a href="index.php">Kembali ke Toko</a>
-  </header>
+    <header>
+        <a href="index.php">Kembali ke Toko</a>
+    </header>
 
-  <h1>Keranjang Belanja</h1>
+    <h1>Keranjang Belanja</h1>
 
-  <div class="cart-container" id="cart-container"></div>
+    <div class="cart-container" id="cart-container"></div>
 
-  <div class="cart-summary">
-    <div class="summary-row">
-      <span class="summary-label">Total Produk:</span>
-      <span class="summary-value" id="total-items">0 Item</span>
-    </div>
-    <div class="summary-row">
-      <span class="summary-label">Total Harga:</span>
-      <span class="summary-value" id="total-price">Rp 0</span>
-    </div>
-    <button class="checkout-btn" id="checkout-btn">Proses Checkout</button>
-  </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Initialize cart
-    const cart = loadCart();
-    const cartContainer = document.getElementById("cart-container");
-    const checkoutBtn = document.getElementById("checkout-btn");
-    
-    renderCart(cart);
-    setupEventListeners();
-
-    // Load and validate cart data
-    function loadCart() {
-      try {
-        const cartData = JSON.parse(localStorage.getItem("cart")) || [];
-        return cartData.map(item => ({
-          id: item.id || generateId(),
-          name: sanitizeText(item.name || item.title || item.productName || `Produk ${item.id || ''}`),
-          price: parsePrice(item.price),
-          quantity: Math.max(1, parseInt(item.quantity) || 1),
-          category: sanitizeText(item.category || 'Umum'),
-          image: validateImage(item.image) || 'default.png',
-          selected: item.selected !== false,
-          originalPrice: parsePrice(item.originalPrice || item.price)
-        })).filter(item => item !== null);
-      } catch (error) {
-        console.error("Error loading cart:", error);
-        return [];
-      }
-    }
-
-    // Generate unique ID if missing
-    function generateId() {
-      return 'prod_' + Math.random().toString(36).substr(2, 9);
-    }
-
-    // Sanitize text content
-    function sanitizeText(text) {
-      return String(text).trim().replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    // Parse price from various formats
-    function parsePrice(price) {
-      if (typeof price === 'number') return Math.max(0, price);
-      if (typeof price !== 'string') return 0;
-      
-      const numericValue = price.replace(/[^\d,-]/g, '')
-                               .replace(',', '.')
-                               .replace(/\.(?=.*\.)/g, '');
-      return parseFloat(numericValue) || 0;
-    }
-
-  
-    function validateImage(url) {
-      if (!url) return null;
-      try {
-        new URL(url);
-        return url;
-      } catch {
-        return null;
-      }
-    }
-
-
-    function renderCart(cart) {
-      if (cart.length === 0) {
-        cartContainer.innerHTML = `
-          <div class="empty-cart">
-            <p>Keranjang belanja Anda kosong</p>
-            <p><a href="index.php">Kembali berbelanja</a></p>
-          </div>
-        `;
-        document.querySelector('.cart-summary').style.display = 'none';
-        return;
-      }
-
-      document.querySelector('.cart-summary').style.display = 'block';
-      cartContainer.innerHTML = cart.map((item, index) => `
-        <div class="cart-item" data-id="${item.id}">
-          <div style="display: flex; align-items: center;">
-            <input type="checkbox" class="item-checkbox" id="item-${index}" 
-                   data-index="${index}" ${item.selected ? 'checked' : ''}>
-            <img src="${item.image}" alt="${item.name}" onerror="this.src='default.png'">
-          </div>
-          <div class="cart-item-details">
-            <div class="cart-item-category">${item.category}</div>
-            <div class="cart-item-name">${item.name}</div>
-            <div class="quantity-control">
-              <button class="quantity-btn decrease" data-index="${index}" aria-label="Kurangi jumlah">−</button>
-              <span class="quantity">${item.quantity}</span>
-              <button class="quantity-btn increase" data-index="${index}" aria-label="Tambah jumlah">+</button>
-              <button class="delete-btn" data-index="${index}" aria-label="Hapus produk">🗑️</button>
-            </div>
-            <div class="item-total">${formatCurrency(item.price * item.quantity)}</div>
-            <button class="btn-product-checkout" data-index="${index}">Checkout Item Ini</button>
-          </div>
+    <div class="cart-summary">
+        <div class="summary-row">
+            <span class="summary-label">Total Produk:</span>
+            <span class="summary-value" id="total-items">0 Item</span>
         </div>
-      `).join('');
+        <div class="summary-row">
+            <span class="summary-label">Total Harga:</span>
+            <span class="summary-value" id="total-price">Rp 0</span>
+        </div>
+        <button class="checkout-btn" id="checkout-btn">Proses Checkout</button>
+    </div>
 
-      updateCartSummary(cart);
-    }
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize cart with data from PHP and localStorage
+        const initialCart = <?php echo json_encode($initialCart); ?>;
+        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+        
+        // Merge carts, giving priority to database cart
+        const mergedCart = initialCart.length > 0 ? initialCart : localCart;
+        
+        // Process cart items to ensure consistent structure
+        const cart = mergedCart.map(item => ({
+            id: item.id || 'unknown',
+            name: item.name || item.product_name || 'Nama Produk',
+            price: parseFloat(item.price) || 0,
+            image: item.image || 'gambar/default.png',
+            category: item.category || item.category_name || 'Baby Alive',
+            quantity: Math.max(1, parseInt(item.quantity) || 1),
+            selected: item.selected !== false
+        }));
 
-
-    function formatCurrency(amount) {
-      return new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0
-      }).format(amount);
-    }
-
-    // cart summary
-    function updateCartSummary(cart) {
-      const selectedItems = cart.filter(item => item.selected);
-      const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
-      const totalPrice = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-      document.getElementById("total-items").textContent = 
-        `${totalItems} Item${totalItems !== 1 ? '' : ''}`;
-      document.getElementById("total-price").textContent = formatCurrency(totalPrice);
-      
-      checkoutBtn.disabled = selectedItems.length === 0;
-    }
-
-
-    function setupEventListeners() {
-      cartContainer.addEventListener('click', function(e) {
-        const index = e.target.dataset.index;
-        if (!index) return;
-
-        const cart = loadCart();
-        const item = cart[index];
-
-        if (e.target.classList.contains('decrease')) {
-          item.quantity = Math.max(1, item.quantity - 1);
-        } else if (e.target.classList.contains('increase')) {
-          item.quantity += 1;
-        } else if (e.target.classList.contains('delete-btn')) {
-          if (confirm(`Hapus ${item.name} dari keranjang?`)) {
-            cart.splice(index, 1);
-          }
-        } else if (e.target.classList.contains('item-checkbox')) {
-          item.selected = e.target.checked;
-        } else if (e.target.classList.contains('btn-product-checkout')) {
-          checkoutSingleItem(item);
-          return;
-        }
-
-        saveCart(cart);
+        const cartContainer = document.getElementById("cart-container");
+        const checkoutBtn = document.getElementById("checkout-btn");
+        
         renderCart(cart);
-      });
+        setupEventListeners();
 
-      // Checkout button
-      checkoutBtn.addEventListener('click', function() {
-        const cart = loadCart();
-        const selectedItems = cart.filter(item => item.selected);
-        
-        if (selectedItems.length === 0) {
-          alert("Silakan pilih setidaknya satu produk untuk checkout.");
-          return;
+        function renderCart(cart) {
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <p>Keranjang belanja Anda kosong</p>
+                        <p><a href="index.php">Kembali berbelanja</a></p>
+                    </div>
+                `;
+                document.querySelector('.cart-summary').style.display = 'none';
+                return;
+            }
+
+            document.querySelector('.cart-summary').style.display = 'block';
+            cartContainer.innerHTML = cart.map((item, index) => `
+                <div class="cart-item" data-id="${item.id}">
+                    <div style="display: flex; align-items: center;">
+                        <input type="checkbox" class="item-checkbox" id="item-${index}" 
+                               data-index="${index}" ${item.selected ? 'checked' : ''}>
+                        <img src="${item.image}" alt="${item.name}" 
+                             onerror="this.src='gambar/default.png'">
+                    </div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-category">${item.category}</div>
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn decrease" data-index="${index}">−</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="quantity-btn increase" data-index="${index}">+</button>
+                            <button class="delete-btn" data-index="${index}">🗑️</button>
+                        </div>
+                        <div class="item-total">${formatCurrency(item.price * item.quantity)}</div>
+                        <button class="btn-product-checkout" data-index="${index}">Checkout Item Ini</button>
+                    </div>
+                </div>
+            `).join('');
+
+            updateCartSummary(cart);
         }
-        
-        proceedToCheckout(selectedItems);
-      });
-    }
 
-    // simpan ke localStorage
-    function saveCart(cart) {
-      localStorage.setItem("cart", JSON.stringify(cart));
-      const headerCartCount = document.querySelector('.header-cart-count');
-      if (headerCartCount) {
-        headerCartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
-      }
-    }
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
 
-    // single item
-    function checkoutSingleItem(item) {
-      if (confirm(`Checkout ${item.quantity}x ${item.name} seharga ${formatCurrency(item.price * item.quantity)}?`)) {
-        localStorage.setItem("checkoutItem", JSON.stringify(item));
-        window.location.href = "checkout.php";
-      }
-    }
+        function updateCartSummary(cart) {
+            const selectedItems = cart.filter(item => item.selected);
+            const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    function proceedToCheckout(items) {
-      const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      if (confirm(`Checkout ${items.length} produk dengan total ${formatCurrency(total)}?`)) {
-        localStorage.setItem("checkoutItems", JSON.stringify(items));
-        window.location.href = "cekot.php";
-      }
-    }
-  });
-</script>
+            document.getElementById("total-items").textContent = `${totalItems} Item${totalItems !== 1 ? '' : ''}`;
+            document.getElementById("total-price").textContent = formatCurrency(totalPrice);
+            
+            checkoutBtn.disabled = selectedItems.length === 0;
+        }
+
+        function setupEventListeners() {
+            cartContainer.addEventListener('click', function(e) {
+                const index = e.target.getAttribute('data-index');
+                if (index === null) return;
+
+                if (e.target.classList.contains('decrease')) {
+                    cart[index].quantity = Math.max(1, cart[index].quantity - 1);
+                } else if (e.target.classList.contains('increase')) {
+                    cart[index].quantity += 1;
+                } else if (e.target.classList.contains('delete-btn')) {
+                    if (confirm(`Hapus ${cart[index].name} dari keranjang?`)) {
+                        cart.splice(index, 1);
+                    }
+                } else if (e.target.classList.contains('item-checkbox')) {
+                    cart[index].selected = e.target.checked;
+                } else if (e.target.classList.contains('btn-product-checkout')) {
+                    checkoutSingleItem(cart[index]);
+                    return;
+                }
+
+                localStorage.setItem("cart", JSON.stringify(cart));
+                renderCart(cart);
+            });
+
+            checkoutBtn.addEventListener('click', function() {
+                const selectedItems = cart.filter(item => item.selected);
+                
+                if (selectedItems.length === 0) {
+                    alert("Silakan pilih setidaknya satu produk untuk checkout.");
+                    return;
+                }
+                
+                proceedToCheckout(selectedItems);
+            });
+        }
+
+        function checkoutSingleItem(item) {
+            if (confirm(`Checkout ${item.quantity}x ${item.name} seharga ${formatCurrency(item.price * item.quantity)}?`)) {
+                localStorage.setItem("checkoutItem", JSON.stringify(item));
+                window.location.href = "checkout.php";
+            }
+        }
+
+        function proceedToCheckout(items) {
+            const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            if (confirm(`Checkout ${items.length} produk dengan total ${formatCurrency(total)}?`)) {
+                localStorage.setItem("checkoutItems", JSON.stringify(items));
+                window.location.href = "cekot.php";
+            }
+        }
+    });
+    </script>
 </body>
 </html>
