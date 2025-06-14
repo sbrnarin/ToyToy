@@ -251,7 +251,7 @@
     <i class="heart-icon" data-lucide="heart"></i>
   </button>
 
-  <img src="gambar/01-MAJORETT-T83WEMAJA-MAJ120209R000.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
+  <img src="gambar/01-MAJORETTE-T83WEMAJA-MAJ120221K010-Multicolor.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
   
   <div class="info">
     <p class="product-title">MAJORETT-T83WEMAJA</p>

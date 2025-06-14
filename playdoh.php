@@ -12,17 +12,16 @@ $result = mysqli_query($koneksi, $sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PlayDoh Products - ToyToyShop</title>
     <link rel="stylesheet" href="produk.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <script src="https://unpkg.com/lucide@latest"></script>
-
 </head>
 <body>
     <nav class="navbar">
         <div class="login">
-            <a href="#location">Location</a>
+            <a href="location.html">Location</a>
             <a href="login.php">Login</a>
             <a href="register.php">Register</a>
             <a href="#contact">Contact</a>
@@ -30,12 +29,10 @@ $result = mysqli_query($koneksi, $sql);
         
         <header>
             <div class="header-container">
-                <!-- Logo Toko -->
                 <div class="logo_toko">
                     <img src="c:\Users\LENOVO\Downloads\Kids_Toys_Logo-removebg-preview.png" alt="Toy logo" class="nav_logo"/>
                 </div>
-                
-                <!-- Search Bar -->
+          
                 <form class="search-form" onsubmit="return searchProducts(event)">
                   <div class="search">
                     <span class="search-icon material-symbols-outlined">search</span>
@@ -47,7 +44,6 @@ $result = mysqli_query($koneksi, $sql);
                   <div class="wishlist-link" id="wishlist-toggle">
                     <span class="material-symbols-outlined">favorite</span>
                     
-                    <!-- Dropdown Wishlist -->
                     <div class="wishlist-dropdown">
                       <div class="wishlist-header">
                         <h3>Wishlist Saya</h3>
@@ -67,7 +63,7 @@ $result = mysqli_query($koneksi, $sql);
                     </div>
                   </div>
 
-                    <a href="user.html" class="icon-link">
+                    <a href="user.php" class="icon-link">
                         <span class="material-symbols-outlined">person</span>
                     </a>
                     <div class="cart-icon-wrapper">
@@ -91,8 +87,7 @@ $result = mysqli_query($koneksi, $sql);
                     </div>
                 </div>
             </div>
-            
-            <!-- Navigation Links -->
+ 
             <nav class="nav_link">
               <a href="index.php">Home</a>
                 <div class="nav-item dropdown">
@@ -114,7 +109,7 @@ $result = mysqli_query($koneksi, $sql);
                     <div class="dropdown-menu">
                         <a href="#">Console Accessories</a>
                         <a href="game_consoles.html">Game Consoles</a>
-                        <a href="video-games.html">Video Game</a>
+                        <a href="video-games.php">Video Game</a>
                     </div>
                 </div>
 
@@ -125,12 +120,24 @@ $result = mysqli_query($koneksi, $sql);
                     <div class="dropdown-menu">
                         <a href="playdoh.php">Play-Doh</a>
                         <a href="lego.php">Lego</a>
-                        <a href="nerf.php">Nerf</a>
+                        <a href="nerf.php">Hot Wheels</a>
                         <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
             </nav>
         </header>
+
+        <div class="tulis">
+    <h1>PLAY DOH COLLECTION</h1>
+</div>
+
+<div class="video-wrapper">
+    <div class="video-container">
+        <video autoplay loop muted>
+            <source src="gambar/playdoh.mp4" type="video/mp4">
+        </video>
+    </div>
+</div>
 
 <!-- product -->
 <section class="products-showcase">     
@@ -211,7 +218,7 @@ $result = mysqli_query($koneksi, $sql);
 </footer>
 
 <script>
-// Cart functionality (matching index.php)
+
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const cartListNavbar = document.getElementById('cart-list-navbar');
 const cartCount = document.querySelector('.cart-count');
@@ -294,7 +301,6 @@ function addToCart(event) {
     showNotification(`${title} ditambahkan ke keranjang`);
 }
 
-// Remove item from cart
 cartListNavbar?.addEventListener('click', function(e) {
     if (e.target.classList.contains('remove-item')) {
         const index = parseInt(e.target.dataset.index, 10);
@@ -306,7 +312,7 @@ cartListNavbar?.addEventListener('click', function(e) {
     }
 });
 
-// Toggle cart popup
+
 cartIcon?.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -315,14 +321,13 @@ cartIcon?.addEventListener('click', function(e) {
     }
 });
 
-// Close cart popup when clicking outside
 document.addEventListener('click', function(e) {
     if (!cartIcon?.contains(e.target) && !cartPopup?.contains(e.target)) {
         if (cartPopup) cartPopup.style.display = 'none';
     }
 });
 
-// Wishlist functionality
+
 let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 const wishlistToggle = document.getElementById('wishlist-toggle');
 const wishlistDropdown = document.querySelector('.wishlist-dropdown');
@@ -404,7 +409,7 @@ function toggleWishlist(event) {
     updateWishlistDisplay();
 }
 
-// Remove item from wishlist
+
 wishlistItemsContainer?.addEventListener('click', function(e) {
     if (e.target.closest('.remove-wishlist')) {
         const itemElement = e.target.closest('.wishlist-item');
@@ -421,26 +426,26 @@ wishlistItemsContainer?.addEventListener('click', function(e) {
     }
 });
 
-// Toggle wishlist dropdown
+
 wishlistToggle?.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     wishlistDropdown.classList.toggle('show');
 });
 
-// Close wishlist dropdown when clicking outside
+
 document.addEventListener('click', function(e) {
     if (!wishlistToggle.contains(e.target) && !wishlistDropdown.contains(e.target)) {
         wishlistDropdown.classList.remove('show');
     }
 });
 
-// Close button
+
 document.querySelector('.close-wishlist')?.addEventListener('click', function() {
     wishlistDropdown.classList.remove('show');
 });
 
-// Search functionality
+
 function searchProducts(event) {
     event.preventDefault();
     const query = document.querySelector('.search-input').value.toLowerCase();
@@ -459,7 +464,7 @@ function searchProducts(event) {
     return false;
 }
 
-// Notification function
+
 function showNotification(message) {
     const notification = document.createElement('div');
     notification.className = 'notification';
@@ -475,12 +480,11 @@ function showNotification(message) {
     }, 10);
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', function() {
     loadCartFromLocalStorage();
     loadWishlistFromLocalStorage();
     
-    // Initialize wishlist buttons
+    
     document.querySelectorAll('.product-card').forEach(card => {
         const productId = card.dataset.productId;
         if (wishlist.some(item => item.id === productId)) {

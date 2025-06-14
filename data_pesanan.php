@@ -1,6 +1,10 @@
 <?php
 include "koneksi.php";
-$sql = "SELECT * FROM pesanan";
+
+// Ambil data pesanan + nama pembeli
+$sql = "SELECT pesanan.*, pembeli.nama_pembeli 
+        FROM pesanan 
+        JOIN pembeli ON pesanan.id_pembeli = pembeli.id_pembeli";
 $query = mysqli_query($koneksi, $sql);
 ?>
 
@@ -168,6 +172,7 @@ $query = mysqli_query($koneksi, $sql);
         </ul>
     </nav>
 </aside>
+
 <div class="main-content">
     <div class="container">
         <h2>Data Pesanan</h2>
@@ -175,7 +180,7 @@ $query = mysqli_query($koneksi, $sql);
             <thead>
                 <tr>
                     <th>ID Pesanan</th>
-                    <th>ID User</th>
+                    <th>Nama Pembeli</th>
                     <th>Tanggal Pesan</th>
                     <th>Total Produk</th>
                     <th>Total Harga</th>
@@ -190,7 +195,7 @@ $query = mysqli_query($koneksi, $sql);
                 <?php while($pesanan = mysqli_fetch_assoc($query)) { ?>
                 <tr>
                     <td><?= $pesanan['id_pesanan'] ?></td>
-                    <td><?= $pesanan['id_pembeli'] ?></td>
+                    <td><?= htmlspecialchars($pesanan['nama_pembeli']) ?></td>
                     <td><?= $pesanan['tanggal_pesan'] ?></td>
                     <td><?= $pesanan['total_produk'] ?></td>
                     <td><?= $pesanan['total_harga'] ?></td>
@@ -248,7 +253,6 @@ $query = mysqli_query($koneksi, $sql);
                             <input type="hidden" name="id_pesanan" value="<?= $pesanan['id_pesanan'] ?>">
                             <button class="hapus">Hapus</button>
                         </form>
-
                     </td>
                 </tr>
                 <?php } ?>
