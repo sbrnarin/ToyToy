@@ -1,21 +1,19 @@
 <?php
 session_start();
-include "koneksi.php";
+if (!isset($_SESSION['username'])) {
+    header("Location: login_admin.php");
+    exit;
+}
 
-// Misalnya kamu sudah punya data admin dari session atau database, contoh:
-$admin = [
-  'username' => 'admin123',
-  'nama_lengkap' => 'Admin Kids Toys'
-];
+$username = $_SESSION['username'];
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <title>Akun Admin</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
+    <meta charset="UTF-8">
+    <title>Akun Admin - Kids Toys</title>
+    <style>
     body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background:rgb(255, 255, 255);
@@ -82,60 +80,61 @@ $admin = [
       align-items: flex-start;
     }
 
-    /* Profile Card */
-    .profile-card {
-      background-color: #D9D9D9;
-      border-radius: 12px;
-      padding: 40px;
-      max-width: 450px;
-      width: 100%;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+  
+        .account-card {
+            max-width: 600px;
+            margin: 80px auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            padding: 40px;
+            text-align: center;
+        }
 
-    .profile-card .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 3px solid #081F5C;
-      margin: 0 auto 25px auto;
-      background: url('https://cdn-icons-png.flaticon.com/512/149/149071.png') center/cover no-repeat;
-    }
+        .account-card .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #081F5C;
+            color: white;
+            font-size: 40px;
+            line-height: 100px;
+            margin: 0 auto 20px;
+            font-weight: bold;
+        }
 
-    .profile-card .username {
-      font-weight: 700;
-      font-size: 22px;
-      margin-bottom: 8px;
-      color: #000000;
-    }
+        .account-card h2 {
+            margin: 0;
+            color: #081F5C;
+            font-size: 28px;
+        }
 
-    .profile-card .admin-name {
-      font-size: 18px;
-      margin-bottom: 25px;
-      color: #000000;
-    }
+        .account-card p {
+            color: #333;
+            font-size: 16px;
+            margin: 8px 0 24px;
+        }
 
-    .profile-card .icon-row {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-    }
+        .account-card .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: white;
+            background-color: #081F5C;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
 
-    .profile-card .icon-row i {
-      font-size: 26px;
-      color: #081F5C;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-
-    .profile-card .icon-row i:hover {
-      color: #081F5C;
-    }
-  </style>
+        .account-card .btn:hover {
+            background-color: #0a2a7a;
+        }
+    </style>
 </head>
 <body>
-
- <aside class="sidebar">
+<aside class="sidebar">
     <div class="logo">
       <img src="gambar/Kids Toys Logo (1).png" alt="Kids Toys Logo">
     </div>
@@ -147,20 +146,14 @@ $admin = [
       </ul>
     </nav>
   </aside>
+    <div class="account-card">
+        <div class="avatar"><?= strtoupper(substr($username, 0, 1)) ?></div>
+        <h2><?= htmlspecialchars($username) ?></h2>
+        <p>Admin Kids Toys</p>
 
-  <div class="main-content">
-    <div class="profile-card">
-      <div class="avatar"></div>
-      <div class="username"><?= htmlspecialchars($admin['username']) ?></div>
-      <div class="admin-name"><?= htmlspecialchars($admin['nama_lengkap']) ?></div>
-
-      <div class="icon-row">
-        <i class="fas fa-th-large" title="Dashboard"></i>
-        <i class="fas fa-key" title="Change Password"></i>
-        <i class="fas fa-envelope" title="Messages"></i>
-      </div>
+        <a href="ubah_password.php" class="btn">Ubah Password</a>
+        <a href="logout.php" class="btn" style="background-color: #999; margin-left: 10px;">Logout</a>
     </div>
-  </div>
 
 </body>
 </html>
