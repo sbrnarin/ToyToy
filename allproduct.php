@@ -87,25 +87,25 @@
             <nav class="nav_link">
               <a href="index.php">Home</a>
                 <div class="nav-item dropdown">
-                    <a href="#toys&games" class="dropdown-toggle">Toys & Games 
+                    <a href="video-games.php" class="dropdown-toggle">Toys & Games 
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="puzzles.html">Building Blocks</a>
-                        <a href="figuriens.html">Action Figures</a>
-                        <a href="playdoh.html">Toy Clay</a>
-                        <a href="dolls.html">Dolls & Accessories</a>
+                        <a href="puzzles.php">Building Blocks</a>
+                        <a href="figurines.php">Action Figures</a>
+                        <a href="playdoh.php">Toy Clay</a>
+                        <a href="dolls.php">Dolls & Accessories</a>
                     </div>
                 </div>
 
                 <div class="nav-item dropdown">
-                    <a href="#videogames" class="dropdown-toggle">Video Games & Consoles
+                    <a href="video-games.php" class="dropdown-toggle">Video Games & Consoles
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#">Console Accessories</a>
-                        <a href="#">Game Consoles</a>
-                        <a href="video-games.html">Video Game</a>
+                        <a href="video-games.php">Console Accessories</a>
+                        <a href="video-games.php">Game Consoles</a>
+                        <a href="video-games.php">Video Game</a>
                     </div>
                 </div>
 
@@ -114,12 +114,13 @@
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="playdoh.html">Play-Doh</a>
-                        <a href="lego.html">Lego</a>
-                        <a href="nerf.html">Nerf</a>
-                        <a href="bebyalive.html">Beby Alive</a>
+                        <a href="playdoh.php">Play-Doh</a>
+                        <a href="lego.php">Lego</a>
+                        <a href="nerf.php">Hot Wheels</a>
+                        <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
+
             </nav>
         </header>
 
@@ -163,47 +164,45 @@
       </div>
     </section>
 
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-column">
-                <h3 class="footer-title">TENTANG</h3>
-                <p>Toko mainan berkualitas sejak 2025. Menyediakan berbagai mainan edukatif dan koleksi eksklusif.</p>
-                <a href="#about" class="footer-link">Tentang Kami</a>
-            </div>
-            
-            <div class="footer-column">
-                <h3 class="footer-title">LAYANAN PELANGGAN</h3>
-                <ul class="footer-links">
-                    <li><a href="#help">Bantuan</a></li>
-                    <li><a href="#payment">Metode Pembayaran</a></li>
-                    <li><a href="#shipping">Gratis Ongkir</a></li>
-                    <li><a href="#contact">Hubungi Kami</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3 class="footer-title">PEMBAYARAN</h3>
-                <div class="payment-methods">
-                    <img src="assets/payment/visa.png" alt="Visa">
-                    <img src="assets/payment/mastercard.png" alt="Mastercard">
-                    <img src="assets/payment/gopay.png" alt="Gopay">
-                    <img src="assets/payment/ovo.png" alt="OVO">
+            <footer class="main-footer">
+                <div class="footer-container">
+                    <div class="footer-column">
+                        <h3 class="footer-title">TENTANG</h3>
+                        <p>Toko mainan berkualitas sejak 2025. Menyediakan berbagai mainan edukatif dan koleksi eksklusif.</p>
+                        <a href="#about" class="footer-link">Tentang Kami</a>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3 class="footer-title">LAYANAN PELANGGAN</h3>
+                        <ul class="footer-links">
+                            <li><a href="#help">Bantuan</a></li>
+                            <li><a href="#payment">Metode Pembayaran</a></li>
+                            <li><a href="#shipping">Gratis Ongkir</a></li>
+                            <li><a href="#contact">Hubungi Kami</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3 class="footer-title">PEMBAYARAN</h3>
+                        <div class="payment-methods">
+                            <img src="gambar/gopay.png" alt="Gopay">
+                            <img src="gambar/dana.png" alt="dana">
+                        </div>
+                        
+                        <h3 class="social-title">IKUTI KAMI</h3>
+                        <div class="social-media">
+                            <a href="#facebook"><i class="fa fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/toytoy_kidsstore?igsh=MWNybDZkemhtdGx0dA=="><i class="fa fa-instagram"></i></a>
+                            <a href="https://wa.me/nomor_anda"><i class="fa fa-whatsapp"></i></a>
+                            <a href="https://youtube.com/@toytoyshop?si=yNXNYKnuUr-zLk1G"><i class="fa fa-youtube"></i></a>
+                        </div>
+                    </div>
                 </div>
                 
-                <h3 class="social-title">IKUTI KAMI</h3>
-                <div class="social-media">
-                    <a href="#facebook"><i class="fa fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/toytoy_kidsstore?igsh=MWNybDZkemhtdGx0dA=="><i class="fa fa-instagram"></i></a>
-                    <a href="https://wa.me/nomor_anda"><i class="fa fa-whatsapp"></i></a>
-                    <a href="https://youtube.com/@toytoyshop?si=yNXNYKnuUr-zLk1G"><i class="fa fa-youtube"></i></a>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 ToyToyShop. All Rights Reserved.</p>
                 </div>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2025 ToyToyShop. All Rights Reserved.</p>
-        </div>
-    </footer>
+            </footer>
 
     <script>
         // Initialize cart and wishlist

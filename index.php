@@ -120,7 +120,7 @@
                     <div class="dropdown-menu">
                         <a href="playdoh.php">Play-Doh</a>
                         <a href="lego.php">Lego</a>
-                        <a href="nerf.php">Nerf</a>
+                        <a href="nerf.php">Hot Wheels</a>
                         <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
@@ -342,8 +342,8 @@
                     <div class="footer-column">
                         <h3 class="footer-title">PEMBAYARAN</h3>
                         <div class="payment-methods">
-                            <img src="assets/payment/gopay.png" alt="Gopay">
-                            <img src="assets/payment/dana.png" alt="dana">
+                            <img src="gambar/gopay.png" alt="Gopay">
+                            <img src="gambar/dana.png" alt="dana">
                         </div>
                         
                         <h3 class="social-title">IKUTI KAMI</h3>
@@ -364,7 +364,7 @@
               <!-- search -->
               <script>
                 function searchProducts(event) {
-                  event.preventDefault(); // Mencegah reload
+                  event.preventDefault(); 
               
                   //case-insensitive
                   const query = document.querySelector('.search-input').value.toLowerCase();

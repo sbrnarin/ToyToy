@@ -30,7 +30,7 @@ $result = mysqli_query($koneksi, $sql);
         <header>
             <div class="header-container">
                 <div class="logo_toko">
-                    <img src="c:\Users\LENOVO\Downloads\Kids_Toys_Logo-removebg-preview.png" alt="Toy logo" class="nav_logo"/>
+                    <img src="gambar/Kids Toys Logo (1).png" alt="Toy logo" class="nav_logo"/>
                 </div>
           
                 <form class="search-form" onsubmit="return searchProducts(event)">
@@ -91,24 +91,24 @@ $result = mysqli_query($koneksi, $sql);
             <nav class="nav_link">
               <a href="index.php">Home</a>
                 <div class="nav-item dropdown">
-                    <a href="#toys&games" class="dropdown-toggle">Toys & Games 
+                    <a href="video-games.php" class="dropdown-toggle">Toys & Games 
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
                         <a href="puzzles.php">Building Blocks</a>
-                        <a href="figuriens.php">Action Figures</a>
+                        <a href="figurines.php">Action Figures</a>
                         <a href="playdoh.php">Toy Clay</a>
                         <a href="dolls.php">Dolls & Accessories</a>
                     </div>
                 </div>
 
                 <div class="nav-item dropdown">
-                    <a href="#videogames" class="dropdown-toggle">Video Games & Consoles
+                    <a href="video-games.php" class="dropdown-toggle">Video Games & Consoles
                         <span class="material-symbols-outlined">arrow_drop_down</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#">Console Accessories</a>
-                        <a href="game_consoles.html">Game Consoles</a>
+                        <a href="video-games.php">Console Accessories</a>
+                        <a href="video-games.php">Game Consoles</a>
                         <a href="video-games.php">Video Game</a>
                     </div>
                 </div>
@@ -124,6 +124,7 @@ $result = mysqli_query($koneksi, $sql);
                         <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
+
             </nav>
         </header>
 
@@ -179,44 +180,46 @@ $result = mysqli_query($koneksi, $sql);
   </div>
 </section> 
 
-<footer class="main-footer">
-    <div class="footer-container">
-        <div class="footer-column">
-            <h3 class="footer-title">TENTANG</h3>
-            <p>Toko mainan berkualitas sejak 2025. Menyediakan berbagai mainan edukatif dan koleksi eksklusif.</p>
-            <a href="#about" class="footer-link">Tentang Kami</a>
-        </div>
-        
-        <div class="footer-column">
-            <h3 class="footer-title">LAYANAN PELANGGAN</h3>
-            <ul class="footer-links">
-                <li><a href="#help">Bantuan</a></li>
-                <li><a href="#payment">Metode Pembayaran</a></li>
-                <li><a href="#shipping">Gratis Ongkir</a></li>
-                <li><a href="#contact">Hubungi Kami</a></li>
-            </ul>
-        </div>
-        
-        <div class="footer-column">
-            <h3 class="footer-title">PEMBAYARAN</h3>
-            <div class="payment-methods">
-                <img src="gambar/gopay.png" alt="Gopay">
-                <img src="gambar/dana.png" alt="OVO">
-            </div>
-            
-            <h3 class="social-title">IKUTI KAMI</h3>
-            <div class="social-media">
-                <a href="#facebook"><i class="fa fa-facebook"></i></a>
-                <a href="#instagram"><i class="fa fa-instagram"></i></a>
-                <a href="#youtube"><i class="fa fa-youtube"></i></a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="footer-bottom">
-        <p>&copy; 2025 ToyToyShop. All Rights Reserved.</p>
-    </div>
-</footer>
+           <footer class="main-footer">
+                <div class="footer-container">
+                    <div class="footer-column">
+                        <h3 class="footer-title">TENTANG</h3>
+                        <p>Toko mainan berkualitas sejak 2025. Menyediakan berbagai mainan edukatif dan koleksi eksklusif.</p>
+                        <a href="#about" class="footer-link">Tentang Kami</a>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3 class="footer-title">LAYANAN PELANGGAN</h3>
+                        <ul class="footer-links">
+                            <li><a href="#help">Bantuan</a></li>
+                            <li><a href="#payment">Metode Pembayaran</a></li>
+                            <li><a href="#shipping">Gratis Ongkir</a></li>
+                            <li><a href="#contact">Hubungi Kami</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3 class="footer-title">PEMBAYARAN</h3>
+                        <div class="payment-methods">
+                            <img src="gambar/gopay.png" alt="Gopay">
+                            <img src="gambar/dana.png" alt="dana">
+                        </div>
+                        
+                        <h3 class="social-title">IKUTI KAMI</h3>
+                        <div class="social-media">
+                            <a href="#facebook"><i class="fa fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/toytoy_kidsstore?igsh=MWNybDZkemhtdGx0dA=="><i class="fa fa-instagram"></i></a>
+                            <a href="https://wa.me/nomor_anda"><i class="fa fa-whatsapp"></i></a>
+                            <a href="https://youtube.com/@toytoyshop?si=yNXNYKnuUr-zLk1G"><i class="fa fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 ToyToyShop. All Rights Reserved.</p>
+                </div>
+            </footer>
+
 
 <script>
 

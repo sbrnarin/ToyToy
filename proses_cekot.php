@@ -39,6 +39,7 @@ if ($stmt->num_rows > 0) {
     $stmtInsert->close();
 }
 $stmt->close();
+
     $produkJson = $_POST['produk'] ?? '[]';
     $ongkir     = isset($_POST['shippingCost']) ? (int)$_POST['shippingCost'] : 0;
     $metode_pengiriman = trim($conn->real_escape_string($_POST['shippingMethod'] ?? ''));
