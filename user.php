@@ -135,6 +135,7 @@ if (isset($_POST['update'])) {
                 <li><a href="pesanan.php">Pesanan Saya</a></li>
                 <li><a href="#">Pusat Bantuan</a></li>
                 <li><a href="logout.php">Logout</a></li>
+                <li><a href="index.php">Home</a></li>
             </ul>
         </div>
 

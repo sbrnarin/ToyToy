@@ -150,8 +150,10 @@ while ($row = $result->fetch_assoc()) {
         <h3>Akun Saya</h3>
         <ul>
             <li><a href="user.php">Profil</a></li>
-            <li><a href="pesanan.php" class="active">Pesanan Saya</a></li>
-            <li><a href="#">Pusat Bantuan</a></li>
+                <li><a href="pesanan.php">Pesanan Saya</a></li>
+                <li><a href="#">Pusat Bantuan</a></li>
+                <li><a href="logout.php">Logout</a></li>
+                <li><a href="index.php">Home</a></li>
         </ul>
     </div>
 

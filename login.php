@@ -1,16 +1,5 @@
 <?php
 session_start();
-
-if (isset($_SESSION["username"])) {
-    if ($_SESSION["role"] === "admin") {
-        header("Location: dash_admin.php");
-        exit;
-    } elseif ($_SESSION["role"] === "user") {
-        header("Location: index.php");
-        exit;
-    }
-}
-
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

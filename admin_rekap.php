@@ -282,7 +282,6 @@ $currentYear = date('Y');
         <li><a href="dash_admin.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a></li>
         <li><a href="admin.php"><i class="fas fa-box"></i> <span>Product</span></a></li>
         <li><a href="akun_admin.php"><i class="fas fa-user"></i> <span>Account</span></a></li>
-        <li><a href="#" class="active"><i class="fas fa-file-alt"></i> <span>Sales Report</span></a></li>
       </ul>
     </nav>
   </aside>
