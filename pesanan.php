@@ -3,20 +3,17 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Koneksi ke database
 $conn = new mysqli("localhost", "root", "", "sabrinalina");
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
 
-// Ambil id_akun dari session
 $id_akun = $_SESSION['id_akun'] ?? 0;
 if (!$id_akun) {
     header("Location: login.php");
     exit;
 }
 
-// Cari id_pembeli berdasarkan id_akun
 $stmtPembeli = $conn->prepare("SELECT id_pembeli FROM pembeli WHERE id_akun = ?");
 $stmtPembeli->bind_param("i", $id_akun);
 $stmtPembeli->execute();
@@ -28,7 +25,6 @@ if ($resultPembeli->num_rows === 0) {
 $pembeli = $resultPembeli->fetch_assoc();
 $id_pembeli = $pembeli['id_pembeli'];
 
-// Ambil data pesanan dan produk
 $stmt = $conn->prepare("
     SELECT p.id_pesanan, p.tanggal_pesan, p.status_pengiriman, p.total_harga, p.metode_pembayaran,
            pr.nama_produk, pr.harga, dp.jumlah
@@ -64,136 +60,161 @@ while ($row = $result->fetch_assoc()) {
     ];
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Pesanan Saya</title>
-    <link rel="stylesheet" href="user.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f6f6f6;
-            margin: 0;
-        }
-        .container {
-            display: flex;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #fff;
-            padding: 20px;
-            border-right: 1px solid #ddd;
-            min-height: 100vh;
-        }
-        .sidebar h3 {
-            margin-top: 0;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        .sidebar ul li {
-            margin: 10px 0;
-        }
-        .sidebar ul li a {
-            text-decoration: none;
-            color: #333;
-        }
-        .sidebar ul li a.active {
-            font-weight: bold;
-            color: #007bff;
-        }
-        .main-content {
-            flex: 1;
-            padding: 30px;
-        }
-        .order-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .order-header {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .product-item {
-            margin-left: 20px;
-        }
-        button {
-            background-color: #2c3e50;
-            border: none;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color:rgb(65, 91, 117);
-        }
-        .kembali-btn {
-            margin-top: 30px;
-            background-color: #2c3e50;
-        }
-        .kembali-btn:hover {
-            background-color: #0056b3;
-        }
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    outline: none; 
+    border: none;
+    text-decoration: none;
+    text-transform: none;
+    transition: .2s linear;
+}
+
+body {
+    background-color: #f4f6fc;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    gap: 20px;
+}
+
+.sidebar {
+    width: 260px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+}
+
+.sidebar h3 {
+    font-size: 20px;
+    color: #081F5C;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #081F5C;
+    padding-bottom: 10px;
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px 15px;
+    background-color: #f0f3ff;
+    color: #081F5C;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-bottom: 12px; /* Jarak antar tombol */
+}
+
+.sidebar a:hover {
+    background-color: #081F5C;
+    color: #fff;
+}
+
+.main-content {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 35px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.main-content h2 {
+    font-size: 26px;
+    color: #081F5C;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.order-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.order-item p {
+    margin: 6px 0;
+}
+
+.product-item {
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+.btn-konfirmasi {
+    background-color: #001f5f;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-konfirmasi:hover {
+    background-color: #003399;
+}
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="sidebar">
         <h3>Akun Saya</h3>
-        <ul>
-            <li><a href="user.php">Profil</a></li>
-                <li><a href="pesanan.php">Pesanan Saya</a></li>
-                <li><a href="#">Pusat Bantuan</a></li>
-                <li><a href="logout.php">Logout</a></li>
-                <li><a href="index.php">Home</a></li>
-        </ul>
+        <a href="user.php">Profil</a>
+        <a href="pesanan.php" class="active">Pesanan Saya</a>
+        <a href="#">Pusat Bantuan</a>
+        <a href="logout.php">Logout</a>
+        <a href="index.php">Home</a>
     </div>
 
     <div class="main-content">
         <h2>Pesanan Saya</h2>
 
         <?php if (empty($pesananList)): ?>
-            <p>Anda belum memiliki pesanan.</p>
+            <p style="text-align:center;">Belum ada pesanan.</p>
         <?php else: ?>
             <?php foreach ($pesananList as $id => $pesanan): ?>
                 <div class="order-item">
-                    <div class="order-header">
-                        Pesanan #<?= htmlspecialchars($id) ?> |
-                        <?= htmlspecialchars($pesanan['tanggal']) ?> |
-                        Status: <strong><?= htmlspecialchars($pesanan['status']) ?></strong>
-                    </div>
-                    <p><strong>Metode Pembayaran:</strong> <?= htmlspecialchars(ucfirst($pesanan['metode'])) ?></p>
+                    <p><strong>ID Pesanan:</strong> <?= $id ?></p>
+                    <p><strong>Tanggal:</strong> <?= $pesanan['tanggal'] ?></p>
+                    <p><strong>Status:</strong> <?= $pesanan['status'] ?></p>
+                    <p><strong>Metode Pembayaran:</strong> <?= $pesanan['metode'] ?></p>
                     <p><strong>Total:</strong> Rp <?= number_format($pesanan['total'], 0, ',', '.') ?></p>
                     <p><strong>Produk:</strong></p>
                     <?php foreach ($pesanan['produk'] as $produk): ?>
                         <div class="product-item">
-                            <?= htmlspecialchars($produk['nama']) ?> - <?= $produk['jumlah'] ?> x Rp <?= number_format($produk['harga'], 0, ',', '.') ?>
+                            <?= $produk['nama'] ?> - <?= $produk['jumlah'] ?> x Rp <?= number_format($produk['harga'], 0, ',', '.') ?>
                         </div>
                     <?php endforeach; ?>
-
                     <?php if (strtolower($pesanan['status']) !== 'selesai'): ?>
-                        <form method="POST" action="konfirmasi_selesai.php" style="margin-top: 15px;">
+                        <form method="POST" action="konfirmasi_selesai.php">
                             <input type="hidden" name="id_pesanan" value="<?= $id ?>">
-                            <button type="submit">Konfirmasi Pesanan Selesai</button>
+                            <button class="btn-konfirmasi" type="submit">Konfirmasi Selesai</button>
                         </form>
                     <?php else: ?>
-                        <p style="color: green; font-weight: bold; margin-top: 10px;">✔ Pesanan telah selesai.</p>
+                        <p style="color: green; font-weight: bold;">✔ Selesai</p>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
-
-        <button class="kembali-btn" onclick="window.location.href='index.php'">Kembali ke Beranda</button>
     </div>
 </div>
-
 </body>
 </html>

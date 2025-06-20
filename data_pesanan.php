@@ -13,54 +13,57 @@ $query = mysqli_query($koneksi, $sql);
 <head>
     <meta charset="UTF-8">
     <title>Data Pesanan - Admin</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            color: #333;
-        }
-        .sidebar {
-            width: 230px;
-            background-color: #081F5C;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .sidebar .logo {
-            margin-bottom: 20px;
-        }
-        .sidebar .logo img {
-            width: 130px;
-        }
-        .sidebar nav ul {
-            list-style: none;
-            padding: 0;
-            width: 100%;
-        }
-        .sidebar nav ul li {
-            margin-bottom: 15px;
-        }
-        .sidebar nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-        .sidebar nav ul li a:hover {
-            background-color: #000000;
-        }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f1f1f1;
+        margin: 0;
+        color: #333;
+    }
+
+    .sidebar {
+        width: 230px;
+        background-color: #081F5C;
+        height: 100vh;
+        position: fixed;
+        padding: 20px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sidebar .logo img {
+        width: 130px;
+        margin-bottom: 30px;
+    }
+
+    .sidebar nav ul {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+    }
+
+    .sidebar nav ul li {
+        margin-bottom: 20px;
+    }
+
+    .sidebar nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+
+    .sidebar nav ul li a:hover {
+        background-color: #000000;
+    }
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -162,16 +165,16 @@ $query = mysqli_query($koneksi, $sql);
 <body>
 <aside class="sidebar">
     <div class="logo">
-        <img src="gambar/Kids Toys Logo (1).png" alt="Kids Toys Logo">
+      <img src="gambar/Kids Toys Logo (1).png" alt="Kids Toys Logo">
     </div>
     <nav>
-        <ul>
-            <li><a href="dash_admin.php">Dashboard</a></li>
-            <li><a href="admin.php">Product</a></li>
-            <li><a href="akun_admin.php">Account</a></li>
-        </ul>
+      <ul>
+        <li><a href="dash_admin.php"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="admin.php"><i class="fas fa-box"></i> Product</a></li>
+        <li><a href="akun_admin.php"><i class="fas fa-user"></i> Account</a></li>
+      </ul>
     </nav>
-</aside>
+  </aside>
 
 <div class="main-content">
     <div class="container">

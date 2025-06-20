@@ -9,65 +9,65 @@ $result = $conn->query($sql);
 <html>
 <head>
     <title>Daftar Akun</title>
-    <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f4f4f4;
-            margin: 20px;
+            background: #f9f9f9;
+            margin: 0;
             color: #333;
         }
-        .sidebar {
-            width: 230px;
-            background-color: #081F5C;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .sidebar .logo {
-            margin-bottom: 20px;
-        }
-        .sidebar .logo img {
-            width: 130px;
-        }
-        .sidebar nav ul {
-            list-style: none;
-            padding: 0;
-            width: 100%;
-        }
-        .sidebar nav ul li {
-            margin-bottom: 15px;
-        }
-        .sidebar nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-        .sidebar nav ul li a:hover {
-            background-color: #000000;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+
+    .sidebar {
+        width: 230px;
+        background-color: #081F5C;
+        height: 100vh;
+        position: fixed;
+        padding: 20px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sidebar .logo img {
+        width: 130px;
+        margin-bottom: 30px;
+    }
+
+    .sidebar nav ul {
+        list-style: none;
+        padding: 0;
+        width: 100%;
+    }
+
+    .sidebar nav ul li {
+        margin-bottom: 20px;
+    }
+
+    .sidebar nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+
+    .sidebar nav ul li a:hover {
+        background-color: #000000;
+    }
+
         .main-content {
-  margin-left: 250px; 
-  padding: 40px;
-  min-height: 100vh;
-  box-sizing: border-box;
-  background-color: #f9f9f9;
-}
+            margin-left: 250px;
+            padding: 40px;
+            min-height: 100vh;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
 
         h2 {
             margin-top: 0;
@@ -75,19 +75,21 @@ $result = $conn->query($sql);
             text-align: center;
             margin-bottom: 30px;
         }
+
         table {
-  width: 90%;
-  margin: 50px auto 60px 20px; /* auto kanan, 250px kiri (230 + 20px spasi) */
-  border-collapse: collapse;
-  background: white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
+            width: 90%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
 
         th, td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
             text-align: center;
         }
+
         th {
             background-color: #081F5C;
             color: white;
@@ -95,7 +97,7 @@ $result = $conn->query($sql);
     </style>
 </head>
 <body>
-    <aside class="sidebar">
+      <aside class="sidebar">
     <div class="logo">
       <img src="gambar/Kids Toys Logo (1).png" alt="Kids Toys Logo">
     </div>
@@ -107,28 +109,27 @@ $result = $conn->query($sql);
       </ul>
     </nav>
   </aside>
-  <!-- <div class="content-wrapper"> -->
-    <h2>Total Akun</h2>
-    <table>
-        <tr>
-            <th>Id Akun</th>
-            <th>Username</th>
-            <th>Login sebagai</th>
-            <th>Aksi</th>
-        </tr>
-        <?php while($row = $result->fetch_assoc()) { ?>
-        <tr>
-            <td><?= $row['id_akun']; ?></td>
-            <td><?= htmlspecialchars($row['username']); ?></td>
-            <td><?= $row['role']; ?></td>
-            <td>
-                <a href="ubah_role.php?id_akun=<?= $row['id_akun']; ?>">Ubah Role</a> |
-                <a href="hapus_akun.php?id_akun=<?= $row['id_akun']; ?>" onclick="return confirm('Yakin?')">Hapus</a>
-            </td>
-        </tr>
-        <?php } ?>
-    </table>
-    
+    <div class="main-content">
+        <h2>Total Akun</h2>
+        <table>
+            <tr>
+                <th>Id Akun</th>
+                <th>Username</th>
+                <th>Login sebagai</th>
+                <th>Aksi</th>
+            </tr>
+            <?php while($row = $result->fetch_assoc()) { ?>
+            <tr>
+                <td><?= $row['id_akun']; ?></td>
+                <td><?= htmlspecialchars($row['username']); ?></td>
+                <td><?= $row['role']; ?></td>
+                <td>
+                    <a href="hapus_akun.php?id_akun=<?= $row['id_akun']; ?>" onclick="return confirm('Yakin?')">Hapus</a>
+                </td>
+            </tr>
+            <?php } ?>
+        </table>
+    </div>
 </body>
 </html>
 

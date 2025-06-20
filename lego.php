@@ -30,7 +30,7 @@ $result = mysqli_query($koneksi, $sql);
         <header>
             <div class="header-container">
                 <div class="logo_toko">
-                    <img src="c:\Users\LENOVO\Downloads\Kids_Toys_Logo-removebg-preview.png" alt="Toy logo" class="nav_logo"/>
+                    <img src="gambar/Kids Toys Logo (1).png" alt="Toy logo" class="nav_logo"/>
                 </div>
           
                 <form class="search-form" onsubmit="return searchProducts(event)">
@@ -39,11 +39,13 @@ $result = mysqli_query($koneksi, $sql);
                     <input class="search-input" type="search" placeholder="Search" />
                   </div>
                 </form>
-                  
+
+                    
                 <div class="header-icons">
                   <div class="wishlist-link" id="wishlist-toggle">
                     <span class="material-symbols-outlined">favorite</span>
                     
+                    <!-- Dropdown Wishlist -->
                     <div class="wishlist-dropdown">
                       <div class="wishlist-header">
                         <h3>Wishlist Saya</h3>
@@ -58,10 +60,11 @@ $result = mysqli_query($koneksi, $sql);
                         </div>
                       </div>
                       <div class="wishlist-footer">
-                        <a href="wishlist.html" class="btn-view-full-wishlist">Lihat wishlist Lengkap</a>
+                        <a href="wishlist.html" class="btn-view-full-wishlist" onclick="window.location.href='wishlist.html'">Lihat wishlist Lengkap</a>
                       </div>
                     </div>
                   </div>
+
 
                     <a href="user.php" class="icon-link">
                         <span class="material-symbols-outlined">person</span>
@@ -69,7 +72,7 @@ $result = mysqli_query($koneksi, $sql);
                     <div class="cart-icon-wrapper">
                       <a href="#" id="cart-icon" class="icon-link">
                         <span class="material-symbols-outlined">shopping_cart</span>
-                        <span class="cart-count">0</span>
+                        <span class="cart-count">0</span> 
                       </a>
                       <div id="cart-popup" class="cart-popup">
                         <h4>Keranjang</h4>
@@ -77,14 +80,13 @@ $result = mysqli_query($koneksi, $sql);
                           <li id="empty-cart" class="empty-cart">
                             <h4>Keranjang Anda Kosong</h4>
                             <button onclick="window.location.href='#'" class="btn-continue">Lanjutkan belanja</button>
-                            <p><strong>Sudah punya akun ?</strong></p>
-                            <p><a href="login.php">Login</a> untuk checkout lebih cepat</p>
                           </li>
                         </ul>
                         <p id="cart-total" class="cart-total">Total: Rp 0</p>
                         <a href="keranjang.php" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
                       </div>
                     </div>
+
                 </div>
             </div>
  
@@ -120,7 +122,7 @@ $result = mysqli_query($koneksi, $sql);
                     <div class="dropdown-menu">
                         <a href="playdoh.php">Play-Doh</a>
                         <a href="lego.php">Lego</a>
-                        <a href="nerf.php">Hot Wheels</a>
+                        <a href="hotwheels.php">Hot Wheels</a>
                         <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>

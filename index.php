@@ -21,20 +21,18 @@
         
         <header>
             <div class="header-container">
-                <!-- Logo Toko -->
                 <div class="logo_toko">
-                    <img src="gambar\Kids Toys Logo (1).png" alt="Toy logo" class="nav_logo"/>
+                    <img src="gambar/Kids Toys Logo (1).png" alt="Toy logo" class="nav_logo"/>
                 </div>
-                
-                <!-- Search Bar -->
-
+          
                 <form class="search-form" onsubmit="return searchProducts(event)">
                   <div class="search">
                     <span class="search-icon material-symbols-outlined">search</span>
                     <input class="search-input" type="search" placeholder="Search" />
                   </div>
                 </form>
-                  
+
+                    
                 <div class="header-icons">
                   <div class="wishlist-link" id="wishlist-toggle">
                     <span class="material-symbols-outlined">favorite</span>
@@ -66,7 +64,7 @@
                     <div class="cart-icon-wrapper">
                       <a href="#" id="cart-icon" class="icon-link">
                         <span class="material-symbols-outlined">shopping_cart</span>
-                        <span class="cart-count">0</span> <!-- jumlah item -->
+                        <span class="cart-count">0</span> 
                       </a>
                       <div id="cart-popup" class="cart-popup">
                         <h4>Keranjang</h4>
@@ -74,20 +72,16 @@
                           <li id="empty-cart" class="empty-cart">
                             <h4>Keranjang Anda Kosong</h4>
                             <button onclick="window.location.href='#'" class="btn-continue">Lanjutkan belanja</button>
-                            <p><strong>Sudah punya akun ?</strong></p>
-                            <p><a href="login.php">Login</a> untuk checkout lebih cepat</p>
                           </li>
                         </ul>
                         <p id="cart-total" class="cart-total">Total: Rp 0</p>
-                        <!-- ini -->
                         <a href="keranjang.php" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
                       </div>
                     </div>
 
                 </div>
             </div>
-            
-            <!-- Navigation Links -->
+ 
             <nav class="nav_link">
               <a href="index.php">Home</a>
                 <div class="nav-item dropdown">
@@ -120,13 +114,12 @@
                     <div class="dropdown-menu">
                         <a href="playdoh.php">Play-Doh</a>
                         <a href="lego.php">Lego</a>
-                        <a href="nerf.php">Hot Wheels</a>
+                        <a href="hotwheels.php">Hot Wheels</a>
                         <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
 
             </nav>
-
         </header>
         
         <!-- Slider -->

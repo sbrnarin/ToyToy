@@ -3,7 +3,7 @@ include 'koneksi.php';
 $sql = "SELECT produk.*, kategori.nama_kategori 
         FROM produk 
         JOIN kategori ON produk.id_kategori = kategori.id_kategori 
-        WHERE kategori.nama_kategori = 'puzzle'";
+        WHERE kategori.nama_kategori = 'Building Blocks'";
 
 $result = mysqli_query($koneksi, $sql);
 ?>
@@ -30,18 +30,19 @@ $result = mysqli_query($koneksi, $sql);
         
         <header>
             <div class="header-container">
+                <!-- Logo Toko -->
                 <div class="logo_toko">
                     <img src="gambar/Kids Toys Logo (1).png" alt="Toy logo" class="nav_logo"/>
                 </div>
-          
+                
+                <!-- Search Bar -->
                 <form class="search-form" onsubmit="return searchProducts(event)">
                   <div class="search">
                     <span class="search-icon material-symbols-outlined">search</span>
                     <input class="search-input" type="search" placeholder="Search" />
                   </div>
                 </form>
-
-                    
+                  
                 <div class="header-icons">
                   <div class="wishlist-link" id="wishlist-toggle">
                     <span class="material-symbols-outlined">favorite</span>
@@ -61,19 +62,18 @@ $result = mysqli_query($koneksi, $sql);
                         </div>
                       </div>
                       <div class="wishlist-footer">
-                        <a href="wishlist.html" class="btn-view-full-wishlist" onclick="window.location.href='wishlist.html'">Lihat wishlist Lengkap</a>
+                        <a href="wishlist.html" class="btn-view-full-wishlist">Lihat wishlist Lengkap</a>
                       </div>
                     </div>
                   </div>
 
-
-                    <a href="user.php" class="icon-link">
+                    <a href="user.html" class="icon-link">
                         <span class="material-symbols-outlined">person</span>
                     </a>
                     <div class="cart-icon-wrapper">
                       <a href="#" id="cart-icon" class="icon-link">
                         <span class="material-symbols-outlined">shopping_cart</span>
-                        <span class="cart-count">0</span> 
+                        <span class="cart-count">0</span>
                       </a>
                       <div id="cart-popup" class="cart-popup">
                         <h4>Keranjang</h4>
@@ -81,16 +81,18 @@ $result = mysqli_query($koneksi, $sql);
                           <li id="empty-cart" class="empty-cart">
                             <h4>Keranjang Anda Kosong</h4>
                             <button onclick="window.location.href='#'" class="btn-continue">Lanjutkan belanja</button>
+                            <p><strong>Sudah punya akun ?</strong></p>
+                            <p><a href="login.php">Login</a> untuk checkout lebih cepat</p>
                           </li>
                         </ul>
                         <p id="cart-total" class="cart-total">Total: Rp 0</p>
                         <a href="keranjang.php" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
                       </div>
                     </div>
-
                 </div>
             </div>
- 
+            
+            <!-- Navigation Links -->
             <nav class="nav_link">
               <a href="index.php">Home</a>
                 <div class="nav-item dropdown">
@@ -143,7 +145,7 @@ $result = mysqli_query($koneksi, $sql);
       SELECT produk.*, kategori.nama_kategori 
       FROM produk 
       JOIN kategori ON produk.id_kategori = kategori.id_kategori 
-      WHERE kategori.nama_kategori = 'puzzle'
+      WHERE kategori.nama_kategori = 'Building Blocks'
     ");
 
     while ($produk = mysqli_fetch_assoc($query)) {
@@ -211,7 +213,6 @@ $result = mysqli_query($koneksi, $sql);
                     <p>&copy; 2025 ToyToyShop. All Rights Reserved.</p>
                 </div>
             </footer>
-
 
 <script>
 // Cart functionality (matching index.php)

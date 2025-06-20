@@ -72,7 +72,7 @@ $query = mysqli_query($koneksi, "
     }
 
     h1 {
-      margin-top: 0;
+      margin-top: a0;
       font-weight: 700;
     }
 

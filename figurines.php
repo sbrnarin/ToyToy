@@ -3,7 +3,7 @@ include 'koneksi.php';
 $sql = "SELECT produk.*, kategori.nama_kategori 
         FROM produk 
         JOIN kategori ON produk.id_kategori = kategori.id_kategori 
-        WHERE kategori.nama_kategori = 'Figurines'";
+        WHERE kategori.nama_kategori = 'Figuriens'";
 
 $result = mysqli_query($koneksi, $sql);
 ?>
@@ -125,7 +125,7 @@ $result = mysqli_query($koneksi, $sql);
                     <div class="dropdown-menu">
                         <a href="playdoh.php">Play-Doh</a>
                         <a href="lego.php">Lego</a>
-                        <a href="nerf.php">Hot Wheels</a>
+                        <a href="hotwheels.php">Hot Wheels</a>
                         <a href="bebyalive.php">Beby Alive</a>
                     </div>
                 </div>
@@ -145,7 +145,7 @@ $result = mysqli_query($koneksi, $sql);
       SELECT produk.*, kategori.nama_kategori 
       FROM produk 
       JOIN kategori ON produk.id_kategori = kategori.id_kategori 
-      WHERE kategori.nama_kategori = 'Figurines'
+      WHERE kategori.nama_kategori = 'Figuriens'
     ");
 
     while ($produk = mysqli_fetch_assoc($query)) {

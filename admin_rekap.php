@@ -75,66 +75,62 @@ $currentMonth = date('n');
 $currentYear = date('Y');
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Rekap Penjualan Produk</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Rekap Penjualan Prouk</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-      color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f1f1f1;
+        margin: 0;
+        color: #333;
     }
 
     .sidebar {
-      width: 230px;
-      background-color: #081F5C;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      padding-top: 20px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .sidebar .logo {
-      margin-bottom: 20px;
+        width: 230px;
+        background-color: #081F5C;
+        height: 100vh;
+        position: fixed;
+        padding: 20px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .sidebar .logo img {
-      width: 130px;
+        width: 130px;
+        margin-bottom: 30px;
     }
 
     .sidebar nav ul {
-      list-style: none;
-      padding: 0;
-      width: 100%;
+        list-style: none;
+        padding: 0;
+        width: 100%;
     }
 
     .sidebar nav ul li {
-      margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
     .sidebar nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      border-radius: 8px;
-      transition: background-color 0.3s;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: background-color 0.3s;
     }
 
     .sidebar nav ul li a:hover {
-      background-color: #000000;
+        background-color: #000000;
     }
+
     
     .rekap-container {
       width: 90%;
@@ -279,9 +275,9 @@ $currentYear = date('Y');
     </div>
     <nav>
       <ul>
-        <li><a href="dash_admin.php"><i class="fas fa-chart-line"></i> <span>Dashboard</span></a></li>
-        <li><a href="admin.php"><i class="fas fa-box"></i> <span>Product</span></a></li>
-        <li><a href="akun_admin.php"><i class="fas fa-user"></i> <span>Account</span></a></li>
+        <li><a href="dash_admin.php"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+        <li><a href="admin.php"><i class="fas fa-box"></i> Product</a></li>
+        <li><a href="akun_admin.php"><i class="fas fa-user"></i> Account</a></li>
       </ul>
     </nav>
   </aside>
@@ -385,8 +381,7 @@ $currentYear = date('Y');
             </tr>
           `;
         });
-
-        // Tambahkan baris total
+    
         tbody.innerHTML += `
           <tr class="total-row">
             <td colspan="4"><strong>Total</strong></td>
@@ -400,8 +395,6 @@ $currentYear = date('Y');
         tbody.innerHTML = `<tr><td colspan="6" class="error-message">Terjadi kesalahan saat memuat data: ${err.message}</td></tr>`;
       });
     });
-
-    // Trigger form submit saat pertama kali load halaman
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('filterForm').dispatchEvent(new Event('submit'));
     });
