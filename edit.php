@@ -8,129 +8,143 @@ $kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Edit Produk</title>
   <style>
-  body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f2f4f8;
-  padding: 20px 40px; /* ganti dari 40px ke 20px atas-bawah */
-  color: #081F5C;
-}
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f4f8;
+      padding: 20px 40px;
+      color: #081F5C;
+    }
 
-h2 {
-  text-align: center;
-  color: #081F5C;
-  margin-top: 10px; /* naikkan dari default */
-  margin-bottom: 20px;
-}
+    h2 {
+      text-align: center;
+      color: #081F5C;
+      margin-top: 10px;
+      margin-bottom: 25px;
+    }
 
+    form {
+      background-color: #ffffff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(8, 31, 92, 0.1);
+      border: 1px solid #081F5C;
+    }
 
-  form {
-    background-color: #ffffff;
-    padding: 25px 30px;
-    border-radius: 12px;
-    max-width: 500px;
-    margin: auto;
-    box-shadow: 0 4px 12px rgba(8, 31, 92, 0.1);
-    border: 1px solid #081F5C;
-  }
+    label {
+      display: block;
+      margin-top: 18px;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #081F5C;
+    }
 
-  label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-    color: #081F5C;
-  }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="file"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #081F5C;
+      border-radius: 6px;
+      font-size: 14px;
+      box-sizing: border-box;
+      background-color: #f9f9ff;
+    }
 
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select,
-  textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border: 1px solid #081F5C;
-    border-radius: 6px;
-    font-size: 14px;
-    box-sizing: border-box;
-    background-color: #f9f9ff;
-  }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
 
-  textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
+    button[type="submit"] {
+      margin-top: 25px;
+      padding: 12px 20px;
+      background-color: #081F5C;
+      color: white;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
 
-  input[type="file"] {
-    margin-top: 8px;
-  }
+    button[type="submit"]:hover {
+      background-color: #061744;
+    }
 
-  button[type="submit"] {
-    margin-top: 20px;
-    padding: 12px 20px;
-    background-color: #081F5C;
-    color: white;
-    font-size: 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  button[type="submit"]:hover {
-    background-color: #061744;
-  }
-</style>
-
+    .current-image {
+      margin-top: 10px;
+      max-width: 200px;
+      max-height: 200px;
+      display: block;
+    }
+  </style>
 </head>
 <body>
+
   <h2>Edit Produk</h2>
+
   <form action="proses_edit.php" method="post" enctype="multipart/form-data">
-  <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
+    <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
 
-  <label>Nama Produk:</label><br>
-  <input type="text" name="nama_produk" value="<?= $produk['nama_produk'] ?>"><br><br>
+    <label for="nama_produk">Nama Produk:</label>
+    <input type="text" name="nama_produk" id="nama_produk" value="<?= $produk['nama_produk'] ?>" required>
 
-  <label>Deskripsi:</label><br>
-  <textarea name="deskripsi" rows="4" cols="40" required></textarea><br><br>
+    <label for="deskripsi">Deskripsi:</label>
+    <textarea name="deskripsi" id="deskripsi" required><?= $produk['deskripsi'] ?></textarea>
 
-  <label>Harga:</label><br>
-  <input type="number" name="harga" value="<?= $produk['harga'] ?>"><br><br>
+    <label for="harga">Harga:</label>
+    <input type="number" name="harga" id="harga" value="<?= $produk['harga'] ?>" required>
 
-  <label>Stok:</label><br>
-  <input type="number" name="stok" value="<?= $produk['stok'] ?>"><br><br>
+    <label for="stok">Stok:</label>
+    <input type="number" name="stok" id="stok" value="<?= $produk['stok'] ?>" required>
 
-  <label>Merk:</label><br>
-  <select name="id_merk">
-    <?php while ($m = mysqli_fetch_assoc($merk)) { ?>
-      <option value="<?= $m['id_merk'] ?>" <?= $m['id_merk'] == $produk['id_merk'] ? 'selected' : '' ?>>
-        <?= $m['nama_merk'] ?>
-      </option>
+    <label for="id_merk">Merk:</label>
+    <select name="id_merk" id="id_merk" required>
+      <option value="">-- Pilih Merk --</option>
+      <?php while ($m = mysqli_fetch_assoc($merk)) { ?>
+        <option value="<?= $m['id_merk'] ?>" <?= $m['id_merk'] == $produk['id_merk'] ? 'selected' : '' ?>>
+          <?= $m['nama_merk'] ?>
+        </option>
+      <?php } ?>
+    </select>
+
+    <label for="id_kategori">Kategori:</label>
+    <select name="id_kategori" id="id_kategori" required>
+      <option value="">-- Pilih Kategori --</option>
+      <?php while ($k = mysqli_fetch_assoc($kategori)) { ?>
+        <option value="<?= $k['id_kategori'] ?>" <?= $k['id_kategori'] == $produk['id_kategori'] ? 'selected' : '' ?>>
+          <?= $k['nama_kategori'] ?>
+        </option>
+      <?php } ?>
+    </select>
+
+    <label for="tanggal_masuk">Tanggal Masuk:</label>
+    <input type="date" name="tanggal_masuk" id="tanggal_masuk" value="<?= date('Y-m-d', strtotime($produk['tanggal_masuk'])) ?>" required>
+
+    <label for="current_image">Gambar Saat Ini:</label>
+    <?php if (!empty($produk['nama_file'])) { ?>
+      <img src="uploads/<?= $produk['nama_file'] ?>" alt="Gambar Produk" class="current-image">
+    <?php } else { ?>
+      <p>Tidak ada gambar</p>
     <?php } ?>
-  </select><br><br>
 
-  <label>Kategori:</label><br>
-  <select name="id_kategori">
-    <?php while ($k = mysqli_fetch_assoc($kategori)) { ?>
-      <option value="<?= $k['id_kategori'] ?>" <?= $k['id_kategori'] == $produk['id_kategori'] ? 'selected' : '' ?>>
-        <?= $k['nama_kategori'] ?>
-      </option>
-    <?php } ?>
-  </select><br><br>
+    <label for="nama_file">Ganti Gambar (opsional):</label>
+    <input type="file" name="nama_file" id="nama_file" accept="image/*">
 
-  <label>Tanggal Masuk:</label><br>
-  <input type="datetime" name="tanggal_masuk" value="<?= $produk['tanggal_masuk'] ?>"><br><br>
+    <button type="submit">Simpan Perubahan</button>
+  </form>
 
-  <label>Ganti Gambar (opsional):</label><br>
-  <input type="file" name="nama_file"><br><br>
-
-  <button type="submit">Simpan Perubahan</button>
-</form>
 </body>
 </html>
-

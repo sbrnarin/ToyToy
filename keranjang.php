@@ -381,9 +381,6 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
                             <button class="quantity-btn increase" data-index="${index}">+</button>
                             <button class="delete-btn" data-index="${index}">🗑️</button>
                         </div>
-                        <div class="item-total">${formatCurrency(item.price * item.quantity)}</div>
-                        <button class="btn-product-checkout" data-index="${index}">Checkout Item Ini</button>
-                    </div>
                 </div>
             `).join('');
 
@@ -448,7 +445,7 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
         function checkoutSingleItem(item) {
             if (confirm(`Checkout ${item.quantity}x ${item.name} seharga ${formatCurrency(item.price * item.quantity)}?`)) {
                 localStorage.setItem("checkoutItem", JSON.stringify(item));
-                window.location.href = "checkout.php";
+                window.location.href = "cekot.php";
             }
         }
 

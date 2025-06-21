@@ -103,6 +103,16 @@ $stmt->close();
             metode_pengiriman, waktu_expired
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
+        // Insert pesanan
+        $stmtPesanan = $conn->prepare("INSERT INTO pesanan (
+            id_pembeli, tanggal_pesan, status_pengiriman, total_harga, total_produk, 
+            status_pembayaran, metode_pembayaran, ongkir, 
+            metode_pengiriman, waktu_expired
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        $status_pengiriman = "tertunda";
+        $status_pembayaran = "belum bayar";
+
         $stmtPesanan->bind_param(
             "issississs", 
             $id_pembeli, $tanggal_pesan, $status_pengiriman, $total_harga, $total_produk,
@@ -114,6 +124,7 @@ $stmt->close();
         $id_pesanan = $stmtPesanan->insert_id;
         $stmtPesanan->close();
 
+        // Insert detail pesanan
         $stmtDetail = $conn->prepare("INSERT INTO detail_pesanan (id_pesanan, id_produk, jumlah, harga_saat_beli) VALUES (?, ?, ?, ?)");
 
         foreach ($produkList as $item) {
@@ -123,25 +134,32 @@ $stmt->close();
 
             if ($id_produk <= 0) continue;
 
-            $cekProduk = $conn->prepare("SELECT id_produk FROM produk WHERE id_produk = ?");
-            $cekProduk->bind_param("i", $id_produk);
-            $cekProduk->execute();
-            $res = $cekProduk->get_result();
-            if ($res->num_rows === 0) {
-                $cekProduk->close();
-                continue;
-            }
-            $cekProduk->close();
-
             $stmtDetail->bind_param("iiid", $id_pesanan, $id_produk, $jumlah, $harga);
             $stmtDetail->execute();
         }
-
         $stmtDetail->close();
+
+        // HAPUS ITEM DARI KERANJANG - PERBAIKAN DISINI
+        if (!empty($productIds)) {
+            $placeholders = implode(',', array_fill(0, count($productIds), '?'));
+            $types = str_repeat('i', count($productIds));
+            
+            // Menggunakan id_akun bukan user_id
+            $stmtDelete = $conn->prepare("DELETE FROM keranjang WHERE id_akun = ? AND produk_id IN ($placeholders)");
+            $stmtDelete->bind_param("i".$types, $id_akun, ...$productIds);
+            $stmtDelete->execute();
+            $stmtDelete->close();
+        }
+
         $conn->commit();
 
-        header("Location: pembayaran.php?pesanan_id=" . urlencode($id_pesanan));
+        // Bersihkan localStorage dan redirect
+        echo "<script>
+            localStorage.removeItem('cart');
+            window.location.href = 'pembayaran.php?pesanan_id=$id_pesanan';
+        </script>";
         exit;
+
     } catch (Exception $e) {
         $conn->rollback();
         die("Terjadi kesalahan saat proses checkout: " . $e->getMessage());
@@ -149,5 +167,6 @@ $stmt->close();
 } else {
     http_response_code(405);
     echo "Metode tidak diperbolehkan";
+
 }
 ?>
