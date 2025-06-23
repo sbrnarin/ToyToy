@@ -1,5 +1,4 @@
 <?php
-// Koneksi database (bagian ini bisa dipisah di file koneksi.php jika prefer)
 $koneksi = new mysqli("localhost", "root", "", "sabrinalina");
 
 if ($koneksi->connect_error) {
@@ -8,12 +7,9 @@ if ($koneksi->connect_error) {
 
 $koneksi->set_charset("utf8mb4");
 
-// Handle AJAX request untuk data rekap
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulan']) && isset($_POST['tahun'])) {
     header('Content-Type: application/json');
     date_default_timezone_set('Asia/Jakarta');
-    
-    // Validasi input
     $bulan = filter_input(INPUT_POST, 'bulan', FILTER_VALIDATE_INT, [
         'options' => ['min_range' => 1, 'max_range' => 12]
     ]);
@@ -70,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bulan']) && isset($_P
     }
 }
 
-// Set default bulan dan tahun saat ini
+// bulan dan tahun saat ini
 $currentMonth = date('n');
 $currentYear = date('Y');
 ?>

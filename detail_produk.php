@@ -1,14 +1,12 @@
 <?php
 include 'koneksi.php';
 
-// Get product ID from URL
 $id_produk = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id_produk <= 0) {
     die("Invalid product ID");
 }
 
-// Query to get product details
 $query = "SELECT produk.*, merk.nama_merk, kategori.nama_kategori 
           FROM produk 
           JOIN merk ON produk.id_merk = merk.id_merk
@@ -30,7 +28,7 @@ if (!$produk) {
     die("Product not found");
 }
 
-// Close statement
+
 mysqli_stmt_close($stmt);
 ?>
 
@@ -69,7 +67,6 @@ mysqli_stmt_close($stmt);
       background-color: #ffffff;
     }
 
-    /* Header Container */
     .header-container {
       display: flex;
       align-items: center;
@@ -86,7 +83,6 @@ mysqli_stmt_close($stmt);
       height: 90px;
     }  
 
-    /* Search Bar */
     .search-form {
       flex-grow: 1;
       max-width: 10000px;
@@ -151,7 +147,6 @@ mysqli_stmt_close($stmt);
       font-size: 24px;
     }
 
-    /* Wishlist Dropdown Styles */
     .wishlist-link {
       position: relative;
       display: flex;
@@ -403,7 +398,7 @@ mysqli_stmt_close($stmt);
       background: #f0f0f0;
     }
 
-    /* Show dropdown */
+    /* lihat dropdown */
     .nav-item.dropdown:hover .dropdown-menu {
       display: block;
     }
@@ -448,7 +443,6 @@ mysqli_stmt_close($stmt);
       }
     }
 
-    /* Product Detail Styles */
     .detail-container {
       display: flex;
       gap: 40px;
@@ -696,7 +690,6 @@ mysqli_stmt_close($stmt);
       font-size: 0.9rem;
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
       .footer-container {
         grid-template-columns: 1fr;
@@ -745,7 +738,6 @@ mysqli_stmt_close($stmt);
                     <div class="wishlist-link" id="wishlist-toggle">
                         <span class="material-symbols-outlined">favorite</span>
                         
-                        <!-- Dropdown Wishlist -->
                         <div class="wishlist-dropdown">
                           <div class="wishlist-header">
                             <h3>Wishlist Saya</h3>
@@ -827,7 +819,6 @@ mysqli_stmt_close($stmt);
             </nav>
         </header>
 
-        <!-- Product Detail Content -->
         <div class="detail-container">
             <div class="image-section">
                 <?php if (isset($produk['nama_file'])): ?>
@@ -874,8 +865,7 @@ mysqli_stmt_close($stmt);
             </div>
         </div>
 
-        <script>
-          // Keranjang dan Wishlist
+        <script> 
           let cart = JSON.parse(localStorage.getItem('cart')) || [];
           let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
@@ -891,7 +881,6 @@ mysqli_stmt_close($stmt);
           const wishlistDropdown = document.querySelector('.wishlist-dropdown');
           const wishlistItemsContainer = document.querySelector('.wishlist-items');
 
-          // Update UI Keranjang
           function updateCartUI() {
             const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
             if (cartCount) cartCount.textContent = totalItems;
@@ -925,7 +914,6 @@ mysqli_stmt_close($stmt);
             cartTotal.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
           }
 
-          // Update UI Wishlist
           function updateWishlistUI() {
             if (!wishlistItemsContainer) return;
 
@@ -958,17 +946,13 @@ mysqli_stmt_close($stmt);
             wishlistItemsContainer.innerHTML = itemsHTML;
           }
 
-          // Notifikasi
           function showNotification(message) {
             alert(message);
           }
 
-          // Event: Load Awal
           document.addEventListener('DOMContentLoaded', () => {
             updateCartUI();
             updateWishlistUI();
-
-            // Toggle cart
             if (cartIcon && cartPopup) {
               cartIcon.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -977,7 +961,6 @@ mysqli_stmt_close($stmt);
               });
             }
 
-            // Toggle wishlist
             if (wishlistToggle && wishlistDropdown) {
               wishlistToggle.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1027,7 +1010,7 @@ mysqli_stmt_close($stmt);
             });
           });
 
-          // Product Detail Functions
+          // Product Detail
           function decreaseQuantity() {
             const quantityInput = document.getElementById('quantity');
             let quantity = parseInt(quantityInput.value);

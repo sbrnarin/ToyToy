@@ -1,13 +1,41 @@
+<?php
+include 'koneksi.php';
+
+// Ambil 1 produk terbaru dari setiap brand
+$brands = ['Baby Alive', 'Playdoh', 'Hot Wheels', 'Lego'];
+$products = [];
+
+foreach ($brands as $brand) {
+    $query = $koneksi->prepare("SELECT p.id_produk, p.nama_produk, p.harga, p.nama_file, m.nama_merk 
+                                 FROM produk p 
+                                 JOIN merk m ON p.id_merk = m.id_merk 
+                                 WHERE m.nama_merk = ? 
+                                 ORDER BY p.id_produk DESC 
+                                 LIMIT 1");
+
+    $query->bind_param("s", $brand);
+    $query->execute();
+    $result = $query->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        $products[] = $row;
+    }
+
+    $query->close();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToyToyShop</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ToyToyShop</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
@@ -154,7 +182,7 @@
                             </div>
                           
                             <div class="brand-item">
-                              <a href="nerf.php">
+                              <a href="hotwheels.php">
                                 <img src="gambar/hwlogo.png" alt="NERF">
                               </a>
                             </div>
@@ -226,92 +254,41 @@
             </div>
                     
 
-            <section class="products-showcase">
+ <section class="products-showcase">
   <div class="products-header">
-    <h2></h2>
     <a href="allproduct.php" class="see-all-btn">
       See All Products <i data-lucide="arrow-up-right"></i>
     </a>
-    
   </div>
-    <div class="product-list">
-    <div class="product-card"
-     data-name="MAJORETT-T83WEMAJA"
-     data-price="100000"
-     data-image="gambar/01-MAJORETT-T83WEMAJA-MAJ120209R000.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-    <i class="heart-icon" data-lucide="heart"></i>
-  </button>
+  <div class="product-list">
+    <?php foreach ($products as $produk): ?>
+      <div class="product-card"
+           data-name="<?= htmlspecialchars($produk['nama_produk']) ?>"
+           data-price="<?= htmlspecialchars($produk['harga']) ?>"
+           data-image="gambar/<?= htmlspecialchars($produk['nama_file']) ?>"
+           data-product-id="<?= $produk['id_produk'] ?>"
+           data-merk="<?= htmlspecialchars($produk['nama_merk']) ?>">
 
-  <img src="gambar/01-MAJORETTE-T83WEMAJA-MAJ120221K010-Multicolor.jpg" alt="MAJORETT-T83WEMAJA" width="100%">
-  
-  <div class="info">
-    <p class="product-title">MAJORETT-T83WEMAJA</p>
-    <p class="product-price">Rp. 100.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+        <button class="wishlist-btn" onclick="toggleWishlist(event)">
+          <i class="lucide-icon" data-lucide="heart"></i>
+        </button>
+
+        <a href="detail_produk.php?id=<?= $produk['id_produk'] ?>" class="product-link">
+          <img src="gambar/<?= htmlspecialchars($produk['nama_file']) ?>" 
+               alt="<?= htmlspecialchars($produk['nama_produk']) ?>" width="100%">
+        </a>
+
+        <div class="info">
+          <a href="detail_produk.php?id=<?= $produk['id_produk'] ?>" class="product-title-link">
+            <p class="product-title"><?= htmlspecialchars($produk['nama_produk']) ?></p>
+          </a>
+          <p class="product-price">Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
+          <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+        </div>
+      </div>
+    <?php endforeach; ?>
   </div>
-</div>
-
-
-<div class="product-card"
-     data-name="BABY-ALIVE-T84PYBYAA"
-     data-price="80000"
-     data-image="gambar/01-BABY-ALIVE-T84PYBYA0-BYAE5841-Multicolor.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-  <i class="lucide-icon" data-lucide="heart"></i>
-</button>
-
-  <img src="gambar/01-BABY-ALIVE-T84PYBYA0-BYAE5841-Multicolor.jpg" alt="Boneka Pinguin" width="100%">
-  
-  <div class="info">
-    <p class="product-title">BABY-ALIVE-T84PYBYAA</p>
-    <p class="product-price">Rp. 80.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    <!-- iniii -->
-
-    <div class="product-card"
-     data-name="Play-doh"
-     data-price="50000"
-     data-image="gambar/0888-PDOF8807-1.webp">
-  
- <button class="wishlist-btn" onclick="toggleWishlist(event)">
-  <i class="lucide-icon" data-lucide="heart"></i>
-</button>
-
-  <img src="gambar/0888-PDOF8807-1.webp" alt=" jfhekahfk" width="100%">
-  
-  <div class="info">
-    <p class="product-title">Play-doh</p>
-    <p class="product-price">Rp. 50.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-
-    
-<div class="product-card"
-     data-name="Boneka pinguin"
-     data-price="47000"
-     data-image="gambar/pinguin eskrim.jpg">
-  
-  <button class="wishlist-btn" onclick="toggleWishlist(event)">
-  <i class="lucide-icon" data-lucide="heart"></i>
-</button>
-
-  <img src="gambar/pinguin eskrim.jpg" alt="Boneka Pinguin" width="100%">
-  
-  <div class="info">
-    <p class="product-title">Boneka Pinguin</p>
-    <p class="product-price">Rp. 47.000</p>
-    <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-  </div>
-</div>
-  </div>
-      </section>
+</section>
 
 
             <footer class="main-footer">
@@ -436,12 +413,9 @@ function loadCartFromLocalStorage() {
     }
 }
 
-// Add to cart functionality
 document.querySelectorAll('.add-to-cart').forEach(button => {
     button.addEventListener('click', function() {
         const productCard = button.closest('.product-card');
-        
-        // Get product details more safely
         const title = productCard.querySelector('.product-title')?.textContent?.trim() || 'Unknown Product';
         const price = productCard.querySelector('.product-price')?.textContent?.trim() || 'N/A';
         const image = productCard.querySelector('img')?.src || 'default-image.jpg';
@@ -464,7 +438,6 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
             });
         }
 
-        // Update cart count (counting total items, not unique products)
         cartCount.textContent = calculateTotalItems();
         updateCartUI();
         saveCartToLocalStorage();
@@ -473,7 +446,7 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
     });
 });
 
-// Helper functions
+
 function calculateTotalItems() {
     return cart.reduce((total, item) => total + item.quantity, 0);
 }
@@ -484,9 +457,6 @@ function generateUniqueId() {
 
 
 
-//sini
-
-// Remove item cart
 cartListNavbar?.addEventListener('click', function(e) {
     if (e.target.classList.contains('remove-item')) {
         const index = parseInt(e.target.dataset.index, 10);
@@ -500,7 +470,7 @@ cartListNavbar?.addEventListener('click', function(e) {
     }
 });
 
-//cart popup
+
 cartIcon?.addEventListener('click', function(e) {
     e.preventDefault();
     if (cartPopup) {
@@ -508,7 +478,7 @@ cartIcon?.addEventListener('click', function(e) {
     }
 });
 
-// cart
+// keranjang
 document.addEventListener('click', function(e) {
     if (!cartIcon?.contains(e.target) && !cartPopup?.contains(e.target)) {
         if (cartPopup) cartPopup.style.display = 'none';
@@ -521,7 +491,6 @@ const wishlistToggle = document.getElementById('wishlist-toggle');
 const wishlistDropdown = document.querySelector('.wishlist-dropdown');
 const wishlistItemsContainer = document.querySelector('.wishlist-items');
 
-// wishlist buttons
 function initializeWishlistButtons() {
     document.querySelectorAll('.wishlist-btn').forEach(btn => {
         const productCard = btn.closest('.product-card');
@@ -669,7 +638,7 @@ document.querySelectorAll('.product-card').forEach(card => {
 
             const product = { name, price, image };
             localStorage.setItem('selectedProduct', JSON.stringify(product));
-            window.location.href = 'product_detail.html';
+            window.location.href = 'detail_produk.php';
         }
     });
 });

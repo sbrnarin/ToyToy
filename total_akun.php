@@ -116,16 +116,13 @@ $result = $conn->query($sql);
                 <th>Id Akun</th>
                 <th>Username</th>
                 <th>Login sebagai</th>
-                <th>Aksi</th>
             </tr>
             <?php while($row = $result->fetch_assoc()) { ?>
             <tr>
                 <td><?= $row['id_akun']; ?></td>
                 <td><?= htmlspecialchars($row['username']); ?></td>
                 <td><?= $row['role']; ?></td>
-                <td>
-                    <a href="hapus_akun.php?id_akun=<?= $row['id_akun']; ?>" onclick="return confirm('Yakin?')">Hapus</a>
-                </td>
+
             </tr>
             <?php } ?>
         </table>

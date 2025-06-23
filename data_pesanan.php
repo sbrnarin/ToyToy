@@ -1,10 +1,10 @@
 <?php
 include "koneksi.php";
 
-// Ambil data pesanan + nama pembeli
 $sql = "SELECT pesanan.*, pembeli.nama_pembeli 
         FROM pesanan 
-        JOIN pembeli ON pesanan.id_pembeli = pembeli.id_pembeli";
+        JOIN pembeli ON pesanan.id_pembeli = pembeli.id_pembeli
+        ORDER BY pesanan.id_pesanan DESC";
 $query = mysqli_query($koneksi, $sql);
 ?>
 

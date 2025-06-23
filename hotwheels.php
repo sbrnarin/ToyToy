@@ -153,7 +153,7 @@ $result = mysqli_query($koneksi, $sql);
         <div class="video-wrapper">
             <div class="video-container">
                 <video autoplay loop muted>
-                    <source src="gambar/ba.mp4" type="video/mp4">
+                    <source src="gambar/hws.mp4" type="video/mp4">
                 </video>
             </div>
         </div>

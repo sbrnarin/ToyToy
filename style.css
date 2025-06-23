@@ -648,6 +648,10 @@ body {
     margin: 0 auto;
 }
 
+data-merk{
+    color: #080808;
+}
+
 .products-header {
     display: flex;
     justify-content: space-between;

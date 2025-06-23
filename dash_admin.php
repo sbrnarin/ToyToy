@@ -4,16 +4,13 @@ include 'koneksi.php';
 // total pesanan
 $total_order = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan")->fetch_assoc()['total'];
 
-// pesanan selesai
 $total_akun = $koneksi->query("SELECT COUNT(*) AS total FROM akun ")->fetch_assoc()['total'];
 
-// pesanan pending
 $dikirim = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'dikirim'")->fetch_assoc()['total'];
 
-// pesanan dibatalkan
 $selesai = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan WHERE status_pengiriman = 'selesai'")->fetch_assoc()['total'];
 
-$rekap = $koneksi->query("SELECT COUNT(*) AS total FROM pesanan ")->fetch_assoc()['total'];
+$rekap = $koneksi->query("SELECT COUNT(*) AS total FROM penjualan ")->fetch_assoc()['total'];
 
 ?>
 

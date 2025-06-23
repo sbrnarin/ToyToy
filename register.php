@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['nama_pembeli'] = $nama;
         $_SESSION['email'] = $email;
         
-        header("Location: index.php");
+        header("Location: login.php");
         exit;
 
     } catch (Exception $e) {
