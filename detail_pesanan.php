@@ -162,7 +162,7 @@ h2 {
 .info-value {
     background-color: #f0f2f5;
     padding: 10px 15px;
-    border-left: 4px solid #081F5C;
+    border-left: 4px solidrgb(104, 107, 114);
     border-radius: 6px;
 }
 
@@ -402,7 +402,7 @@ h2 {
             <table class="summary-table">
                 <tr>
                     <td>Total Produk:</td>
-                    <td><?= $total_items ?> item(s)</td>
+                    <td><?= $total_items ?> item</td>
                 </tr>
                 <tr>
                     <td>Subtotal:</td>
