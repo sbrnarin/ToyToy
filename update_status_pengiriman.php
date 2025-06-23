@@ -1,19 +1,21 @@
 <?php
-include 'koneksi.php';
+include "koneksi.php";
 
-// Validasi awal
-$id = isset($_POST['id_pesanan']) ? (int) $_POST['id_pesanan'] : 0;
-$status = $_POST['status_pengiriman'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_pesanan = intval($_POST['id_pesanan'] ?? 0);
+    $status = trim($_POST['status_pengiriman'] ?? '');
 
-$allowed_status = ['Belum Diproses', 'Dikemas', 'Dikirim', 'Selesai'];
+    if ($id_pesanan > 0 && $status) {
+        $stmt = $koneksi->prepare("UPDATE pesanan SET status_pengiriman = ? WHERE id_pesanan = ?");
+        $stmt->bind_param("si", $status, $id_pesanan);
 
-if ($id > 0 && in_array($status, $allowed_status)) {
-    $sql = "UPDATE pesanan SET status_pengiriman = ? WHERE id_pesanan = ?";
-    $stmt = mysqli_prepare($koneksi, $sql);
-    mysqli_stmt_bind_param($stmt, 'si', $status, $id);
-    $success = mysqli_stmt_execute($stmt);
-    echo $success ? 'ok' : 'gagal';
-} else {
-    echo 'invalid';
+        if ($stmt->execute()) {
+            echo "success";
+        } else {
+            echo "error";
+        }
+    } else {
+        echo "invalid";
+    }
 }
 ?>
