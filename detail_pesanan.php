@@ -322,7 +322,7 @@ h2 {
                 </div>
                 <div class="info-item">
                     <div class="info-label">Tanggal Pesan:</div>
-                    <div class="info-value"><?= date('d/m/Y H:i', strtotime($pesanan['tanggal_pesan'])) ?></div>
+                    <div class="info-value"><?= date('d/m/Y', strtotime($pesanan['tanggal_pesan'])) ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Metode Pembayaran:</div>
