@@ -769,17 +769,11 @@ data-merk{
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 40px;
     padding: 0 20px;
-
-    /* Tambahan */
-    text-align: center;
-    align-items: center;
 }
 
 .footer-column {
     margin-bottom: 30px;
-    text-align: center;
 }
-
 
 .footer-title {
     font-size: 1.3rem;

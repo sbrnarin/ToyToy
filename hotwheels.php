@@ -483,6 +483,28 @@ if (!isset($_SESSION['cart'])) {
                 alert(message);
             }
         </script>
+        <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const cartIcon = document.getElementById('cart-icon');
+    const cartPopup = document.getElementById('cart-popup');
+
+    // Toggle dropdown saat ikon diklik
+    cartIcon.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation(); // agar tidak langsung tertutup
+
+        cartPopup.classList.toggle('active');
+    });
+
+    // Klik di luar akan menutup cart-popup
+    document.addEventListener('click', function (e) {
+        if (!cartPopup.contains(e.target) && !cartIcon.contains(e.target)) {
+            cartPopup.classList.remove('active');
+        }
+    });
+});
+</script>
+
 
         <script>
             lucide.createIcons();
