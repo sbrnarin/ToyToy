@@ -60,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productIds   = [];
 
     foreach ($produkList as $item) {
+       
         $jumlah = (int)($item['quantity'] ?? 1);
         $harga  = (float)($item['price'] ?? 0);
         $total_produk += $jumlah;
@@ -69,11 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Transaksi mulai
+  
     $conn->begin_transaction();
 
     try {
-        // Masukkan ke tabel pesanan
         $stmtPesanan = $conn->prepare("INSERT INTO pesanan (
             id_pembeli, tanggal_pesan, status_pengiriman, total_harga, total_produk, 
             status_pembayaran, metode_pembayaran, ongkir, 

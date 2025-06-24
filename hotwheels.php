@@ -250,38 +250,38 @@ $result = mysqli_query($koneksi, $sql);
             const cartTotal = document.getElementById('cart-total');
             const emptyCartMessage = document.getElementById('empty-cart');
 
-            function updateCartUI() {
-                if (!cartListNavbar || !cartTotal) return;
+        function updateCartUI() {
+            if (!cartListNavbar || !cartTotal) return;
 
-                cartListNavbar.innerHTML = '';
-                let total = 0;
+            cartListNavbar.innerHTML = '';
+            let total = 0;
 
-                if (cart.length === 0) {
-                    if (emptyCartMessage) {
-                        cartListNavbar.appendChild(emptyCartMessage);
-                        emptyCartMessage.style.display = 'block';
-                    }
-                    cartTotal.textContent = 'Total: Rp 0';
-                    cartCount.textContent = '0';
-                    return;
+            if (cart.length === 0) {
+                if (emptyCartMessage) {
+                    cartListNavbar.appendChild(emptyCartMessage);
+                    emptyCartMessage.style.display = 'block';
                 }
-
-                cart.forEach((item, index) => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <img src="${item.image}" alt="${item.title}" style="width: 40px; height: auto; vertical-align: middle; margin-right: 8px;">
-                        ${item.title} - Rp ${item.price.toLocaleString('id-ID')}
-                        <button class="remove-item" data-index="${index}">&times;</button>
-                    `;
-                    cartListNavbar.appendChild(li);
-
-                    total += item.price * item.quantity;
-                });
-
-                if (emptyCartMessage) emptyCartMessage.style.display = 'none';
-                cartTotal.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
-                cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartTotal.textContent = 'Total: Rp 0';
+                cartCount.textContent = '0';
+                return;
             }
+
+            cart.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" style="width: 40px; height: auto; vertical-align: middle; margin-right: 8px;">
+                    ${item.name} - Rp ${item.price.toLocaleString('id-ID')}
+                    <button class="remove-item" data-index="${index}">&times;</button>
+                `;
+                cartListNavbar.appendChild(li);
+
+                total += item.price * item.quantity;
+            });
+
+            if (emptyCartMessage) emptyCartMessage.style.display = 'none';
+            cartTotal.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
 
             function saveCartToLocalStorage() {
                 localStorage.setItem('cart', JSON.stringify(cart));
@@ -295,34 +295,36 @@ $result = mysqli_query($koneksi, $sql);
                 }
             }
 
-            function addToCart(event) {
-                event.preventDefault();
-                event.stopPropagation();
-                
-                const productCard = event.target.closest('.product-card');
-                const productId = productCard.dataset.productId;
-                const title = productCard.dataset.name;
-                const price = parseInt(productCard.dataset.price);
-                const image = productCard.dataset.image;
+function addToCart(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const productCard = event.target.closest('.product-card');
+    const productId = productCard.dataset.productId;
+    const name = productCard.dataset.name;
+    // Bersihkan format harga sebelum konversi ke number
+    const price = parseInt(productCard.dataset.price.replace(/[^\d]/g, ''));
+    const image = productCard.dataset.image;
+    const merk = productCard.dataset.merk || ''; // tambahkan merk jika ada
 
-                const existingItem = cart.find(item => item.id === productId);
+    const existingItem = cart.find(item => item.id === productId);
 
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({ 
-                        id: productId,
-                        title, 
-                        price, 
-                        image, 
-                        quantity: 1 
-                    });
-                }
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ 
+            id: productId,
+            name, 
+            price, 
+            image,
+            quantity: 1 
+        });
+    }
 
-                saveCartToLocalStorage();
-                updateCartUI();
-                showNotification(`${title} ditambahkan ke keranjang`);
-            }
+    updateCartUI();
+    saveCartToLocalStorage();
+    showNotification(`${name} ditambahkan ke keranjang`);
+}
 
             cartListNavbar?.addEventListener('click', function(e) {
                 if (e.target.classList.contains('remove-item')) {
@@ -331,7 +333,7 @@ $result = mysqli_query($koneksi, $sql);
                     cart.splice(index, 1);
                     saveCartToLocalStorage();
                     updateCartUI();
-                    showNotification(`${removedItem.title} dihapus dari keranjang`);
+                    showNotification(`${removedItem.name} dihapus dari keranjang`);
                 }
             });
 

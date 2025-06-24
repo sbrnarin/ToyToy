@@ -263,29 +263,29 @@ foreach ($brands as $brand) {
   <div class="product-list">
     <?php foreach ($products as $produk): ?>
       <div class="product-card"
-           data-name="<?= htmlspecialchars($produk['nama_produk']) ?>"
-           data-price="<?= htmlspecialchars($produk['harga']) ?>"
-           data-image="gambar/<?= htmlspecialchars($produk['nama_file']) ?>"
-           data-product-id="<?= $produk['id_produk'] ?>"
-           data-merk="<?= htmlspecialchars($produk['nama_merk']) ?>">
+     data-name="<?= htmlspecialchars($produk['nama_produk']) ?>"
+     data-price="<?= htmlspecialchars($produk['harga']) ?>"
+     data-image="gambar/<?= htmlspecialchars($produk['nama_file']) ?>"
+     data-product-id="<?= $produk['id_produk'] ?>"
+     data-merk="<?= htmlspecialchars($produk['nama_merk']) ?>">
 
-        <button class="wishlist-btn" onclick="toggleWishlist(event)">
-          <i class="lucide-icon" data-lucide="heart"></i>
-        </button>
+    <button class="wishlist-btn" onclick="toggleWishlist(event)">
+        <i class="lucide-icon" data-lucide="heart"></i>
+    </button>
 
-        <a href="detail_produk.php?id=<?= $produk['id_produk'] ?>" class="product-link">
-          <img src="gambar/<?= htmlspecialchars($produk['nama_file']) ?>" 
-               alt="<?= htmlspecialchars($produk['nama_produk']) ?>" width="100%">
-        </a>
+    <a href="detail_produk.php?id=<?= $produk['id_produk'] ?>" class="product-link">
+        <img src="gambar/<?= htmlspecialchars($produk['nama_file']) ?>" 
+             alt="<?= htmlspecialchars($produk['nama_produk']) ?>" width="100%">
+    </a>
 
-        <div class="info">
-          <a href="detail_produk.php?id=<?= $produk['id_produk'] ?>" class="product-title-link">
+    <div class="info">
+        <a href="detail_produk.php?id=<?= $produk['id_produk'] ?>" class="product-title-link">
             <p class="product-title"><?= htmlspecialchars($produk['nama_produk']) ?></p>
-          </a>
-          <p class="product-price">Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
-          <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
-        </div>
-      </div>
+        </a>
+        <p class="product-price">Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
+        <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+    </div>
+</div>
     <?php endforeach; ?>
   </div>
 </section>
