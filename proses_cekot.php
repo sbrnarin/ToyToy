@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_akun = $_SESSION['id_akun'] ?? null;
     if (!$id_akun) die("Silakan login terlebih dahulu.");
 
-    // Cek apakah pembeli sudah terdaftar
     $stmt = $conn->prepare("SELECT id_pembeli FROM pembeli WHERE id_akun = ?");
     $stmt->bind_param("i", $id_akun);
     $stmt->execute();
@@ -105,7 +104,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmtDetail->close();
 
-        // ========== Tambahan: Simpan juga ke penjualan dan detail_penjualan ==========
         $tanggal_penjualan = date('Y-m-d');
         $stmtPenjualan = $conn->prepare("INSERT INTO penjualan (tanggal) VALUES (?)");
         $stmtPenjualan->bind_param("s", $tanggal_penjualan);
@@ -125,7 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $stmtDetailJual->close();
 
-        // (Opsional) Hapus dari keranjang
         if (!empty($productIds)) {
             $placeholders = implode(',', array_fill(0, count($productIds), '?'));
             $types = str_repeat('i', count($productIds));

@@ -10,7 +10,7 @@ if ($pesanan_id <= 0) {
 
 // Ambil data pesanan
 $stmt = $conn->prepare("
-    SELECT p.id_pesanan, p.total_harga, p.status_pembayaran, 
+    SELECT p.id_pesanan, p.total_harga,
            p.metode_pembayaran, p.tanggal_pesan, p.ongkir, 
            p.metode_pengiriman, p.kode_pembayaran,
            pb.nama_pembeli, pb.alamat, pb.kota, pb.provinsi, pb.no_telp 
@@ -71,242 +71,181 @@ $kode_dana = "DANA-" . date('Ymd') . "-" . strtoupper(substr(md5('dana' . $pesan
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0a1c4c;
-            --primary-light: #14378a;
-            --secondary: #f8f9fa;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --dark: #2c3e50;
-            --light: #ffffff;
-            --gray: #6c757d;
-            --border: #e0e0e0;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        --primary: #0a1c4c;
+        --primary-light: #14378a;
+        --secondary: #f8f9fa;
+        --danger: #e74c3c;
+        --success: #2ecc71;
+        --dark: #2c3e50;
+        --light: #ffffff;
+        --gray: #6c757d;
+        --border: #e0e0e0;
+    }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f5f7fa;
             color: var(--dark);
-            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
         }
-        
+
         .container {
-            max-width: 800px;
-            margin: 30px auto;
-            padding: 0 15px;
-        }
-        
-        .payment-card {
+            max-width: 700px;
+            margin: auto;
             background: var(--light);
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             overflow: hidden;
-            margin-bottom: 30px;
         }
-        
+
         .payment-header {
             background: var(--primary);
             color: var(--light);
-            padding: 20px;
+            padding: 16px 24px;
+            font-size: 18px;
+            font-weight: 600;
             text-align: center;
         }
-        
-        .payment-header h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        
-        .payment-body {
-            padding: 25px;
-        }
-        
+
         .section {
-            margin-bottom: 25px;
-        }
-        
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+            padding: 20px 24px;
             border-bottom: 1px solid var(--border);
         }
-        
-        .customer-info {
-            background: var(--secondary);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
         }
-        
-        .info-item {
+
+        .customer-info .info-item {
             margin-bottom: 8px;
+            font-size: 14px;
         }
-        
-        .info-item strong {
+
+        .customer-info .info-item strong {
             font-weight: 500;
+            color: var(--dark);
         }
-        
+
         .order-summary {
             width: 100%;
             border-collapse: collapse;
+            font-size: 14px;
         }
-        
+
         .order-summary th, 
         .order-summary td {
-            padding: 12px 15px;
+            padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
-        
-        .order-summary th {
-            background: var(--secondary);
-            font-weight: 500;
-        }
-        
-        .order-summary tbody tr:last-child td {
-            border-bottom: none;
-        }
-        
+
         .text-right {
             text-align: right;
         }
-        
+
         .order-total {
             font-weight: 600;
-            font-size: 1.1rem;
             color: var(--primary);
         }
-        
-        .payment-methods {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .payment-method {
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+.payment-methods {
+    display: flex;
+    gap: 16px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.payment-method {
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    width: 140px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.payment-method.selected {
+    border-color: var(--primary);
+    background-color: #f0f4ff;
+}
+
+.payment-method img {
+    width: 60px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.payment-method input {
+    display: none;
+}
+
+
+        .payment-code {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--primary);
+            padding: 10px;
+            background: #eef3fb;
             text-align: center;
+            border: 1px dashed var(--primary);
+            border-radius: 6px;
+            margin: 10px 0;
         }
-        
-        .payment-method:hover {
-            border-color: var(--primary-light);
+
+        ol, ul {
+            list-style: none;
+            padding-left: 0;
         }
-        
-        .payment-method.selected {
-            border-color: var(--primary);
-            background-color: rgba(10, 28, 76, 0.05);
-        }
-        
-        .payment-method img {
-            width: 80px;
-            height: 50px;
-            object-fit: contain;
-            margin-bottom: 10px;
-        }
-        
-        .payment-method input {
-            display: none;
-        }
-        
+
         .payment-instruction {
             display: none;
-            background: var(--secondary);
-            padding: 20px;
+            background: #f0f2f5;
+            padding: 15px;
             border-radius: 8px;
-            margin-top: 20px;
+            margin-top: 15px;
             animation: fadeIn 0.3s ease;
+            font-size: 14px;
         }
-        
+
         .payment-instruction.active {
             display: block;
         }
-        
-        .payment-code {
-            font-size: 1.2rem;
-            font-weight: 600;
-            background: var(--light);
-            padding: 12px;
-            border: 1px dashed var(--gray);
-            border-radius: 6px;
-            text-align: center;
-            margin: 15px 0;
-            user-select: all;
-            color: var(--primary);
-        }
-        
+
         .timer {
-            font-size: 1.1rem;
+            text-align: center;
+            margin-top: 10px;
             font-weight: 500;
             color: var(--danger);
-            text-align: center;
-            margin-top: 15px;
+            font-size: 14px;
         }
-        
+
         .btn-confirm {
+            margin: 20px 0;
             display: block;
             width: 100%;
-            padding: 14px;
+            padding: 12px;
+            font-size: 15px;
             background: var(--primary);
-            color: var(--light);
+            color: white;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
             cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 25px;
         }
-        
+
         .btn-confirm:hover {
             background: var(--primary-light);
         }
-        
-        .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-        
-        .alert-warning {
-            background: #fff3cd;
-            color: #856404;
-            border-left: 4px solid #ffeeba;
-        }
-        
-        .alert-info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border-left: 4px solid #bee5eb;
-        }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @media (max-width: 768px) {
-            .payment-methods {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-            
-            .order-summary th, 
-            .order-summary td {
-                padding: 10px;
-                font-size: 0.9rem;
-            }
         }
     </style>
 </head>
@@ -316,13 +255,6 @@ $kode_dana = "DANA-" . date('Ymd') . "-" . strtoupper(substr(md5('dana' . $pesan
             <div class="payment-header">
                 <h2>Detail Pembayaran</h2>
             </div>
-            
-            <div class="payment-body">
-                <?php if ($dataPesanan['status_pembayaran'] === 'belum bayar' || $dataPesanan['status_pembayaran'] === NULL): ?>
-                <div class="alert alert-warning">
-                    Silakan selesaikan pembayaran sebelum <?= date('d/m/Y H:i', strtotime($waktu_expired)) ?> untuk menghindari pembatalan otomatis.
-                </div>
-                <?php endif; ?>
                 
                 <div class="section">
                     <div class="section-title">Informasi Pelanggan</div>
@@ -367,21 +299,22 @@ $kode_dana = "DANA-" . date('Ymd') . "-" . strtoupper(substr(md5('dana' . $pesan
                         </tfoot>
                     </table>
                 </div>
-                
-                <?php if ($dataPesanan['status_pembayaran'] === 'belum bayar' || $dataPesanan['status_pembayaran'] === NULL): ?>
-                <div class="section">
-                    <div class="section-title">Metode Pembayaran</div>
-                    <div class="payment-methods">
-                        <div class="payment-method" onclick="selectPayment('gopay')">
-                            <input type="radio" name="payment" value="gopay" id="gopay">
-                            <img src="gambar/gopay.png" onerror="this.src='gambar/placeholder.png'" alt="GoPay">
-                            <div>GoPay</div>
-                        </div>
-                        <div class="payment-method" onclick="selectPayment('dana')">
-                            <input type="radio" name="payment" value="dana" id="dana">
-                            <img src="gambar/dana.png" onerror="this.src='gambar/placeholder.png'" alt="DANA">
-                            <div>DANA</div>
-                        </div>
+<div class="section">
+    <div class="section-title">Metode Pembayaran</div>
+    <div class="payment-methods">
+        <div class="payment-method" onclick="selectPayment('gopay')">
+            <input type="radio" name="payment" value="gopay" id="gopay" hidden>
+            <img src="gambar/gopay.png" onerror="this.src='gambar/placeholder.png'" alt="GoPay">
+            <div>GoPay</div>
+        </div>
+        <div class="payment-method" onclick="selectPayment('dana')">
+            <input type="radio" name="payment" value="dana" id="dana" hidden>
+            <img src="gambar/dana.png" onerror="this.src='gambar/placeholder.png'" alt="DANA">
+            <div>DANA</div>
+        </div>
+    </div>
+</div>
+
                     </div>
                     
                     <div id="gopay-instruction" class="payment-instruction">
@@ -410,11 +343,6 @@ $kode_dana = "DANA-" . date('Ymd') . "-" . strtoupper(substr(md5('dana' . $pesan
                     
                     <button class="btn-confirm" onclick="confirmPayment()">Konfirmasi Pembayaran</button>
                 </div>
-                <?php else: ?>
-                <div class="alert alert-info">
-                    Status pembayaran: <strong><?= ucfirst($dataPesanan['status_pembayaran']) ?></strong>
-                </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>
