@@ -63,158 +63,164 @@ while ($row = $result->fetch_assoc()) {
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Pesanan Saya</title>
-    <style>
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-    outline: none; 
-    border: none;
-    text-decoration: none;
-    text-transform: none;
-    transition: .2s linear;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pesanan Saya - Kids Toys</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-body {
-    background-color: #f4f6fc;
-    color: #333;
-}
+    body {
+      background-color: #f4f6fc;
+      color: #333;
+    }
 
-.container {
-    display: flex;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    gap: 20px;
-}
+    .navbar {
+      background-color: #081F5C;
+      height: 20px;
+      width: 100%;
+    }
 
-.sidebar {
-    width: 260px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    padding: 25px;
-}
+    .header-wrapper {
+      max-width: 1000px;
+      margin: 15px auto 0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 20px;
+      justify-content: center;
+    }
 
-.sidebar h3 {
-    font-size: 20px;
-    color: #081F5C;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #081F5C;
-    padding-bottom: 10px;
-}
+    .logo-area img {
+      height: 40px;
+    }
 
-.sidebar a {
-    display: block;
-    padding: 10px 15px;
-    background-color: #f0f3ff;
-    color: #081F5C;
-    border-radius: 6px;
-    font-weight: 500;
-    margin-bottom: 12px; /* Jarak antar tombol */
-}
+    .nav-menu {
+      display: flex;
+      gap: 30px;
+      background-color: white;
+      padding: 10px 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      align-items: center;
+    }
 
-.sidebar a:hover {
-    background-color: #081F5C;
-    color: #fff;
-}
+    .nav-menu a {
+      color: black;
+      font-weight: 500;
+      text-decoration: none;
+    }
 
-.main-content {
-    flex: 1;
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 35px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
+    .nav-menu a.logout {
+      color: red;
+    }
 
-.main-content h2 {
-    font-size: 26px;
-    color: #081F5C;
-    margin-bottom: 25px;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-}
+    .nav-menu img {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      padding: 4px;
+    }
 
-.order-item {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-    padding: 15px;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 600px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
+    .content-wrapper {
+      background-color: white;
+      width: 90%;
+      max-width: 900px;
+      margin: 40px auto;
+      border-radius: 12px;
+      padding: 30px;
+    }
 
-.order-item p {
-    margin: 6px 0;
-}
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+      color: #333;
+    }
 
-.product-item {
-    margin-left: 20px;
-    font-size: 14px;
-}
+    .order-item {
+      background-color: #f3f3f3;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
 
-.btn-konfirmasi {
-    background-color: #001f5f;
-    color: white;
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-}
+    .order-item p {
+      margin: 6px 0;
+    }
 
-.btn-konfirmasi:hover {
-    background-color: #003399;
-}
-    </style>
+    .product-item {
+      margin-left: 20px;
+      font-size: 14px;
+    }
+
+    .btn-konfirmasi {
+      background-color: #001f5f;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-konfirmasi:hover {
+      background-color: #003399;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-    <div class="sidebar">
-        <h3>Akun Saya</h3>
-        <a href="user.php">Profil</a>
-        <a href="pesanan.php" class="active">Pesanan Saya</a>
-        <a href="#">Pusat Bantuan</a>
-        <a href="logout.php">Logout</a>
-        <a href="index.php">Home</a>
-    </div>
+  <div class="navbar"></div>
 
-    <div class="main-content">
-        <h2>Pesanan Saya</h2>
-
-        <?php if (empty($pesananList)): ?>
-            <p style="text-align:center;">Belum ada pesanan.</p>
-        <?php else: ?>
-            <?php foreach ($pesananList as $id => $pesanan): ?>
-                <div class="order-item">
-                    <p><strong>ID Pesanan:</strong> <?= $id ?></p>
-                    <p><strong>Tanggal:</strong> <?= $pesanan['tanggal'] ?></p>
-                    <p><strong>Status:</strong> <?= $pesanan['status'] ?></p>
-                    <p><strong>Metode Pembayaran:</strong> <?= $pesanan['metode'] ?></p>
-                    <p><strong>Total:</strong> Rp <?= number_format($pesanan['total'], 0, ',', '.') ?></p>
-                    <p><strong>Produk:</strong></p>
-                    <?php foreach ($pesanan['produk'] as $produk): ?>
-                        <div class="product-item">
-                            <?= $produk['nama'] ?> - <?= $produk['jumlah'] ?> x Rp <?= number_format($produk['harga'], 0, ',', '.') ?>
-                        </div>
-                    <?php endforeach; ?>
-                    <?php if (strtolower($pesanan['status']) !== 'selesai'): ?>
-                        <form method="POST" action="konfirmasi_selesai.php">
-                            <input type="hidden" name="id_pesanan" value="<?= $id ?>">
-                            <button class="btn-konfirmasi" type="submit">Konfirmasi Selesai</button>
-                        </form>
-                    <?php else: ?>
-                        <p style="color: green; font-weight: bold;">✔ Selesai</p>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
+  <div class="header-wrapper">
+   
+    <div class="nav-menu">
+      <a href="user.php">Profil</a>
+      <a href="pesanan.php">Pesanan</a>
+      <a href="index.php">Home</a>
+      <a href="logout.php" class="logout">Logout</a>
+      <img src="user-icon.png" alt="User Icon">
     </div>
-</div>
+  </div>
+
+  <div class="content-wrapper">
+    <h2>Pesanan</h2>
+
+    <?php if (empty($pesananList)): ?>
+      <p style="text-align:center;">Belum ada pesanan.</p>
+    <?php else: ?>
+      <?php foreach ($pesananList as $id => $pesanan): ?>
+        <div class="order-item">
+          <p><strong>ID Pesanan:</strong> <?= $id ?></p>
+          <p><strong>Tanggal:</strong> <?= $pesanan['tanggal'] ?></p>
+          <p><strong>Status:</strong> <?= $pesanan['status'] ?></p>
+          <p><strong>Metode Pembayaran:</strong> <?= $pesanan['metode'] ?></p>
+          <p><strong>Total:</strong> Rp <?= number_format($pesanan['total'], 0, ',', '.') ?></p>
+          <p><strong>Produk:</strong></p>
+          <?php foreach ($pesanan['produk'] as $produk): ?>
+            <div class="product-item">
+              <?= $produk['nama'] ?> - <?= $produk['jumlah'] ?> x Rp <?= number_format($produk['harga'], 0, ',', '.') ?>
+            </div>
+          <?php endforeach; ?>
+
+          <?php if (strtolower($pesanan['status']) !== 'selesai'): ?>
+            <form method="POST" action="konfirmasi_selesai.php">
+              <input type="hidden" name="id_pesanan" value="<?= $id ?>">
+              <button class="btn-konfirmasi" type="submit">Konfirmasi Selesai</button>
+            </form>
+          <?php else: ?>
+            <p style="color: green; font-weight: bold;">&#10003; Selesai</p>
+          <?php endif; ?>
+        </div>
+      <?php endforeach; ?>
+    <?php endif; ?>
+  </div>
 </body>
 </html>
+

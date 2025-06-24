@@ -31,10 +31,11 @@ $userData = [
     'email' => '',
     'no_telp' => '',
     'alamat' => '',
+    'kota'=>'',
     'profile_image' => ''
 ];
 
-$sql = "SELECT nama_pembeli, email, no_telp, alamat, profile_image FROM pembeli WHERE id_akun = ?";
+$sql = "SELECT nama_pembeli, email, no_telp, alamat, kota, profile_image FROM pembeli WHERE id_akun = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id_akun);
 $stmt->execute();
@@ -57,13 +58,15 @@ if (isset($_POST['update'])) {
     $email = $_POST['email'];
     $no_telp = $_POST['phone'];
     $alamat = $_POST['alamat'];
+    $kota = $_POST['kota'];
 
     $upload_dir = 'uploads/';
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
 
-    $profile_picture = $userData['profile_image'];
+     $profile_picture = $userData['profile_image'];
+
 
     // Upload foto profil baru
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === 0) {
@@ -101,16 +104,16 @@ if (isset($_POST['update'])) {
     }
 
     // Update data pembeli
-    $sql = "UPDATE pembeli SET nama_pembeli = ?, email = ?, no_telp = ?, alamat = ?, profile_image = ? WHERE id_akun = ?";
+    $sql = "UPDATE pembeli SET nama_pembeli = ?, email = ?, no_telp = ?, alamat = ?, kota = ?, profile_image = ? WHERE id_akun = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssi", $nama_pembeli, $email, $no_telp, $alamat, $profile_picture, $id_akun);
+    $stmt->bind_param("ssssssi", $nama_pembeli, $email, $no_telp, $alamat, $kota, $profile_picture, $id_akun);
 
     if ($stmt->execute()) {
-        $message = "Profil berhasil diperbarui.";
         $userData['nama_pembeli'] = $nama_pembeli;
         $userData['email'] = $email;
         $userData['no_telp'] = $no_telp;
         $userData['alamat'] = $alamat;
+        $userData['kota'] = $kota;
         $userData['profile_image'] = $profile_picture;
     } else {
         $message = "Terjadi kesalahan: " . $conn->error;
@@ -121,253 +124,222 @@ if (isset($_POST['update'])) {
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Profil - ToyToyShop</title>
-    <link rel="stylesheet" href="user.css">
-    <style>
-        * {
-            padding: 0; margin: 0;
-            box-sizing: border-box;
-            font-family: "Poppins", sans-serif;
-            text-decoration: none;
-        }
-        body {
-            background-color: #f4f6fc;
-            color: #333;
-        }
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #0a1c4c;
-            color: #fff;
-            padding: 15px 30px;
-        }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            margin-left: 20px;
-        }
-        .navbar .logo {
-            font-size: 22px;
-            font-weight: bold;
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: white;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .dropdown-content a {
-            color: #0a1c4c;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .dropdown-content a:hover {
-            background-color: #f0f0f0;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profil - Kids Toys</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 20px;
-            gap: 20px;
-        }
+    body {
+      background-color: #f4f6fc;
+    }
 
-        .sidebar {
-            width: 260px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 25px;
-        }
+    .navbar {
+      background-color: #081F5C;
+      height: 20px;
+      width: 100%;
+    }
 
-        .sidebar h3 {
-            font-size: 20px;
-            color: #081F5C;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #081F5C;
-            padding-bottom: 10px;
-        }
+    .header-wrapper {
+      max-width: 1000px;
+      margin: 15px auto 0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 0 20px;
+      justify-content: center;
+    }
 
-        .sidebar ul { list-style: none; }
-        .sidebar li { margin-bottom: 15px; }
+    .logo-area img {
+      height: 40px;
+    }
 
-        .sidebar a {
-            display: block;
-            padding: 10px 15px;
-            background-color: #f0f3ff;
-            color: #081F5C;
-            border-radius: 6px;
-            font-weight: 500;
-        }
+    .nav-menu {
+      display: flex;
+      gap: 30px;
+      background-color: white;
+      padding: 10px 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      align-items: center;
+    }
 
-        .sidebar a:hover {
-            background-color: #081F5C;
-            color: #fff;
-        }
+    .nav-menu a {
+      color: black;
+      font-weight: 500;
+      text-decoration: none;
+    }
 
-        .main-content {
-            flex: 1;
-            background-color: #fff;
-            border-radius: 12px;
-            padding: 35px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
+    .nav-menu a.logout {
+      color: red;
+    }
 
-        .main-content h2 {
-            font-size: 26px;
-            color: #081F5C;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
+    .nav-menu img {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      border: 1px solid #ccc;
+      padding: 4px;
+    }
 
-        .main-content img {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            display: block;
-            margin-bottom: 15px;
-        }
+    .profile-box {
+      background-color: white;
+      width: 90%;
+      max-width: 900px;
+      margin: 40px auto;
+      border-radius: 12px;
+      padding: 30px;
+    }
 
-        .message {
-            color: #d9534f;
-            margin-bottom: 15px;
-            background-color: #fff4f4;
-            padding: 10px 15px;
-            border-left: 4px solid #ff6b6b;
-            border-radius: 4px;
-        }
+    .profile-box h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+      color: #333;
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    .profile-layout {
+      display: flex;
+      gap: 30px;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
+    .profile-img {
+      flex: 0 0 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-            background-color: #f9f9f9;
-        }
+    .profile-img img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
 
-        .form-control:focus {
-            border-color: #081F5C;
-            background-color: #fff;
-        }
+    .profile-img label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
 
-        button {
-            padding: 12px;
-            background-color: #081F5C;
-            color: #fff;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-weight: 500;
-        }
+    .profile-form-wrapper {
+      flex: 1;
+    }
 
-        button:hover {
-            background-color: #0a2a7a;
-        }
+    .profile-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 0;
+    }
 
-        @media (max-width: 900px) {
-            .container {
-                flex-direction: column;
-                padding: 10px;
-            }
-            .sidebar { width: 100%; }
-            .main-content { padding: 20px; }
-        }
-    </style>
+    .form-col {
+      flex: 1 1 45%;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background-color: #f2f2f2;
+    }
+
+    .submit-btn {
+      display: block;
+      margin: 30px auto 0;
+      background-color: #081F5C;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #0a2a7a;
+    }
+  </style>
 </head>
 <body>
+  <div class="navbar"></div>
 
-<!-- NAVBAR -->
-<div class="navbar">
-    <div class="logo"><a href="index.php">ToyToyShop</a></div>
-    <div class="dropdown">
-        <a href="#">👤 <?= htmlspecialchars($_SESSION['username']); ?> ▾</a>
-        <div class="dropdown-content">
-            <a href="user.php">Profil</a>
-            <a href="pesanan.php">Pesanan Saya</a>
-            <a href="logout.php">Logout</a>
-            <a href="index.php">Kembali ke Home</a>
-        </div>
+  <div class="header-wrapper">
+    
+    <div class="nav-menu">
+      <a href="user.php">Profil</a>
+      <a href="pesanan.php">Pesanan</a>
+      <a href="index.php">Home</a>
+      <a href="logout.php" class="logout">Logout</a>
+      <img src="user-icon.png" alt="User Icon">
     </div>
-</div>
+  </div>
 
-<div class="container">
-
-    <div class="main-content">
-        <h2>Profil</h2>
-        <?php if (!empty($message)): ?>
-            <p class="message"><?= htmlspecialchars($message); ?></p>
-        <?php endif; ?>
-
-        <?php if (!empty($userData['profile_image'])): ?>
-            <img src="uploads/<?= htmlspecialchars($userData['profile_image']); ?>" alt="Foto Profil">
-        <?php else: ?>
-            <p>Tidak ada foto profil</p>
-        <?php endif; ?>
-
-        <form method="POST" action="user.php" enctype="multipart/form-data">
+  <div class="profile-box">
+    <h2>Profil</h2>
+    <div class="profile-layout">
+      <div class="profile-img">
+        <img src="uploads/<?= htmlspecialchars($userData['profile_image']) ?: 'default-user.png' ?>" alt="Profile Pic">
+        <label for="profile_picture">Ganti profil</label>
+        <input type="file" name="profile_picture" id="profile_picture" class="form-control">
+      </div>
+      <div class="profile-form-wrapper">
+        <form class="profile-form" method="POST" enctype="multipart/form-data">
+          <div class="form-col">
             <div class="form-group">
-                <label>Username</label>
-                <input type="text" value="<?= htmlspecialchars($username); ?>" disabled class="form-control">
+              <label>Username</label>
+              <input type="text" value="<?= htmlspecialchars($username); ?>" disabled class="form-control">
             </div>
             <div class="form-group">
-                <label>Nama</label>
-                <input type="text" name="name" value="<?= htmlspecialchars($userData['nama_pembeli']); ?>" required class="form-control">
+              <label>Nama</label>
+              <input type="text" name="name" value="<?= htmlspecialchars($userData['nama_pembeli']); ?>" required class="form-control">
             </div>
             <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" value="<?= htmlspecialchars($userData['email']); ?>" required class="form-control">
+              <label>Email</label>
+              <input type="email" name="email" value="<?= htmlspecialchars($userData['email']); ?>" required class="form-control">
             </div>
             <div class="form-group">
-                <label>Nomor Telepon</label>
-                <input type="tel" name="phone" value="<?= htmlspecialchars($userData['no_telp']); ?>" required class="form-control">
+              <label>Nomor telepon</label>
+              <input type="tel" name="phone" value="<?= htmlspecialchars($userData['no_telp']); ?>" required class="form-control">
+            </div>
+          </div>
+          <div class="form-col">
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" name="password" placeholder="Kosongkan jika tidak diubah" class="form-control">
             </div>
             <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="Kosongkan jika tidak diubah" class="form-control">
+              <label>Alamat</label>
+              <input type="text" name="alamat" value="<?= htmlspecialchars($userData['alamat']); ?>" required class="form-control">
             </div>
             <div class="form-group">
-                <label>Alamat</label>
-                <input type="text" name="alamat" value="<?= htmlspecialchars($userData['alamat']); ?>" required class="form-control">
+              <label>Kota</label>
+              <input type="text" name="kota" value="<?= htmlspecialchars($userData['kota']); ?>" required class="form-control">
             </div>
-            <div class="form-group">
-                <label>Foto Profil</label>
-                <input type="file" name="profile_picture" class="form-control">
-            </div>
-            <button type="submit" name="update">Update Profil</button>
+          </div>
+          <button type="submit" name="update" class="submit-btn">Update Profil</button>
         </form>
+      </div>
     </div>
-</div>
-
+  </div>
 </body>
 </html>
