@@ -153,23 +153,23 @@ if (!isset($_SESSION['cart'])) {
                     </div>
                   </div>
 
-                    <div class="cart-icon-wrapper">
-                      <a href="#" id="cart-icon" class="icon-link">
-                        <span class="material-symbols-outlined">shopping_cart</span>
-                        <span class="cart-count">0</span> 
-                      </a>
-                      <div id="cart-popup" class="cart-popup">
-                        <h4>Keranjang</h4>
-                        <ul id="cart-list-navbar">
-                          <li id="empty-cart" class="empty-cart">
-                            <h4>Keranjang Anda Kosong</h4>
-                            <button onclick="window.location.href='#'" class="btn-continue">Lanjutkan belanja</button>
-                          </li>
-                        </ul>
-                        <p id="cart-total" class="cart-total">Total: Rp 0</p>
-                        <a href="keranjang.php" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
-                      </div>
+                      <div class="cart-icon-wrapper">
+                    <a href="#" id="cart-icon" class="icon-link">
+                      <span class="material-symbols-outlined">shopping_cart</span>
+                      <span class="cart-count">0</span> 
+                    </a>
+                    <div id="cart-popup" class="cart-popup">
+                      <h4>Keranjang</h4>
+                      <ul id="cart-list-navbar">
+                        <li id="empty-cart" class="empty-cart">
+                          <h4>Keranjang Anda Kosong</h4>
+                          <button class="btn-continue">Lanjutkan belanja</button>
+                        </li>
+                      </ul>
+                      <p id="cart-total" class="cart-total">Total: Rp 0</p>
+                      <a href="keranjang.php" class="btn-view-full-cart">Lihat Keranjang Lengkap</a>
                     </div>
+                  </div>
 
                 </div>
             </div>
