@@ -185,46 +185,43 @@ if (isset($_POST['update'])) {
       color: #333;
     }
 
-    .profile-layout {
-      display: flex;
-      gap: 30px;
-    }
+.profile-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  flex-wrap: wrap;
+}
 
-    .profile-img {
-      flex: 0 0 150px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
 
-    .profile-img img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: 10px;
-    }
+.profile-img img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  flex: 0 0 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ini penting biar ke kiri */
+}
 
-    .profile-img label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
 
-    .profile-form-wrapper {
-      flex: 1;
-    }
+.profile-form-wrapper {
+  width: 100%;
+}
 
-    .profile-form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-top: 0;
-    }
+.form-cols {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
 
-    .form-col {
-      flex: 1 1 45%;
-    }
+.form-col {
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
 
     .form-group {
       margin-bottom: 15px;
@@ -382,50 +379,56 @@ if (isset($_POST['update'])) {
 
   <div class="profile-box">
     <h2>Profil</h2>
-    <div class="profile-layout">
-      <div class="profile-img">
-        <img src="uploads/<?= htmlspecialchars($userData['profile_image']) ?: 'default-user.png' ?>" alt="Profile Pic">
-        <label for="profile_picture">Ganti profil</label>
-        <input type="file" name="profile_picture" id="profile_picture" class="form-control">
+ <form class="profile-form" method="POST" enctype="multipart/form-data">
+  <div class="profile-layout">
+    <div class="profile-img">
+      <img src="uploads/<?= htmlspecialchars($userData['profile_image']) ?: 'default-user.png' ?>" alt="Profile Pic">
+      <label for="profile_picture">Ganti profil</label>
+      <input type="file" name="profile_picture" id="profile_picture" class="form-control">
+    </div>
+
+  <div class="profile-form-wrapper">
+    <form class="profile-form" method="POST" enctype="multipart/form-data">
+      <div class="form-cols">
+        <div class="form-col">
+          <!-- kolom kiri -->
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" value="<?= htmlspecialchars($username); ?>" disabled class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Nama</label>
+            <input type="text" name="name" value="<?= htmlspecialchars($userData['nama_pembeli']); ?>" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="<?= htmlspecialchars($userData['email']); ?>" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Nomor telepon</label>
+            <input type="tel" name="phone" value="<?= htmlspecialchars($userData['no_telp']); ?>" required class="form-control">
+          </div>
+        </div>
+        <div class="form-col">
+          <!-- kolom kanan -->
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Kosongkan jika tidak diubah" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Alamat</label>
+            <input type="text" name="alamat" value="<?= htmlspecialchars($userData['alamat']); ?>" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Kota</label>
+            <input type="text" name="kota" value="<?= htmlspecialchars($userData['kota']); ?>" required class="form-control">
+          </div>
+        </div>
       </div>
-      <div class="profile-form-wrapper">
-        <form class="profile-form" method="POST" enctype="multipart/form-data">
-          <div class="form-col">
-            <div class="form-group">
-              <label>Username</label>
-              <input type="text" value="<?= htmlspecialchars($username); ?>" disabled class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Nama</label>
-              <input type="text" name="name" value="<?= htmlspecialchars($userData['nama_pembeli']); ?>" required class="form-control">
-            </div>
-<div class="form-group">
-              <label>Email</label>
-              <input type="email" name="email" value="<?= htmlspecialchars($userData['email']); ?>" required class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Nomor telepon</label>
-              <input type="tel" name="phone" value="<?= htmlspecialchars($userData['no_telp']); ?>" required class="form-control">
-            </div>
-          </div>
-          <div class="form-col">
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" name="password" placeholder="Kosongkan jika tidak diubah" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Alamat</label>
-              <input type="text" name="alamat" value="<?= htmlspecialchars($userData['alamat']); ?>" required class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Kota</label>
-              <input type="text" name="kota" value="<?= htmlspecialchars($userData['kota']); ?>" required class="form-control">
-            </div>
-          </div>
-          <button type="submit" name="update" class="submit-btn">Update Profil</button>
-        </form>
+      <button type="submit" name="update" class="submit-btn">Update Profil</button>
+    </form>
+  </div>
 </div>
- </div>
 </div>
 <script>
   const userToggle = document.getElementById("user-toggle");
