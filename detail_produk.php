@@ -28,7 +28,6 @@ if (!$produk) {
     die("Product not found");
 }
 
-
 mysqli_stmt_close($stmt);
 ?>
 
@@ -710,6 +709,29 @@ mysqli_stmt_close($stmt);
         width: 100%;
       }
     }
+
+        .stock-info {
+      font-size: 14px;
+      margin: 10px 0;
+    }
+    .in-stock {
+      color: green;
+      font-weight: bold;
+    }
+    .low-stock {
+      color: orange;
+      font-weight: bold;
+    }
+    .out-of-stock {
+      color: red;
+      font-weight: bold;
+    }
+    .stock-error {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -819,269 +841,337 @@ mysqli_stmt_close($stmt);
             </nav>
         </header>
 
-        <div class="detail-container">
-            <div class="image-section">
-                <?php if (isset($produk['nama_file'])): ?>
-                    <img src="gambar/<?php echo htmlspecialchars($produk['nama_file']); ?>" alt="<?php echo htmlspecialchars($produk['nama_produk']); ?>">
-                <?php endif; ?>
+         <div class="detail-container">
+        <div class="image-section">
+            <?php if (isset($produk['nama_file'])): ?>
+                <img src="gambar/<?php echo htmlspecialchars($produk['nama_file']); ?>" alt="<?php echo htmlspecialchars($produk['nama_produk']); ?>">
+            <?php endif; ?>
+        </div>
+        <div class="info-section">
+            <?php if (isset($produk['nama_produk'])): ?>
+                <h2><?php echo htmlspecialchars($produk['nama_produk']); ?></h2>
+            <?php endif; ?>
+            
+            <?php if (isset($produk['nama_merk'])): ?>
+                <p><strong>Brand:</strong> <?php echo htmlspecialchars($produk['nama_merk']); ?></p>
+            <?php endif; ?>
+            
+            <?php if (isset($produk['nama_kategori'])): ?>
+                <p><strong>Category:</strong> <?php echo htmlspecialchars($produk['nama_kategori']); ?></p>
+            <?php endif; ?>
+            
+            <!-- ADDED STOCK INFORMATION -->
+            <p class="stock-info <?php 
+                echo ($produk['stok'] <= 0) ? 'out-of-stock' : 
+                     (($produk['stok'] < 5) ? 'low-stock' : 'in-stock'); 
+            ?>">
+                <?php 
+                    echo ($produk['stok'] <= 0) ? 'Stok Habis' : 
+                         (($produk['stok'] < 5) ? 'Stok Terbatas: ' . $produk['stok'] : 'Stok Tersedia: ' . $produk['stok']); 
+                ?>
+            </p>
+            
+            <?php if (isset($produk['deskripsi'])): ?>
+                <p><strong>Description:</strong> <?php echo htmlspecialchars($produk['deskripsi']); ?></p>
+            <?php endif; ?>
+            
+            <div class="quantity">
+                <button onclick="decreaseQuantity()">-</button>
+                <input type="number" id="quantity" value="1" min="1" max="<?php echo $produk['stok']; ?>">
+                <button onclick="increaseQuantity()">+</button>
             </div>
-            <div class="info-section">
-                <?php if (isset($produk['nama_produk'])): ?>
-                    <h2><?php echo htmlspecialchars($produk['nama_produk']); ?></h2>
-                <?php endif; ?>
-                
-                <?php if (isset($produk['nama_merk'])): ?>
-                    <p><strong>Brand:</strong> <?php echo htmlspecialchars($produk['nama_merk']); ?></p>
-                <?php endif; ?>
-                
-                <?php if (isset($produk['nama_kategori'])): ?>
-                    <p><strong>Category:</strong> <?php echo htmlspecialchars($produk['nama_kategori']); ?></p>
-                <?php endif; ?>
-                
-                <?php if (isset($produk['deskripsi'])): ?>
-                    <p><strong>Description:</strong> <?php echo htmlspecialchars($produk['deskripsi']); ?></p>
-                <?php endif; ?>
-                
-                <div class="quantity">
-                    <button onclick="decreaseQuantity()">-</button>
-                    <input type="number" id="quantity" value="1" min="1">
-                    <button onclick="increaseQuantity()">+</button>
-                </div>
-                
-                <div class="pembelianan">
-                    <p>Total Price: <span id="product-price">Rp 
-                        <?php if (isset($produk['harga'])): ?>
-                            <?php echo number_format($produk['harga'], 0, ',', '.'); ?>
-                        <?php else: ?>
-                            0
-                        <?php endif; ?>
-                    </span></p>
-                </div>
-                
-                <div class="buttons">
-                    <button class="cart-btn" onclick="addToCart()">Add to Cart</button>
-                    <button class="buy-btn" onclick="buyNow()">Buy Now</button>
-                </div>
+            <p id="stock-error" class="stock-error">Jumlah melebihi stok yang tersedia</p>
+            
+            <div class="pembelianan">
+                <p>Total Price: <span id="product-price">Rp 
+                    <?php if (isset($produk['harga'])): ?>
+                        <?php echo number_format($produk['harga'], 0, ',', '.'); ?>
+                    <?php else: ?>
+                        0
+                    <?php endif; ?>
+                </span></p>
+            </div>
+            
+            <div class="buttons">
+                <button class="cart-btn" onclick="addToCart()" <?php echo ($produk['stok'] <= 0) ? 'disabled style="opacity:0.5; cursor:not-allowed"' : ''; ?>>
+                    <?php echo ($produk['stok'] <= 0) ? 'Stok Habis' : 'Add to Cart'; ?>
+                </button>
+                <button class="buy-btn" onclick="buyNow()" <?php echo ($produk['stok'] <= 0) ? 'disabled style="opacity:0.5; cursor:not-allowed"' : ''; ?>>
+                    <?php echo ($produk['stok'] <= 0) ? 'Stok Habis' : 'Buy Now'; ?>
+                </button>
             </div>
         </div>
+    </div>
 
-        <script> 
-          let cart = JSON.parse(localStorage.getItem('cart')) || [];
-          let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    <script> 
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const maxStock = <?php echo $produk['stok']; ?>;
 
-          // Elemen
-          const cartCount = document.querySelector('.cart-count');
-          const cartListNavbar = document.getElementById('cart-list-navbar');
-          const cartTotal = document.getElementById('cart-total');
-          const emptyCartMessage = document.getElementById('empty-cart');
-          const cartIcon = document.getElementById('cart-icon');
-          const cartPopup = document.getElementById('cart-popup');
+      // Elemen
+      const cartCount = document.querySelector('.cart-count');
+      const cartListNavbar = document.getElementById('cart-list-navbar');
+      const cartTotal = document.getElementById('cart-total');
+      const emptyCartMessage = document.getElementById('empty-cart');
+      const cartIcon = document.getElementById('cart-icon');
+      const cartPopup = document.getElementById('cart-popup');
+      const quantityInput = document.getElementById('quantity');
+      const stockError = document.getElementById('stock-error');
 
-          const wishlistToggle = document.getElementById('wishlist-toggle');
-          const wishlistDropdown = document.querySelector('.wishlist-dropdown');
-          const wishlistItemsContainer = document.querySelector('.wishlist-items');
+      const wishlistToggle = document.getElementById('wishlist-toggle');
+      const wishlistDropdown = document.querySelector('.wishlist-dropdown');
+      const wishlistItemsContainer = document.querySelector('.wishlist-items');
 
-          function updateCartUI() {
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            if (cartCount) cartCount.textContent = totalItems;
+      function updateCartUI() {
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        if (cartCount) cartCount.textContent = totalItems;
 
-            if (!cartListNavbar || !cartTotal) return;
+        if (!cartListNavbar || !cartTotal) return;
 
-            cartListNavbar.innerHTML = '';
-            let total = 0;
+        cartListNavbar.innerHTML = '';
+        let total = 0;
 
-            if (cart.length === 0) {
-              if (emptyCartMessage) {
-                cartListNavbar.appendChild(emptyCartMessage);
-                emptyCartMessage.style.display = 'block';
-              }
-              cartTotal.textContent = 'Total: Rp 0';
-              return;
-            }
-
-            cart.forEach((item, index) => {
-              const li = document.createElement('li');
-              li.innerHTML = `
-                <img src="${item.image}" alt="${item.name}" style="width: 40px; height: auto; margin-right: 8px;">
-                ${item.name} - Rp ${item.price.toLocaleString('id-ID')} (${item.quantity})
-                <button class="remove-item" data-index="${index}">&times;</button>
-              `;
-              cartListNavbar.appendChild(li);
-              total += item.price * item.quantity;
-            });
-
-            if (emptyCartMessage) emptyCartMessage.style.display = 'none';
-            cartTotal.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
+        if (cart.length === 0) {
+          if (emptyCartMessage) {
+            cartListNavbar.appendChild(emptyCartMessage);
+            emptyCartMessage.style.display = 'block';
           }
+          cartTotal.textContent = 'Total: Rp 0';
+          return;
+        }
 
-          function updateWishlistUI() {
-            if (!wishlistItemsContainer) return;
+        cart.forEach((item, index) => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" style="width: 40px; height: auto; margin-right: 8px;">
+            ${item.name} - Rp ${item.price.toLocaleString('id-ID')} (${item.quantity})
+            <button class="remove-item" data-index="${index}">&times;</button>
+          `;
+          cartListNavbar.appendChild(li);
+          total += item.price * item.quantity;
+        });
 
-            if (wishlist.length === 0) {
-              wishlistItemsContainer.innerHTML = `
-                <div class="empty-message">
-                  <span class="material-symbols-outlined">favorite</span>
-                  <p>Wishlist Anda kosong</p>
-                </div>
-              `;
-              return;
-            }
+        if (emptyCartMessage) emptyCartMessage.style.display = 'none';
+        cartTotal.textContent = `Total: Rp ${total.toLocaleString('id-ID')}`;
+      }
 
-            let itemsHTML = '';
-            wishlist.forEach(item => {
-              itemsHTML += `
-                <div class="wishlist-item" data-id="${item.id}">
-                  <img src="${item.image}" alt="${item.name}">
-                  <div class="wishlist-item-details">
-                    <div class="wishlist-item-name">${item.name}</div>
-                    <div class="wishlist-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
-                  </div>
-                  <button class="remove-wishlist">
-                    <span class="material-symbols-outlined">close</span>
-                  </button>
-                </div>
-              `;
-            });
+      function updateWishlistUI() {
+        if (!wishlistItemsContainer) return;
 
-            wishlistItemsContainer.innerHTML = itemsHTML;
-          }
+        if (wishlist.length === 0) {
+          wishlistItemsContainer.innerHTML = `
+            <div class="empty-message">
+              <span class="material-symbols-outlined">favorite</span>
+              <p>Wishlist Anda kosong</p>
+            </div>
+          `;
+          return;
+        }
 
-          function showNotification(message) {
-            alert(message);
-          }
+        let itemsHTML = '';
+        wishlist.forEach(item => {
+          itemsHTML += `
+            <div class="wishlist-item" data-id="${item.id}">
+              <img src="${item.image}" alt="${item.name}">
+              <div class="wishlist-item-details">
+                <div class="wishlist-item-name">${item.name}</div>
+                <div class="wishlist-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+              </div>
+              <button class="remove-wishlist">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </div>
+          `;
+        });
 
-          document.addEventListener('DOMContentLoaded', () => {
-            updateCartUI();
-            updateWishlistUI();
-            if (cartIcon && cartPopup) {
-              cartIcon.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
-              });
-            }
+        wishlistItemsContainer.innerHTML = itemsHTML;
+      }
 
-            if (wishlistToggle && wishlistDropdown) {
-              wishlistToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                wishlistDropdown.classList.toggle('show');
-              });
-            }
+      function showNotification(message) {
+        alert(message);
+      }
 
-            // Klik luar: tutup dropdown
-            document.addEventListener('click', (e) => {
-              if (cartPopup && !cartIcon.contains(e.target) && !cartPopup.contains(e.target)) {
-                cartPopup.style.display = 'none';
-              }
-              if (wishlistDropdown && !wishlistToggle.contains(e.target) && !wishlistDropdown.contains(e.target)) {
-                wishlistDropdown.classList.remove('show');
-              }
-            });
-
-            // Hapus item dari cart
-            cartListNavbar?.addEventListener('click', (e) => {
-              if (e.target.classList.contains('remove-item')) {
-                const index = parseInt(e.target.dataset.index, 10);
-                const removed = cart[index];
-                cart.splice(index, 1);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCartUI();
-                showNotification(`${removed.name} dihapus dari keranjang`);
-              }
-            });
-
-            // Hapus dari wishlist
-            wishlistItemsContainer?.addEventListener('click', (e) => {
-              if (e.target.closest('.remove-wishlist')) {
-                const itemElement = e.target.closest('.wishlist-item');
-                const productId = itemElement.dataset.id;
-
-                wishlist = wishlist.filter(item => item.id !== productId);
-                localStorage.setItem('wishlist', JSON.stringify(wishlist));
-                updateWishlistUI();
-                showNotification('Item dihapus dari wishlist');
-              }
-            });
-
-            // Tombol close wishlist
-            document.querySelector('.close-wishlist')?.addEventListener('click', () => {
-              wishlistDropdown.classList.remove('show');
-            });
+      document.addEventListener('DOMContentLoaded', () => {
+        updateCartUI();
+        updateWishlistUI();
+        
+        // Set max quantity based on stock
+        quantityInput.max = maxStock;
+        
+        if (cartIcon && cartPopup) {
+          cartIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
           });
+        }
 
-          // Product Detail
-          function decreaseQuantity() {
-            const quantityInput = document.getElementById('quantity');
-            let quantity = parseInt(quantityInput.value);
-            if (quantity > 1) {
-              quantity--;
-              quantityInput.value = quantity;
-              updateTotalPrice(quantity);
-            }
+        if (wishlistToggle && wishlistDropdown) {
+          wishlistToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            wishlistDropdown.classList.toggle('show');
+          });
+        }
+
+        // Klik luar: tutup dropdown
+        document.addEventListener('click', (e) => {
+          if (cartPopup && !cartIcon.contains(e.target) && !cartPopup.contains(e.target)) {
+            cartPopup.style.display = 'none';
           }
-
-          function increaseQuantity() {
-            const quantityInput = document.getElementById('quantity');
-            let quantity = parseInt(quantityInput.value);
-            quantity++;
-            quantityInput.value = quantity;
-            updateTotalPrice(quantity);
+          if (wishlistDropdown && !wishlistToggle.contains(e.target) && !wishlistDropdown.contains(e.target)) {
+            wishlistDropdown.classList.remove('show');
           }
+        });
 
-          function updateTotalPrice(quantity) {
-            const priceElement = document.getElementById('product-price');
-            const basePrice = <?php echo isset($produk['harga']) ? $produk['harga'] : 0; ?>;
-            const totalPrice = basePrice * quantity;
-            priceElement.textContent = 'Rp ' + totalPrice.toLocaleString('id-ID');
-          }
-
-          function addToCart() {
-            const quantity = parseInt(document.getElementById('quantity').value);
-            const product = {
-              id: <?php echo $produk['id_produk']; ?>,
-              name: "<?php echo addslashes($produk['nama_produk']); ?>",
-              price: <?php echo $produk['harga']; ?>,
-              quantity: quantity,
-              image: "gambar/<?php echo $produk['nama_file']; ?>"
-            };
-
-            // Check if product already in cart
-            const existingIndex = cart.findIndex(item => item.id === product.id);
-            if (existingIndex >= 0) {
-              cart[existingIndex].quantity += quantity;
-            } else {
-              cart.push(product);
-            }
-
+        // Hapus item dari cart
+        cartListNavbar?.addEventListener('click', (e) => {
+          if (e.target.classList.contains('remove-item')) {
+            const index = parseInt(e.target.dataset.index, 10);
+            const removed = cart[index];
+            cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartUI();
-            showNotification('Produk telah ditambahkan ke keranjang');
+            showNotification(`${removed.name} dihapus dari keranjang`);
           }
+        });
 
-          function buyNow() {
-    const productData = {
-        id: "<?php echo $produk['id_produk']; ?>",
-        name: "<?php echo $produk['nama_produk']; ?>",
-        price: <?php echo $produk['harga']; ?>,
-        quantity: parseInt(document.getElementById('quantity').value),
-        image: "gambar/<?php echo $produk['nama_file']; ?>"
-    };
-    
-    // Tambahkan ke keranjang
-    const existingIndex = cart.findIndex(item => item.id === productData.id);
-    if (existingIndex >= 0) {
-        cart[existingIndex].quantity += productData.quantity;
-    } else {
-        cart.push(productData);
-    }
-    
-    // Simpan ke localStorage
-    localStorage.setItem('cart', JSON.stringify(cart));
-    
-    // Redirect ke halaman keranjang
-    window.location.href = "keranjang.php";
-}
-        </script>
+        // Hapus dari wishlist
+        wishlistItemsContainer?.addEventListener('click', (e) => {
+          if (e.target.closest('.remove-wishlist')) {
+            const itemElement = e.target.closest('.wishlist-item');
+            const productId = itemElement.dataset.id;
+
+            wishlist = wishlist.filter(item => item.id !== productId);
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistUI();
+            showNotification('Item dihapus dari wishlist');
+          }
+        });
+
+        // Tombol close wishlist
+        document.querySelector('.close-wishlist')?.addEventListener('click', () => {
+          wishlistDropdown.classList.remove('show');
+        });
+      });
+
+      // Product Detail
+      function decreaseQuantity() {
+        let quantity = parseInt(quantityInput.value);
+        if (quantity > 1) {
+          quantity--;
+          quantityInput.value = quantity;
+          updateTotalPrice(quantity);
+          stockError.style.display = 'none';
+        }
+      }
+
+      function increaseQuantity() {
+        let quantity = parseInt(quantityInput.value);
+        if (quantity < maxStock) {
+          quantity++;
+          quantityInput.value = quantity;
+          updateTotalPrice(quantity);
+          stockError.style.display = 'none';
+        } else {
+          stockError.style.display = 'block';
+        }
+      }
+
+      function updateTotalPrice(quantity) {
+        const priceElement = document.getElementById('product-price');
+        const basePrice = <?php echo isset($produk['harga']) ? $produk['harga'] : 0; ?>;
+        const totalPrice = basePrice * quantity;
+        priceElement.textContent = 'Rp ' + totalPrice.toLocaleString('id-ID');
+      }
+
+      function addToCart() {
+        const quantity = parseInt(quantityInput.value);
+        
+        if (quantity > maxStock) {
+          showNotification('Jumlah melebihi stok yang tersedia');
+          return;
+        }
+
+        const product = {
+          id: <?php echo $produk['id_produk']; ?>,
+          name: "<?php echo addslashes($produk['nama_produk']); ?>",
+          price: <?php echo $produk['harga']; ?>,
+          quantity: quantity,
+          image: "gambar/<?php echo $produk['nama_file']; ?>",
+          maxStock: maxStock
+        };
+
+        // Check if product already in cart
+        const existingIndex = cart.findIndex(item => item.id === product.id);
+        if (existingIndex >= 0) {
+          // Check if total quantity exceeds stock
+          if (cart[existingIndex].quantity + quantity > maxStock) {
+            showNotification('Total jumlah melebihi stok yang tersedia');
+            return;
+          }
+          cart[existingIndex].quantity += quantity;
+        } else {
+          cart.push(product);
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartUI();
+        showNotification('Produk telah ditambahkan ke keranjang');
+      }
+
+      function buyNow() {
+        const quantity = parseInt(quantityInput.value);
+        
+        if (quantity > maxStock) {
+          showNotification('Jumlah melebihi stok yang tersedia');
+          return;
+        }
+
+        const productData = {
+          id: "<?php echo $produk['id_produk']; ?>",
+          name: "<?php echo $produk['nama_produk']; ?>",
+          price: <?php echo $produk['harga']; ?>,
+          quantity: quantity,
+          image: "gambar/<?php echo $produk['nama_file']; ?>"
+        };
+        
+        // Tambahkan ke keranjang
+        const existingIndex = cart.findIndex(item => item.id === productData.id);
+        if (existingIndex >= 0) {
+          // Check stock before adding
+          if (cart[existingIndex].quantity + quantity > maxStock) {
+            showNotification('Total jumlah melebihi stok yang tersedia');
+            return;
+          }
+          cart[existingIndex].quantity += productData.quantity;
+        } else {
+          cart.push(productData);
+        }
+        
+        // Simpan ke localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Redirect ke halaman keranjang
+        window.location.href = "keranjang.php";
+      }
+
+      // Validate quantity input
+      quantityInput.addEventListener('change', function() {
+        const quantity = parseInt(this.value);
+        if (quantity > maxStock) {
+          this.value = maxStock;
+          stockError.style.display = 'block';
+          updateTotalPrice(maxStock);
+        } else if (quantity < 1) {
+          this.value = 1;
+          stockError.style.display = 'none';
+          updateTotalPrice(1);
+        } else {
+          stockError.style.display = 'none';
+          updateTotalPrice(quantity);
+        }
+      });
+    </script>
 </body>
 </html>

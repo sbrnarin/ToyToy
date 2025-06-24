@@ -1,7 +1,6 @@
 <?php
 include 'koneksi.php';
 
-// Ambil 1 produk terbaru dari setiap brand
 $brands = ['Baby Alive', 'Playdoh', 'Hot Wheels', 'Lego'];
 $products = [];
 
@@ -79,10 +78,7 @@ foreach ($brands as $brand) {
 
     <nav class="navbar">
         <div class="login">
-            <a href="location.html">Location</a>
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
-            <a href="footer">Contact</a>
+          <p style="color: #000080; text-align: center; margin: 0;">.</p>
         </div>
         
         <header>
@@ -124,14 +120,21 @@ foreach ($brands as $brand) {
                   </div>
 
 
-                   <div class="dropdown-user">
-  <span class="material-symbols-outlined" id="user-toggle">person</span>
-  <div class="dropdown-user-menu" id="user-menu">
-    <a href="user.php">Profil</a>
-    <a href="pesanan.php">Pesanan Saya</a>
-    <a href="logout.php">Logout</a>
-  </div>
-</div>
+                   <?php session_start(); ?>
+                  <div class="dropdown-user">
+                    <span class="material-symbols-outlined" id="user-toggle">person</span>
+                    <div class="dropdown-user-menu" id="user-menu">
+                      <?php if (isset($_SESSION['id_pembeli'])): ?>
+                        <a href="user.php">Profil</a>
+                        <a href="pesanan.php">Pesanan Saya</a>
+                        <a href="logout.php">Logout</a>
+                      <?php else: ?>
+                        <a href="login.php">Login</a>
+                        <a href="register.php">Register</a>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+
                     <div class="cart-icon-wrapper">
                       <a href="#" id="cart-icon" class="icon-link">
                         <span class="material-symbols-outlined">shopping_cart</span>
@@ -374,7 +377,6 @@ foreach ($brands as $brand) {
                 </div>
             </footer>
 
-            //user 
             <script>
 const userToggle = document.getElementById("user-toggle");
   const userMenu = document.getElementById("user-menu");

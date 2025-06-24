@@ -129,40 +129,46 @@
     </div>
 
     <!-- Products Showcase Section -->
-    <section class="products-showcase">     
-      <div class="product-list">
-        <?php
-        include 'koneksi.php';
+            <section class="products-showcase">     
+            <div class="product-list">
+                <?php while ($produk = mysqli_fetch_assoc($query)): ?>
+                <div class="product-card"
+                    data-name="<?= htmlspecialchars($produk['nama_produk']) ?>"
+                    data-price="<?= $produk['harga'] ?>"
+                    data-image="gambar/<?= htmlspecialchars($produk['nama_file']) ?>"
+                    data-product-id="<?= $produk['id_produk'] ?>"
+                    data-stock="<?= $produk['stok'] ?>">
 
-        $query = mysqli_query($koneksi, "
-          SELECT produk.*, merk.nama_merk 
-          FROM produk 
-          JOIN merk ON produk.id_merk = merk.id_merk
-        ");
+                    <button class="wishlist-btn" onclick="toggleWishlist(event)">
+                        <i class="heart-icon" data-lucide="heart"></i>
+                    </button>
 
-        while ($produk = mysqli_fetch_assoc($query)) {
-        ?>
-          <div class="product-card"
-               data-name="<?php echo $produk['nama_produk']; ?>"
-               data-price="<?php echo $produk['harga']; ?>"
-               data-image="gambar/<?php echo $produk['nama_file']; ?>"
-               data-id="<?php echo $produk['id_produk']; ?>">
+                    <a href="detail_produk.php?id=<?= $produk['id_produk'] ?>" class="product-link">
+                        <img src="gambar/<?= htmlspecialchars($produk['nama_file']) ?>" alt="<?= htmlspecialchars($produk['nama_produk']) ?>">
+                    </a>
 
-            <button class="wishlist-btn" onclick="toggleWishlist(event)">
-              <i class="heart-icon" data-lucide="heart"></i>
-            </button>
-
-            <img src="gambar/<?php echo $produk['nama_file']; ?>" alt="<?php echo $produk['nama_produk']; ?>" width="100%">
-
-            <div class="info">
-              <p class="product-title"><?php echo $produk['nama_produk']; ?></p>
-              <p class="product-price">Rp. <?php echo number_format($produk['harga'], 0, ',', '.'); ?></p>
-              <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+                    <div class="info">
+                        <a href="detail_produk.php?id=<?= $produk['id_produk'] ?>" class="product-title-link">
+                            <p class="product-title"><?= htmlspecialchars($produk['nama_produk']) ?></p>
+                        </a>
+                        <p class="product-price">Rp <?= number_format($produk['harga'], 0, ',', '.') ?></p>
+                        
+                        <!-- Stock Information (ONLY ADDED ELEMENT) -->
+                        <p class="stock-info <?= ($produk['stok'] <= 0) ? 'stock-out' : (($produk['stok'] < 5) ? 'stock-low' : '') ?>">
+                            Stok: <?= $produk['stok'] ?>
+                        </p>
+                        
+                        <!-- Modified Add to Cart Button -->
+                        <button class="add-to-cart <?= ($produk['stok'] <= 0) ? 'disabled-btn' : '' ?>" 
+                                onclick="<?= ($produk['stok'] > 0) ? 'addToCart(event)' : 'return false' ?>"
+                                <?= ($produk['stok'] <= 0) ? 'disabled' : '' ?>>
+                            <?= ($produk['stok'] <= 0) ? 'Stok Habis' : 'Add to cart' ?>
+                        </button>
+                    </div>
+                </div>
+                <?php endwhile; ?>
             </div>
-          </div>
-        <?php } ?>
-      </div>
-    </section>
+        </section>
 
             <footer class="main-footer">
                 <div class="footer-container">

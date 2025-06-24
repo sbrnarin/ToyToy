@@ -161,10 +161,7 @@ while ($row = $result->fetch_assoc()) {
 
     <nav class="navbar">
         <div class="login">
-            <a href="location.html">Location</a>
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
-            <a href="footer">Contact</a>
+          <p style="color: #000080; text-align: center; margin: 0;">.</p>
         </div>
         
         <header>

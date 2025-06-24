@@ -1,5 +1,13 @@
 <?php
 include "koneksi.php";
+
+// Validasi stok saat form disubmit (untuk edit produk)
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['stok'])) {
+    if ($_POST['stok'] < 0) {
+        die("<script>alert('Stok tidak boleh minus!');history.back();</script>");
+    }
+}
+
 $query = mysqli_query($koneksi, "
   SELECT p.*, m.nama_merk, k.nama_kategori
   FROM produk p
@@ -72,7 +80,7 @@ $query = mysqli_query($koneksi, "
     }
 
     h1 {
-      margin-top: a0;
+      margin-top: 0;
       font-weight: 700;
     }
 
@@ -125,6 +133,16 @@ $query = mysqli_query($koneksi, "
     .action a:hover {
       opacity: 0.7;
     }
+    
+    .stok-habis {
+      color: red;
+      font-weight: bold;
+    }
+    
+    .stok-sedikit {
+      color: orange;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -146,7 +164,7 @@ $query = mysqli_query($koneksi, "
     <a href="tambah.php" class="btn-tambah">Tambah Produk</a>
     <table>
       <tr>
-        <th>Id Produk</th>
+        <th>ID Produk</th>
         <th>Nama Produk</th>
         <th>Deskripsi</th>
         <th>Harga</th>
@@ -157,30 +175,56 @@ $query = mysqli_query($koneksi, "
         <th>Gambar</th>
         <th>Aksi</th>
       </tr>
-      <?php while($produk = mysqli_fetch_assoc($query)) { ?>
+      <?php while($produk = mysqli_fetch_assoc($query)): ?>
       <tr>
-        <td><?=$produk['id_produk']?></td>
-        <td><?=$produk['nama_produk']?></td>
-        <td><?=$produk['deskripsi']?></td>
-        <td><?=$produk['harga']?></td>
-        <td><?=$produk['stok']?></td>
-        <td><?=$produk['nama_merk']?></td>
-        <td><?=$produk['nama_kategori']?></td>
-        <td><?=$produk['tanggal_masuk']?></td>
+        <td><?=htmlspecialchars($produk['id_produk'])?></td>
+        <td><?=htmlspecialchars($produk['nama_produk'])?></td>
+        <td><?=htmlspecialchars($produk['deskripsi'])?></td>
+        <td>Rp <?=number_format($produk['harga'], 0, ',', '.')?></td>
+        <?php
+$class = '';
+if ($produk['stok'] <= 0) {
+    $class = 'stok-habis';
+} elseif ($produk['stok'] < 5) {
+    $class = 'stok-sedikit';
+}
+?>
+<td class="<?= $class ?>">
+  <?= htmlspecialchars($produk['stok']) ?>
+</td>
+        <td><?=htmlspecialchars($produk['nama_merk'])?></td>
+        <td><?=htmlspecialchars($produk['nama_kategori'])?></td>
+        <td><?=htmlspecialchars($produk['tanggal_masuk'])?></td>
         <td>
-          <?php if (!empty($produk['nama_file'])) { ?>
-            <img src="gambar/<?=$produk['nama_file']?>" width="100" />
-          <?php } else { ?>
+          <?php if (!empty($produk['nama_file'])): ?>
+            <img src="gambar/<?=htmlspecialchars($produk['nama_file'])?>" width="100" />
+          <?php else: ?>
             <span>-</span>
-          <?php } ?>
+          <?php endif; ?>
         </td>
         <td class="action">
           <a href="edit.php?id_produk=<?=$produk['id_produk']?>">Edit</a> |
           <a href="hapus.php?id_produk=<?=$produk['id_produk']?>" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
         </td>
       </tr>
-      <?php } ?>
+      <?php endwhile; ?>
     </table>
   </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const forms = document.querySelectorAll('form[action="edit.php"]');
+      forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+          const stokInput = form.querySelector('input[name="stok"]');
+          if (parseInt(stokInput.value) < 0) {
+            e.preventDefault();
+            alert('Stok tidak boleh minus!');
+            stokInput.focus();
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>

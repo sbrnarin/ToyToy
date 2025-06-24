@@ -12,20 +12,35 @@ $result = mysqli_query($koneksi, $sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Video Games - ToyToyShop</title>
     <link rel="stylesheet" href="produk.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <script src="https://unpkg.com/lucide@latest"></script>
-
+    <style>
+        /* Added styles for stock display */
+        .stock-info {
+            font-size: 12px;
+            margin: 5px 0;
+            color: #666;
+        }
+        .stock-out {
+            color: red;
+            font-weight: bold;
+        }
+        .stock-low {
+            color: orange;
+        }
+        .disabled-btn {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="login">
-            <a href="location.html">Location</a>
-            <a href="login.php">Login</a>
-            <a href="register.php">Register</a>
-            <a href="#contact">Contact</a>
+          <p style="color: #000080; text-align: center; margin: 0;">.</p>
         </div>
         
         <header>
@@ -133,8 +148,6 @@ $result = mysqli_query($koneksi, $sql);
             </nav>
         </header>
 
-    
-
 <!-- product -->
 <section class="products-showcase">     
   <div class="product-list">
@@ -154,7 +167,8 @@ $result = mysqli_query($koneksi, $sql);
            data-name="<?php echo $produk['nama_produk']; ?>"
            data-price="<?php echo $produk['harga']; ?>"
            data-image="gambar/<?php echo $produk['nama_file']; ?>"
-           data-product-id="<?php echo $produk['id_produk']; ?>">
+           data-product-id="<?php echo $produk['id_produk']; ?>"
+           data-stock="<?php echo $produk['stok']; ?>">
 
         <button class="wishlist-btn" onclick="toggleWishlist(event)">
           <i class="heart-icon" data-lucide="heart"></i>
@@ -165,7 +179,18 @@ $result = mysqli_query($koneksi, $sql);
         <div class="info">
           <p class="product-title"><?php echo $produk['nama_produk']; ?></p>
           <p class="product-price">Rp. <?php echo number_format($produk['harga'], 0, ',', '.'); ?></p>
-          <button class="add-to-cart" onclick="addToCart(event)">Add to cart</button>
+          
+          <!-- Stock Information (Added) -->
+          <p class="stock-info <?php echo ($produk['stok'] <= 0) ? 'stock-out' : (($produk['stok'] < 5) ? 'stock-low' : ''); ?>">
+            Stok: <?php echo $produk['stok']; ?>
+          </p>
+          
+          <!-- Modified Add to Cart Button -->
+          <button class="add-to-cart <?php echo ($produk['stok'] <= 0) ? 'disabled-btn' : ''; ?>" 
+                  onclick="<?php echo ($produk['stok'] > 0) ? 'addToCart(event)' : 'return false'; ?>"
+                  <?php echo ($produk['stok'] <= 0) ? 'disabled' : ''; ?>>
+            <?php echo ($produk['stok'] <= 0) ? 'Stok Habis' : 'Add to cart'; ?>
+          </button>
         </div>
       </div>
     <?php
@@ -215,7 +240,7 @@ $result = mysqli_query($koneksi, $sql);
             </footer>
 
 <script>
-// Cart functionality (matching index.php)
+// Cart functionality (updated with stock check)
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const cartListNavbar = document.getElementById('cart-list-navbar');
 const cartCount = document.querySelector('.cart-count');
@@ -245,6 +270,11 @@ function updateCartUI() {
         li.innerHTML = `
             <img src="${item.image}" alt="${item.title}" style="width: 40px; height: auto; vertical-align: middle; margin-right: 8px;">
             ${item.title} - Rp ${item.price.toLocaleString('id-ID')}
+            <div>
+                <button class="qty-btn minus" data-index="${index}">-</button>
+                <span>${item.quantity}</span>
+                <button class="qty-btn plus" data-index="${index}" ${item.quantity >= item.maxStock ? 'disabled' : ''}>+</button>
+            </div>
             <button class="remove-item" data-index="${index}">&times;</button>
         `;
         cartListNavbar.appendChild(li);
@@ -278,18 +308,32 @@ function addToCart(event) {
     const title = productCard.dataset.name;
     const price = parseInt(productCard.dataset.price);
     const image = productCard.dataset.image;
+    const stock = parseInt(productCard.dataset.stock);
+
+    // Check if product is out of stock
+    if (stock <= 0) {
+        showNotification('Maaf, produk ini sudah habis');
+        return;
+    }
 
     const existingItem = cart.find(item => item.id === productId);
 
     if (existingItem) {
+        // Check if we can add more
+        if (existingItem.quantity >= stock) {
+            showNotification('Maaf, stok tidak mencukupi');
+            return;
+        }
         existingItem.quantity += 1;
+        existingItem.maxStock = stock; // Update max stock in case it changed
     } else {
         cart.push({ 
             id: productId,
             title, 
             price, 
             image, 
-            quantity: 1 
+            quantity: 1,
+            maxStock: stock
         });
     }
 
@@ -298,8 +342,30 @@ function addToCart(event) {
     showNotification(`${title} ditambahkan ke keranjang`);
 }
 
-// Remove item from cart
+// Handle quantity changes in cart
 cartListNavbar?.addEventListener('click', function(e) {
+    if (e.target.classList.contains('minus')) {
+        const index = parseInt(e.target.dataset.index, 10);
+        if (cart[index].quantity > 1) {
+            cart[index].quantity -= 1;
+        } else {
+            cart.splice(index, 1);
+        }
+        saveCartToLocalStorage();
+        updateCartUI();
+    }
+    
+    if (e.target.classList.contains('plus')) {
+        const index = parseInt(e.target.dataset.index, 10);
+        if (cart[index].quantity < cart[index].maxStock) {
+            cart[index].quantity += 1;
+            saveCartToLocalStorage();
+            updateCartUI();
+        } else {
+            showNotification('Tidak bisa menambah, stok terbatas');
+        }
+    }
+    
     if (e.target.classList.contains('remove-item')) {
         const index = parseInt(e.target.dataset.index, 10);
         const removedItem = cart[index];
@@ -495,9 +561,6 @@ document.addEventListener('DOMContentLoaded', function() {
     lucide.createIcons();
 });
 
-function showNotification(message) {
-    alert(message);
-}
 </script>
 
 <script>
