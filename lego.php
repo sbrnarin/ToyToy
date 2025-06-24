@@ -309,10 +309,10 @@ $result = mysqli_query($koneksi, $sql);
 
                 if (existingItem) {
                     existingItem.quantity += 1;
-                } else {
+ } else {
                     cart.push({ 
                         id: productId,
-                        title, 
+                        name: title,
                         price, 
                         image, 
                         quantity: 1 
