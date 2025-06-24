@@ -1,24 +1,19 @@
 <?php
 include "koneksi.php";
 
-// Aktifkan error reporting untuk development
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Validasi parameter id_pesanan
 if (!isset($_GET['id_pesanan']) || empty($_GET['id_pesanan'])) {
     header("Location: data_pesanan.php?error=missing_id");
     exit();
 }
 
-// Validasi dan sanitasi input
 $id_pesanan = filter_input(INPUT_GET, 'id_pesanan', FILTER_VALIDATE_INT);
 if ($id_pesanan === false || $id_pesanan <= 0) {
     header("Location: data_pesanan.php?error=invalid_id");
     exit();
 }
-
-// Query untuk mendapatkan detail pesanan dengan prepared statement
 $sql_pesanan = "SELECT pesanan.*, pembeli.* 
                 FROM pesanan 
                 JOIN pembeli ON pesanan.id_pembeli = pembeli.id_pembeli
@@ -55,7 +50,6 @@ mysqli_stmt_bind_param($stmt_items, "i", $id_pesanan);
 mysqli_stmt_execute($stmt_items);
 $query_items = mysqli_stmt_get_result($stmt_items);
 
-// Jika tidak ada item, tetap lanjutkan (beberapa pesanan mungkin tidak punya item)
 ?>
 
 <!DOCTYPE html>
@@ -168,7 +162,7 @@ h2 {
 .info-value {
     background-color: #f0f2f5;
     padding: 10px 15px;
-    border-left: 4px solid #081F5C;
+    border-left: 4px solidrgb(104, 107, 114);
     border-radius: 6px;
 }
 
@@ -328,7 +322,7 @@ h2 {
                 </div>
                 <div class="info-item">
                     <div class="info-label">Tanggal Pesan:</div>
-                    <div class="info-value"><?= date('d/m/Y H:i', strtotime($pesanan['tanggal_pesan'])) ?></div>
+                    <div class="info-value"><?= date('d/m/Y', strtotime($pesanan['tanggal_pesan'])) ?></div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Metode Pembayaran:</div>
@@ -408,7 +402,7 @@ h2 {
             <table class="summary-table">
                 <tr>
                     <td>Total Produk:</td>
-                    <td><?= $total_items ?> item(s)</td>
+                    <td><?= $total_items ?> item</td>
                 </tr>
                 <tr>
                     <td>Subtotal:</td>
@@ -424,6 +418,6 @@ h2 {
         <a href="data_pesanan.php" class="back-btn"><i class="fas fa-arrow-left"></i> Kembali ke Daftar Pesanan</a>
     </div>
 </div>
-
+                      
 </body>
 </html>

@@ -1,5 +1,4 @@
 <?php
-// Tambahkan header no-cache di bagian paling atas
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
@@ -188,7 +187,7 @@ $query = mysqli_query($koneksi, $sql);
     align-items: center;
     flex-wrap: wrap;
     white-space: nowrap;
-    width: 140px; /* batasi lebar agar konsisten */
+    width: 140px; 
     margin: 0 auto;
 }
 
@@ -389,7 +388,7 @@ document.querySelectorAll('.payment-status-form select').forEach(select => {
         const form = this.closest('form');
         const idPesanan = form.querySelector('input[name="id_pesanan"]').value;
         const newStatus = this.value;
-        const oldStatus = this.getAttribute('data-old-value'); // ✅ fix di sini
+        const oldStatus = this.getAttribute('data-old-value'); 
 
         fetch(form.action, {
             method: 'POST',
@@ -404,11 +403,10 @@ document.querySelectorAll('.payment-status-form select').forEach(select => {
         })
         .then(result => {
             if (result === 'success') {
-                // ✅ Update class dan simpan value baru
                 this.className = `status-select ${newStatus.toLowerCase().replace(' ', '-')}`;
-                this.setAttribute('data-old-value', newStatus); // ✅ simpan status baru
+                this.setAttribute('data-old-value', newStatus);
 
-                // Aktifkan / nonaktifkan dropdown pengiriman
+                
                 const row = this.closest('tr');
                 const shippingSelect = row.querySelector('select[data-id]');
                 
@@ -429,13 +427,13 @@ document.querySelectorAll('.payment-status-form select').forEach(select => {
                 }
             } else {
                 alert('Gagal mengupdate status pembayaran');
-                this.value = oldStatus; // rollback
+                this.value = oldStatus; 
             }
         })
         .catch(error => {
             console.error('Error:', error);
             alert('Terjadi kesalahan saat mengupdate status pembayaran');
-            this.value = oldStatus; // rollback
+            this.value = oldStatus; 
         });
     });
 });
