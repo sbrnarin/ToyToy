@@ -36,6 +36,44 @@ foreach ($brands as $brand) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    
+.dropdown-user {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.dropdown-user .material-symbols-outlined {
+  font-size: 24px;
+  color: #333;
+}
+
+.dropdown-user-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 130%;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  z-index: 1000;
+  min-width: 160px;
+}
+
+.dropdown-user-menu a {
+  display: block;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.dropdown-user-menu a:hover {
+  background-color: #f4f6fc;
+  color: #081F5C;
+}
+  </style>
 </head>
 <body>
 
@@ -86,9 +124,14 @@ foreach ($brands as $brand) {
                   </div>
 
 
-                    <a href="user.php" class="icon-link">
-                        <span class="material-symbols-outlined">person</span>
-                    </a>
+                   <div class="dropdown-user">
+  <span class="material-symbols-outlined" id="user-toggle">person</span>
+  <div class="dropdown-user-menu" id="user-menu">
+    <a href="user.php">Profil</a>
+    <a href="pesanan.php">Pesanan Saya</a>
+    <a href="logout.php">Logout</a>
+  </div>
+</div>
                     <div class="cart-icon-wrapper">
                       <a href="#" id="cart-icon" class="icon-link">
                         <span class="material-symbols-outlined">shopping_cart</span>
@@ -331,6 +374,25 @@ foreach ($brands as $brand) {
                 </div>
             </footer>
 
+            //user 
+            <script>
+const userToggle = document.getElementById("user-toggle");
+  const userMenu = document.getElementById("user-menu");
+
+  userToggle.addEventListener("click", function (e) {
+    e.stopPropagation();
+    userMenu.style.display = userMenu.style.display === "block" ? "none" : "block";
+  });
+
+  // Tutup dropdown kalau klik di luar
+  document.addEventListener("click", function (e) {
+    if (!userMenu.contains(e.target)) {
+      userMenu.style.display = "none";
+    }
+  });
+  </script>
+
+
               <!-- search -->
               <script>
                 function searchProducts(event) {
@@ -356,9 +418,7 @@ foreach ($brands as $brand) {
                   
                   return false;
                 }
-              </script>
-                
-<script>
+            
 // keranjang
 const cart = [];
 const cartListNavbar = document.getElementById('cart-list-navbar');
@@ -658,6 +718,5 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   lucide.createIcons();
 </script>
-  
 </body>
 </html>
