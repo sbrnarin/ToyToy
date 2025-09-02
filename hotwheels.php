@@ -488,21 +488,44 @@ document.addEventListener('DOMContentLoaded', function () {
     const cartIcon = document.getElementById('cart-icon');
     const cartPopup = document.getElementById('cart-popup');
 
-    // Toggle dropdown saat ikon diklik
+
     cartIcon.addEventListener('click', function (e) {
         e.preventDefault();
-        e.stopPropagation(); // agar tidak langsung tertutup
-
+        e.stopPropagation(); 
         cartPopup.classList.toggle('active');
     });
 
-    // Klik di luar akan menutup cart-popup
     document.addEventListener('click', function (e) {
         if (!cartPopup.contains(e.target) && !cartIcon.contains(e.target)) {
             cartPopup.classList.remove('active');
         }
     });
 });
+
+
+    document.getElementById('cart-icon')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        const popup = document.getElementById('cart-popup');
+        popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+    });
+
+
+    document.addEventListener('click', function(e) {
+        const cartIcon = document.getElementById('cart-icon');
+        const cartPopup = document.getElementById('cart-popup');
+        
+        if (cartIcon && cartPopup && !cartIcon.contains(e.target) && !cartPopup.contains(e.target)) {
+            cartPopup.style.display = 'none';
+        }
+    });
+
+
+    document.querySelector('.btn-continue')?.addEventListener('click', function() {
+        const cartPopup = document.getElementById('cart-popup');
+        if (cartPopup) {
+            cartPopup.style.display = 'none';
+        }
+    });
 </script>
 
 

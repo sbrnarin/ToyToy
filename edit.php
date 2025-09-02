@@ -89,13 +89,19 @@ $kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
       max-height: 200px;
       display: block;
     }
+    
+    .error-message {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
 
   <h2>Edit Produk</h2>
 
-  <form action="proses_edit.php" method="post" enctype="multipart/form-data">
+  <form action="proses_edit.php" method="post" enctype="multipart/form-data" id="editProdukForm">
     <input type="hidden" name="id_produk" value="<?= $produk['id_produk'] ?>">
 
     <label for="nama_produk">Nama Produk:</label>
@@ -105,10 +111,11 @@ $kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
     <textarea name="deskripsi" id="deskripsi" required><?= $produk['deskripsi'] ?></textarea>
 
     <label for="harga">Harga:</label>
-    <input type="number" name="harga" id="harga" value="<?= $produk['harga'] ?>" required>
+    <input type="number" name="harga" id="harga" value="<?= $produk['harga'] ?>" min="0" required>
 
     <label for="stok">Stok:</label>
-    <input type="number" name="stok" id="stok" value="<?= $produk['stok'] ?>" required>
+    <input type="number" name="stok" id="stok" value="<?= $produk['stok'] ?>" min="0" required>
+    <div id="stokError" class="error-message"></div>
 
     <label for="id_merk">Merk:</label>
     <select name="id_merk" id="id_merk" required>
@@ -145,6 +152,36 @@ $kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
 
     <button type="submit">Simpan Perubahan</button>
   </form>
+
+  <script>
+    document.getElementById('editProdukForm').addEventListener('submit', function(e) {
+      const stokInput = document.getElementById('stok');
+      const stokError = document.getElementById('stokError');
+      
+      stokError.textContent = '';
+
+      if (parseInt(stokInput.value) < 0) {
+        e.preventDefault();
+        stokError.textContent = 'Stok tidak boleh kurang dari 0';
+        stokInput.focus();
+        return false;
+      }
+      
+
+      return true;
+    });
+
+
+    document.getElementById('stok').addEventListener('keydown', function(e) {
+      if (e.key === '-' || e.key === 'e' || e.key === 'E') {
+        e.preventDefault();
+      }
+    });
+
+    document.getElementById('stok').addEventListener('wheel', function(e) {
+      e.preventDefault();
+    });
+  </script>
 
 </body>
 </html>

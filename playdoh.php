@@ -462,7 +462,7 @@ if (!isset($_SESSION['cart'])) {
                 localStorage.setItem('wishlist', JSON.stringify(wishlist));
             }
             
-            // Search Functionality (UNCHANGED)
+
             function searchProducts(event) {
                 event.preventDefault();
                 const searchTerm = document.querySelector('.search-input').value.toLowerCase();
@@ -478,10 +478,32 @@ if (!isset($_SESSION['cart'])) {
                 });
             }
             
-            // Notification Function (UNCHANGED)
             function showNotification(message) {
                 alert(message);
             }
+
+
+    document.getElementById('cart-icon')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        const popup = document.getElementById('cart-popup');
+        popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function(e) {
+        const cartIcon = document.getElementById('cart-icon');
+        const cartPopup = document.getElementById('cart-popup');
+        
+        if (cartIcon && cartPopup && !cartIcon.contains(e.target) && !cartPopup.contains(e.target)) {
+            cartPopup.style.display = 'none';
+        }
+    });
+
+    document.querySelector('.btn-continue')?.addEventListener('click', function() {
+        const cartPopup = document.getElementById('cart-popup');
+        if (cartPopup) {
+            cartPopup.style.display = 'none';
+        }
+    });
         </script>
 
         <script>

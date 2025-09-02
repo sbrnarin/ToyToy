@@ -128,15 +128,18 @@ $currentYear = date('Y');
     }
 
     
-    .rekap-container {
-      width: 90%;
-      max-width: 1000px;
-      margin: 50px auto 50px 250px;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+.rekap-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 20px 0 27px;           /* center secara horizontal */
+  padding: 30px;
+  padding-left: 250px;         /* kasih ruang untuk sidebar supaya konten ga ketiban */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+
     
     .rekap-container h2 {
       text-align: center;

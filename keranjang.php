@@ -12,7 +12,7 @@ $id_pembeli = $userLoggedIn ? $_SESSION['id_pembeli'] : null;
 $dbCart = [];
 if ($userLoggedIn && $id_pembeli) {
     $query = "SELECT p.id_produk as id, p.nama_produk as name, p.harga as price, 
-                     p.nama_file as image, k.jumlah as quantity
+                     p.nama_file as image, k.jumlah as quantity, p.stok as maxStock
               FROM keranjang k 
               JOIN produk p ON k.id_produk = p.id_produk 
               WHERE k.id_pembeli = ?";
@@ -29,6 +29,7 @@ if ($userLoggedIn && $id_pembeli) {
                     'price' => $row['price'],
                     'image' => 'gambar/' . $row['image'],
                     'quantity' => $row['quantity'],
+                    'maxStock' => $row['maxStock'],
                     'selected' => true
                 ];
             }
@@ -177,6 +178,10 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
     .quantity-control button:hover {
       background: #e0e0e0;
     }
+    .quantity-control button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
     .quantity-control span {
       min-width: 20px;
       text-align: center;
@@ -234,6 +239,19 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
       background: white;
       border-radius: 8px;
       margin-top: 40px;
+    }
+    .stock-info {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+    .stock-low {
+      color: orange;
+      font-weight: bold;
+    }
+    .stock-out {
+      color: red;
+      font-weight: bold;
     }
     @media (max-width: 600px) {
       .cart-item {
@@ -390,6 +408,7 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
         price: parseFloat(item.price),
         image: item.image,
         quantity: parseInt(item.quantity) || 1,
+        maxStock: parseInt(item.maxStock) || 0,
         selected: item.selected !== false
       }));
 
@@ -423,13 +442,22 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
               <div class="quantity-control">
                 <button class="decrease" data-index="${index}">−</button>
                 <span>${item.quantity}</span>
-                <button class="increase" data-index="${index}">+</button>
+                <button class="increase" data-index="${index}" ${item.quantity >= item.maxStock ? 'disabled' : ''}>+</button>
                 <button class="delete-btn" data-index="${index}">🗑️</button>
               </div>
+              <p class="stock-info ${getStockClass(item.maxStock, item.quantity)}">
+                Stok: ${item.maxStock} | Tersedia: ${item.maxStock - item.quantity}
+              </p>
             </div>
           </div>
         `).join("");
         updateSummary();
+      }
+
+      function getStockClass(stock, quantity) {
+        if (stock <= 0) return 'stock-out';
+        if (stock - quantity < 5) return 'stock-low';
+        return '';
       }
 
       function setupEvents() {
@@ -442,8 +470,12 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
             updateCartItem(index);
           }
           else if (e.target.classList.contains("increase")) {
-            cart[index].quantity += 1;
-            updateCartItem(index);
+            if (cart[index].quantity < cart[index].maxStock) {
+              cart[index].quantity += 1;
+              updateCartItem(index);
+            } else {
+              showNotification('Tidak bisa menambah, stok terbatas');
+            }
           }
           else if (e.target.classList.contains("delete-btn")) {
             if (confirm("Hapus produk ini dari keranjang?")) {
@@ -472,6 +504,14 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
             alert("Silakan pilih minimal satu produk untuk checkout.");
             return;
           }
+          
+          // Check stock before checkout
+          const outOfStockItems = selectedItems.filter(item => item.quantity > item.maxStock);
+          if (outOfStockItems.length > 0) {
+            alert("Beberapa produk dalam keranjang melebihi stok yang tersedia. Silakan sesuaikan jumlah pembelian.");
+            return;
+          }
+          
           localStorage.setItem("checkoutItems", JSON.stringify(selectedItems));
           window.location.href = "cekot.php";
         });
@@ -484,6 +524,19 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
             ` ${formatRupiah(cart[index].price * cart[index].quantity)}`;
           itemElement.querySelector('.quantity-control span').textContent = 
             cart[index].quantity;
+            
+          // Update increase button disabled state
+          const increaseBtn = itemElement.querySelector('.increase');
+          if (increaseBtn) {
+            increaseBtn.disabled = cart[index].quantity >= cart[index].maxStock;
+          }
+          
+          // Update stock info
+          const stockInfo = itemElement.querySelector('.stock-info');
+          if (stockInfo) {
+            stockInfo.textContent = `Stok: ${cart[index].maxStock} | Tersedia: ${cart[index].maxStock - cart[index].quantity}`;
+            stockInfo.className = `stock-info ${getStockClass(cart[index].maxStock, cart[index].quantity)}`;
+          }
         }
         updateSummary();
       }
@@ -499,6 +552,10 @@ $initialCart = !empty($dbCart) ? $dbCart : [];
 
       function formatRupiah(angka) {
         return "Rp " + angka.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
+      
+      function showNotification(message) {
+        alert(message);
       }
     });
   </script>
@@ -608,7 +665,8 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         const title = productCard.querySelector('.product-title')?.textContent?.trim() || 'Unknown Product';
         const price = productCard.querySelector('.product-price')?.textContent?.trim() || 'N/A';
         const image = productCard.querySelector('img')?.src || 'default-image.jpg';
-        const productId = productCard.dataset.productId || generateUniqueId(); // Add data-product-id to your HTML
+        const productId = productCard.dataset.productId || generateUniqueId();
+        const productStock = parseInt(productCard.dataset.stock) || 0;
 
         // Find existing item by ID if available, otherwise by title+price
         const existingItem = productId 
@@ -616,14 +674,21 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
             : cart.find(item => item.title === title && item.price === price);
 
         if (existingItem) {
+            // Check if we can add more
+            if (existingItem.quantity >= productStock) {
+              showNotification('Maaf, stok tidak mencukupi');
+              return;
+            }
             existingItem.quantity += 1;
+            existingItem.maxStock = productStock;
         } else {
             cart.push({ 
                 id: productId,
                 title, 
                 price, 
                 image, 
-                quantity: 1 
+                quantity: 1,
+                maxStock: productStock
             });
         }
 
@@ -643,7 +708,6 @@ function calculateTotalItems() {
 function generateUniqueId() {
     return Math.random().toString(36).substring(2, 15);
 }
-
 
 
 cartListNavbar?.addEventListener('click', function(e) {
